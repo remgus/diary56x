@@ -1,8 +1,6 @@
-import { createStore } from "vuex";
+import { createStore } from "vuex-smart-module";
+import root from "./modules/auth";
 
-export default createStore({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {},
-});
+export const store = createStore(root);
+
+export default store;
