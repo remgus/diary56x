@@ -61,9 +61,9 @@
           </div>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li>
-              <a class="dropdown-item" href="{% url 'profile' %}"
-                ><i class="bi bi-person me-2"></i> Аккаунт</a
-              >
+              <router-link class="dropdown-item" to="/profile">
+                <i class="bi bi-person me-2"></i> <span>Аккаунт</span>
+              </router-link>
             </li>
             <li>
               <a class="dropdown-item" href="{% url 'logout' %}"

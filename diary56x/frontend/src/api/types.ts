@@ -7,18 +7,18 @@ export class User {
     this.data = user;
   }
 
-  public isAdmin(): boolean {
+  public get isAdmin(): boolean {
     return (
       this.data.account_type === AccountTypes.ADMIN ||
       this.data.account_type === AccountTypes.ROOT
     );
   }
 
-  public isTeacher(): boolean {
+  public get isTeacher(): boolean {
     return this.data.account_type === AccountTypes.TEACHER;
   }
 
-  public isStudent(): boolean {
+  public get isStudent(): boolean {
     return this.data.account_type === AccountTypes.STUDENT;
   }
 }
