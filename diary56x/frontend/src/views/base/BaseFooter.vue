@@ -3,9 +3,9 @@
     <div class="container">
       <div class="row text-center">
         <div class="col-md-3 col-4 text-start text-md-center">
-          <a href="{% url 'homepage' %}" class="text-decoration-none"
-            >Главная</a
-          >
+          <router-link to="/" class="text-decoration-none">
+            Главная
+          </router-link>
         </div>
         <div class="col-md-3 col-4">
           <a href="{% url 'timetable' %}" class="text-decoration-none">
@@ -19,7 +19,9 @@
           <a href="{% url 'minimum' %}" class="text-decoration-none">Минимум</a>
         </div>
         <div class="col-md-3 col-4">
-          <a href="{% url 'news' %}" class="text-decoration-none">Новости</a>
+          <router-link to="/blog" class="text-decoration-none">
+            Новости
+          </router-link>
         </div>
         <div class="col-md-3 col-4 text-end text-md-center">
           <a href="{% url 'about' %}" class="text-decoration-none">О проекте</a>

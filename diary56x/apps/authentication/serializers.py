@@ -1,5 +1,7 @@
 from rest_framework import serializers
 
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+
 from . import models
 
 
@@ -97,3 +99,7 @@ class TeacherCreateSerializer(serializers.ModelSerializer):
 
 class UserBulkDeleteSerializer(serializers.Serializer):
     ids = serializers.CharField()
+
+
+class RefreshTokenSerializer(serializers.Serializer):
+    refresh = serializers.CharField()

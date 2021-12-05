@@ -1,4 +1,4 @@
-import { User } from "@/api/types";
+import { User } from "@/api/models";
 import { Mutations } from "vuex-smart-module";
 import { Message, RootState } from "./types";
 

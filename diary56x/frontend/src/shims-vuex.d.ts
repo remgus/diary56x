@@ -1,11 +1,11 @@
-import { instance } from "./api";
 import store from "./store";
+import { APIServiceType } from "./api";
 
 declare module "@vue/runtime-core" {
   // Provide typings for `this.$store`
   interface ComponentCustomProperties {
     $store: typeof store;
-    $api: typeof instance;
+    $api: APIServiceType;
   }
 }
 

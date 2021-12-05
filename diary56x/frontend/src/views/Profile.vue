@@ -24,7 +24,7 @@
         </div>
         <div class="mb-1">
           <i class="bi bi-calendar-plus me-2"></i><b>Дата регистрации: </b
-          >{{ user.data.registration_date }}
+          >{{ toShortDate(user.data.registration_date) }}
         </div>
 
         <div v-if="user.isStudent">
@@ -45,14 +45,14 @@
       <div class="" id="settings">
         <h4 class="mb-3"><i class="bi bi-gear me-2"></i>Настройки</h4>
         <div class="mb-1">
-          <a href="{% url 'reset_password' %}"
+          <!-- <a href="{% url 'reset_password' %}"
             ><i class="bi bi-key me-2"></i>Сбросить пароль</a
-          >
+          > -->
         </div>
         <div class="mb-1">
-          <a href="{% url 'message_to_admin' %}"
+          <!-- <a href="{% url 'message_to_admin' %}"
             ><i class="bi bi-pencil me-2"></i>Изменить данные аккаунта</a
-          >
+          > -->
         </div>
       </div>
     </div>
@@ -60,9 +60,10 @@
 </template>
 
 <script lang="ts">
-import { User } from "@/api/types";
+import { User } from "@/api/models";
 import { defineComponent } from "@vue/runtime-core";
 import { toSvg } from "jdenticon";
+import { toShortDate } from "@/utils/date";
 
 interface Data {
   user: User;
@@ -76,6 +77,11 @@ export default defineComponent({
   },
   computed: {
     jdenticon: (vm) => toSvg(vm.user.id, 100),
+  },
+  methods: {
+    toShortDate(date: string) {
+      return toShortDate(new Date(date));
+    },
   },
 });
 </script>

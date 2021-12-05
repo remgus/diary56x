@@ -1,57 +1,33 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import { UserCredentials } from "@/store/modules/auth/types";
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+} from "axios";
+import {
+  clearLocalDataAfterLogout,
+  getLocalData,
+  LocalData,
+  setLocalData,
+} from "./local";
+import router from "@/router";
+import BlogService from "./services/blog";
+import { APITokens, APIUser } from "./types";
+import createAuthRefreshInterceptor from "axios-auth-refresh";
 
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 
-export enum AccountTypes {
-  ROOT,
-  ADMIN,
-  TEACHER,
-  STUDENT,
-}
-
-export interface APIUser {
-  id: number;
-  email: string;
-  first_name: string;
-  surname: string;
-  second_name: string;
-  account_type: AccountTypes;
-  last_login: string;
-  registration_date: string;
-  is_superuser: boolean;
-  is_staff: boolean;
-  is_active: boolean;
-}
-
-export interface AccessTokens {
-  access: string;
-  refresh: string;
-}
-
-export function getLocalAccessToken(): string | null {
-  return localStorage.getItem("diary56x-access-token");
-}
-
-export function getLocalRefreshToken(): string | null {
-  return localStorage.getItem("diary56x-refresh-token");
-}
-
-export function setLocalAccessToken(token: string): void {
-  localStorage.setItem("diary56x-access-token", token);
-}
-
-export function setLocalRefreshToken(token: string): void {
-  localStorage.setItem("diary56x-refresh-token", token);
-}
-
 enum APIURLS {
-  GET_TOKEN = "auth/token/",
-  REFRESH_TOKEN = "auth/token/refresh/",
+  GET_TOKEN = "auth/token",
+  REFRESH_TOKEN = "auth/token/refresh",
   CURRENT_USER = "auth/users/current",
+  REMOVE_TOKEN = "auth/logout",
+  BASE_URL = "/api/private/",
 }
 
-const instance = axios.create({
+export const instance = axios.create({
   baseURL: "/api/private/",
   headers: {
     "Content-Type": "application/json",
@@ -68,7 +44,7 @@ instance.interceptors.request.use(
         `Expected 'config' and 'config.headers' not to be undefined`
       );
     }
-    const token = localStorage.getItem("diary56x-access-token");
+    const token = getLocalData(LocalData.ACCESS_TOKEN);
     if (token) {
       config.headers["Authorization"] = `Bearer ${token}`;
     }
@@ -79,54 +55,55 @@ instance.interceptors.request.use(
   }
 );
 
-// Add a response interceptor to handle expired authetication token
-instance.interceptors.response.use(
-  (res) => {
-    return res;
-  },
-  async (err) => {
-    const originalConfig = err.config;
-
-    if (err.response) {
-      // Access Token was expired
-      if (err.response.status === 401 && !originalConfig._retry) {
-        originalConfig._retry = true;
-
-        instance
-          .post(APIURLS.REFRESH_TOKEN, {
-            refreshToken: getLocalRefreshToken(),
-          })
-          .then((res) => {
-            setLocalAccessToken(res.data.accessToken);
-            originalConfig.headers[
-              "Authorization"
-            ] = `Bearer ${res.data.accessToken}`;
-            return instance(originalConfig);
-          })
-          .catch((e) => {
-            if (e.response && e.response.data) {
-              return Promise.reject(e.response.data);
-            }
-
-            return Promise.reject(e);
-          });
+const refreshAuthLogic = (failedRequest: AxiosError) =>
+  axios
+    .post(APIURLS.BASE_URL + APIURLS.REFRESH_TOKEN, {
+      refresh: getLocalData(LocalData.REFRESH_TOKEN),
+    })
+    .then((response) => {
+      setLocalData(LocalData.ACCESS_TOKEN, response.data.access);
+      if (failedRequest.response?.config.headers) {
+        failedRequest.response.config.headers["Authorization"] =
+          "Bearer " + response.data.access;
       }
+      return Promise.resolve();
+    })
+    .catch((error) => {
+      clearLocalDataAfterLogout();
+      router.push("/login");
+      return Promise.reject(error);
+    });
 
-      if (err.response.status === 403 && err.response.data) {
-        return Promise.reject(err.response.data);
-      }
-    }
+createAuthRefreshInterceptor(instance, refreshAuthLogic);
 
-    return Promise.reject(err);
+export type APIServiceType = APIService;
+
+export class APIService {
+  public readonly axios: AxiosInstance;
+  public readonly URLS = APIURLS;
+  public readonly blog = new BlogService(this);
+
+  constructor(a: AxiosInstance) {
+    this.axios = a;
   }
-);
 
-export default class API {
-  static readonly URLS = APIURLS;
+  public getCurrentUser(): Promise<AxiosResponse<APIUser>> {
+    return this.axios.get<APIUser>(APIURLS.CURRENT_USER);
+  }
 
-  static readonly axios = instance;
+  public logout(refreshToken: string): Promise<AxiosResponse> {
+    return this.axios.post(APIURLS.REMOVE_TOKEN, {
+      refresh: refreshToken,
+    });
+  }
 
-  static getCurrentUser(): Promise<AxiosResponse<APIUser>> {
-    return instance.get<APIUser>(APIURLS.CURRENT_USER);
+  public login(credentials: UserCredentials): Promise<AxiosResponse> {
+    return this.axios.post<APITokens>(API.URLS.GET_TOKEN, {
+      email: credentials.email,
+      password: credentials.password,
+    });
   }
 }
+
+const API = new APIService(instance);
+export default API;

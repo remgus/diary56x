@@ -1,11 +1,23 @@
-import { getLocalAccessToken, getLocalRefreshToken } from "@/api";
-import { User } from "@/api/types";
-import { getUserFromLocalStorage } from "./utils";
+import { getLocalData, LocalData } from "@/api/local";
+import { User } from "@/api/models";
+import { APIUser } from "@/api/types";
+
+const getUser = (): User | null => {
+  const v = getLocalData(LocalData.USER);
+  if (!v) return null;
+  const vParsed: APIUser = JSON.parse(v);
+  if (!vParsed) return null;
+  return new User(vParsed);
+};
 
 export class RootState {
-  accessToken: string | null = getLocalAccessToken();
-  refreshToken: string | null = getLocalRefreshToken();
-  user: User | null = getUserFromLocalStorage();
+  accessToken: string | null = getLocalData(LocalData.ACCESS_TOKEN) as
+    | string
+    | null;
+  refreshToken: string | null = getLocalData(LocalData.REFRESH_TOKEN) as
+    | string
+    | null;
+  user: User | null = getUser();
   messages: Message[] = [];
 }
 

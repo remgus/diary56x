@@ -40,8 +40,10 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "apps.authentication.apps.AuthConfig",
+    "apps.blog.apps.BlogConfig",
     "rest_framework",
     "django_filters",
+    "rest_framework_simplejwt.token_blacklist",
 ]
 
 MIDDLEWARE = [
@@ -149,7 +151,10 @@ REST_FRAMEWORK = {
 }
 
 JWT_AUTH = {
-    "JWT_ALLOW_REFRESH": True,
-    "JWT_EXPIRATION_DELTA": datetime.timedelta(hours=1),
-    "JWT_REFRESH_EXPIRATION_DELTA": datetime.timedelta(days=7),
+    "TOKEN_TYPE_CLAIM": "rest_framework_simplejwt.tokens.AccessToken",
+    "ACCESS_TOKEN_LIFETIME": datetime.timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=14),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": False,
 }

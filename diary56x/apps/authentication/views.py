@@ -1,9 +1,14 @@
 import django_filters
 from django.conf import settings
 from rest_framework import generics, permissions, response, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.exceptions import TokenError
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import Users
-from .serializers import UserBulkDeleteSerializer, UserSerializer
+from .serializers import (RefreshTokenSerializer, UserBulkDeleteSerializer,
+                          UserSerializer)
 from .utils import ACCOUNT_TYPE_CHOICES
 
 
@@ -69,3 +74,19 @@ class UserBulkDeleteAPIView(generics.DestroyAPIView):
             return response.Response(status=status.HTTP_403_FORBIDDEN)
         self.get_queryset().filter(id__in=to_delete).delete()
         return response.Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class LogoutView(APIView):
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def post(self, request):
+        """Logout the user."""
+        serializer = RefreshTokenSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        refresh_token = serializer.validated_data["refresh"]
+        try:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+        except Exception as e:
+            raise TokenError(e)
+        return Response(status=status.HTTP_205_RESET_CONTENT)

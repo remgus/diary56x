@@ -12,5 +12,5 @@ import "./assets/styles/base.css";
 import API from "./api";
 
 const app = createApp(App);
-app.config.globalProperties.$api = new API();
+app.config.globalProperties.$api = API;
 app.use(store).use(router).mount("#app");

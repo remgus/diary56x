@@ -10,23 +10,23 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <router-link to="/" class="navbar-brand">
-        <img
-          src="@/assets/icons/logo.svg"
-          id="logo"
-          class="d-inline-block align-center me-2"
-          alt=""
-        />
-        <span id="brand-name">Diary56x</span>
-      </router-link>
-
       <div class="collapse navbar-collapse" id="navbarcontent">
+        <router-link to="/" class="navbar-brand d-none d-lg-block">
+          <img
+            src="@/assets/icons/logo.svg"
+            id="logo"
+            class="d-inline-block align-center me-2"
+            alt=""
+          />
+          <span id="brand-name">Diary56x</span>
+        </router-link>
+
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <span class="nav-link">Расписание</span>
           </li>
           <li class="nav-item">
-            <span class="nav-link">Новости</span>
+            <router-link to="/blog" class="nav-link">Новости</router-link>
           </li>
           <li class="nav-item">
             <span class="nav-link">Помощь</span>
@@ -66,9 +66,10 @@
               </router-link>
             </li>
             <li>
-              <a class="dropdown-item" href="{% url 'logout' %}"
-                ><i class="bi bi-box-arrow-right me-2"></i> Выйти</a
-              >
+              <a class="dropdown-item" href="#" @click.prevent="logout">
+                <i class="bi bi-box-arrow-right me-2"></i>
+                Выйти
+              </a>
             </li>
           </ul>
         </div>
@@ -78,22 +79,18 @@
 </template>
 
 <script lang="ts">
-import { User } from "@/api/types";
 import { defineComponent } from "vue";
 import { toSvg } from "jdenticon";
 
-interface Props {
-  user?: User;
-}
-
 export default defineComponent({
-  data() {
-    return {
-      user: this.$store.state.user,
-    } as Props;
-  },
   computed: {
     jdenticon: (vm) => toSvg(vm.user.id, 45),
+    user: (vm) => vm.$store.state.user,
+  },
+  methods: {
+    logout() {
+      this.$store.dispatch("logout");
+    },
   },
 });
 </script>

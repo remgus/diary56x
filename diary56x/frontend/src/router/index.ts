@@ -1,6 +1,6 @@
-import { store } from "@/store";
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
+import { handleMetaViews } from "./utils";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -29,6 +29,16 @@ const routes: Array<RouteRecordRaw> = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/blog",
+    name: "Blog",
+    component: () => import("../views/blog/NewsList.vue"),
+  },
+  {
+    path: "/blog/create/",
+    name: "CreatePost",
+    component: () => import("../views/blog/CreatePost.vue"),
+  },
 ];
 
 const router = createRouter({
@@ -37,31 +47,9 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
-  if (
-    to.matched.some(
-      (record) =>
-        record.meta.requiresAuth !== undefined && !record.meta.requiresAuth
-    )
-  ) {
-    if (store.getters["isAuthenticated"]) {
-      next("/");
-    } else {
-      next();
-    }
-  } else if (
-    to.matched.some(
-      (record) =>
-        record.meta.requiresAuth !== undefined && record.meta.requiresAuth
-    )
-  ) {
-    if (!store.getters["isAuthenticated"]) {
-      next("/login");
-    } else {
-      next();
-    }
-  } else {
-    next();
-  }
+  const res = handleMetaViews(to, next);
+  if (res) return;
+  next();
 });
 
 export default router;

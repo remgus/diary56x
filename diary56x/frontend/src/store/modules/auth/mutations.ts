@@ -1,9 +1,6 @@
-import API, {
-  AccessTokens,
-  setLocalAccessToken,
-  setLocalRefreshToken,
-} from "@/api";
-import { User } from "@/api/types";
+import API from "@/api";
+import { clearLocalDataAfterLogout, LocalData, setLocalData } from "@/api/local";
+import { User } from "@/api/models";
 import { Actions } from "vuex-smart-module";
 import { RootMutations } from "./actions";
 import { RootGetters } from "./getters";
@@ -17,15 +14,11 @@ export class RootActions extends Actions<
 > {
   login(credentials: UserCredentials): Promise<void> {
     return new Promise((resolve, reject) => {
-      API.axios
-        .post<AccessTokens>(API.URLS.GET_TOKEN, {
-          email: credentials.email,
-          password: credentials.password,
-        })
+      API.login(credentials)
         .then((response) => {
           const { access, refresh } = response.data;
-          setLocalAccessToken(access);
-          setLocalRefreshToken(refresh);
+          setLocalData(LocalData.ACCESS_TOKEN, access);
+          setLocalData(LocalData.REFRESH_TOKEN, refresh);
           this.commit("setTokens", {
             accessToken: access,
             refreshToken: refresh,
@@ -43,7 +36,7 @@ export class RootActions extends Actions<
       API.getCurrentUser()
         .then((response) => {
           this.commit("setUser", new User(response.data));
-          localStorage.setItem("user", JSON.stringify(response.data));
+          setLocalData(LocalData.USER, JSON.stringify(response.data));
           resolve();
         })
         .catch((error) => {
@@ -55,5 +48,23 @@ export class RootActions extends Actions<
   addMessage(payload: Message): Promise<void> {
     this.dispatch("addMessage", payload);
     return Promise.resolve();
+  }
+
+  logout(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (!this.state.refreshToken) {
+        return Promise.reject("Refresh token is null.");
+      }
+      API.logout(this.state.refreshToken)
+        .then(() => {
+          this.commit("clearUser");
+          this.commit("clearTokens");
+          clearLocalDataAfterLogout();
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
   }
 }
