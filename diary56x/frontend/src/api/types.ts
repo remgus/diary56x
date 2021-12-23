@@ -31,6 +31,15 @@ export interface APIPost {
   author: string;
   image: string;
   slug: string;
+  id: number;
+}
+
+export interface APICreatePost {
+  title: string;
+  content: string;
+  author: string;
+  image?: string;
+  slug: string;
 }
 
 export interface Paginator<T> {

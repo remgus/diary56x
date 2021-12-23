@@ -16,6 +16,7 @@
             v-if="searchDone"
             class="btn btn-outline-secondary"
             id="cancel-search-btn"
+            ref="searchButton"
             @click.prevent="clearSearch"
           >
             <i class="bi bi-x-lg"></i>
@@ -26,6 +27,7 @@
             name="search"
             v-model="search"
             id="search-input"
+            ref="searchInput"
           />
           <button class="btn btn-outline-primary" id="search-btn" type="submit">
             <i class="bi bi-search" />
@@ -34,7 +36,7 @@
       </form>
     </div>
 
-    <div v-if="posts === undefined">
+    <div v-if="posts === null">
       <div class="text-center">
         <div class="spinner-border text-primary" role="status"></div>
       </div>
@@ -49,65 +51,111 @@
         />
       </div>
     </div>
-    <div v-else></div>
+    <div v-else>
+      <div v-for="post in posts.results" :key="post.id" class="card card-body">
+        <li class="row mt-2">
+          <div class="col">
+            <div>
+              <h5 class="mt-0">{{ post.title }}</h5>
+            </div>
+            <p class="my-0">Автор: {{ post.author }}</p>
+            <p class="text-muted my-0">
+              {{ processDate(post) }}
+            </p>
+          </div>
+
+          <div class="col-auto">
+            <div class="w-100">
+              <img
+                :src="getImage(post)"
+                class="align-self-center mr-3 post-image"
+                alt=""
+                height="70"
+                width="70"
+              />
+            </div>
+          </div>
+        </li>
+      </div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
-import { Post } from "@/api/models";
-import { Paginator } from "@/api/types";
-import { defineComponent } from "@vue/runtime-core";
-import { LocationQueryValue } from "vue-router";
-
-interface Data {
-  posts?: Paginator<Post>;
-  search: LocationQueryValue;
-  page: number;
-  searchDone: boolean;
-}
+import { APIPost, Paginator } from "@/api/types";
+import { computed, defineComponent, onMounted, ref } from "@vue/runtime-core";
+import { LocationQueryValue, useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { key } from "@/store";
+import APIService from "@/api";
+import { toShortDateTime } from "@/utils/date";
 
 export default defineComponent({
-  data() {
-    return {
-      posts: undefined,
-      search: null,
-      searchDone: false,
-      page: 1,
-    } as Data;
-  },
-  methods: {
-    refresh() {
-      document.getElementById("search-input")?.blur();
-      document.getElementById("search-btn")?.blur();
-      this.posts = undefined;
+  setup() {
+    const store = useStore(key);
+    const route = useRoute();
+
+    const search = ref<string | null>(null);
+    const searchDone = ref(false);
+    const page = ref(1);
+
+    const searchInput = ref<HTMLElement | null>(null);
+    const searchButton = ref<HTMLElement | null>(null);
+
+    const posts = ref<null | Paginator<APIPost>>(null);
+
+    onMounted(() => {
+      search.value = route.query.search as LocationQueryValue;
+      const queryPage = Number(route.query.page as LocationQueryValue);
+      if (queryPage) page.value = queryPage;
+      refresh();
+    });
+
+    const refresh = () => {
+      searchInput.value?.blur();
+      searchButton.value?.blur();
+
+      posts.value = null;
       const start = performance.now();
-      this.$api.blog
+      APIService.blog
         .list({
-          page: this.page,
-          search: this.search ? this.search : undefined,
+          page: page.value,
+          search: search.value ? search.value : undefined,
         })
         .then(async (data) => {
           const t = performance.now() - start;
           if (t < 300) {
             await new Promise((r) => setTimeout(r, 300 - t));
           }
-          this.posts = data.data;
-          this.searchDone = Boolean(this.search);
+          posts.value = data.data;
+          searchDone.value = Boolean(search.value);
         });
-    },
-    clearSearch() {
-      this.search = null;
-      this.refresh();
-    },
-  },
-  mounted() {
-    this.search = this.$route.query.search as LocationQueryValue;
-    const queryPage = Number(this.$route.query.page as LocationQueryValue);
-    if (queryPage) this.page = queryPage;
-    this.refresh();
-  },
-  computed: {
-    user: (vm) => vm.$store.state.user,
+    };
+
+    const clearSearch = () => {
+      search.value = null;
+      refresh();
+    };
+
+    const getImage = (p: APIPost) => {
+      return p.image ? p.image : require("@/assets/icons/document.svg");
+    };
+
+    const processDate = (p: APIPost) => {
+      return toShortDateTime(new Date(p.date));
+    };
+
+    return {
+      posts,
+      page,
+      search,
+      searchDone,
+      refresh,
+      getImage,
+      processDate,
+      clearSearch,
+      user: computed(() => store.state.user),
+    };
   },
 });
 </script>
