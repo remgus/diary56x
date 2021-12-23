@@ -18,7 +18,7 @@ django-filter = "^2.4.0"
 django-widget-tweaks = "^1.4.8"
 Markdown = "^3.3.4"
 mkdocs = "^1.2"
-poetry = "^1.1.6"
+poetry = "^1.1.12"
 toml = "^0.10.2"
 djangorestframework-simplejwt = "^5.0.0"
 
