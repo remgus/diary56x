@@ -1,5 +1,9 @@
 import API from "@/api";
-import { clearLocalDataAfterLogout, LocalData, setLocalData } from "@/api/local";
+import {
+  clearLocalDataAfterLogout,
+  LocalData,
+  setLocalData,
+} from "@/api/local";
 import { User } from "@/api/models";
 import { Actions } from "vuex-smart-module";
 import { RootMutations } from "./actions";
