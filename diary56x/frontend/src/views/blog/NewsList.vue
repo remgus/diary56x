@@ -52,31 +52,45 @@
       </div>
     </div>
     <div v-else>
-      <div v-for="post in posts.results" :key="post.id" class="card card-body">
-        <li class="row mt-2">
-          <div class="col">
-            <div>
-              <h5 class="mt-0">{{ post.title }}</h5>
+      <div class="mb-5">
+        <div
+          v-for="post in posts.results"
+          :key="post.id"
+          class="card card-body"
+        >
+          <li class="row mt-2">
+            <div class="col">
+              <div>
+                <h5 class="mt-0">{{ post.title }}</h5>
+              </div>
+              <p class="my-0">Автор: {{ post.author }}</p>
+              <p class="text-muted my-0">
+                {{ processDate(post) }}
+              </p>
             </div>
-            <p class="my-0">Автор: {{ post.author }}</p>
-            <p class="text-muted my-0">
-              {{ processDate(post) }}
-            </p>
-          </div>
 
-          <div class="col-auto">
-            <div class="w-100">
-              <img
-                :src="getImage(post)"
-                class="align-self-center mr-3 post-image"
-                alt=""
-                height="70"
-                width="70"
-              />
+            <div class="col-auto">
+              <div class="w-100">
+                <img
+                  :src="getImage(post)"
+                  class="align-self-center mr-3 post-image"
+                  alt=""
+                  height="70"
+                  width="70"
+                />
+              </div>
             </div>
-          </div>
-        </li>
+          </li>
+        </div>
       </div>
+
+      <pagination
+        :paginator="posts"
+        :curPage="page"
+        centered
+        @nextPage="nextPage"
+        @prevPage="prevPage"
+      />
     </div>
   </div>
 </template>
@@ -89,8 +103,10 @@ import { useStore } from "vuex";
 import { key } from "@/store";
 import APIService from "@/api";
 import { toShortDateTime } from "@/utils/date";
+import Pagination from "@/components/Pagination.vue";
 
 export default defineComponent({
+  components: { Pagination },
   setup() {
     const store = useStore(key);
     const route = useRoute();
@@ -145,6 +161,16 @@ export default defineComponent({
       return toShortDateTime(new Date(p.date));
     };
 
+    const nextPage = () => {
+      if (posts.value?.next) page.value++;
+      refresh();
+    };
+
+    const prevPage = () => {
+      if (posts.value?.previous) page.value--;
+      refresh();
+    };
+
     return {
       posts,
       page,
@@ -154,6 +180,8 @@ export default defineComponent({
       getImage,
       processDate,
       clearSearch,
+      prevPage,
+      nextPage,
       user: computed(() => store.state.user),
     };
   },

@@ -42,11 +42,14 @@ export interface APICreatePost {
   slug: string;
 }
 
-export interface Paginator<T> {
+export interface Paginator<T> extends RawPaginator {
+  results: T[];
+}
+
+export interface RawPaginator {
   next: string | null;
   previous: string | null;
   count: number;
-  results: T[];
 }
 
 export type APIModel = APIPost | APIUser;

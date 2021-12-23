@@ -1,6 +1,5 @@
 import { AxiosResponse } from "axios";
 import { APIServiceType } from "..";
-import { Post } from "../models";
 import { APICreatePost, APIPost, Paginator } from "../types";
 
 export interface BlogListParams {
