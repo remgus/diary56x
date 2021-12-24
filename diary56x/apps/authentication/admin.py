@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Students, Teachers, Users
+from .models import Student, Teacher, User
 
 
 class UserAdmin(admin.ModelAdmin):
@@ -10,6 +10,6 @@ class UserAdmin(admin.ModelAdmin):
     list_filter = ("account_type", "last_login")
 
 
-admin.site.register(Users, UserAdmin)
-admin.site.register(Students)
-admin.site.register(Teachers)
+admin.site.register(User, UserAdmin)
+admin.site.register(Student)
+admin.site.register(Teacher)

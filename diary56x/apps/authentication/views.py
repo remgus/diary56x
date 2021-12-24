@@ -6,7 +6,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Users
+from .models import User
 from .serializers import (RefreshTokenSerializer, UserBulkDeleteSerializer,
                           UserSerializer)
 from .utils import ACCOUNT_TYPE_CHOICES
@@ -33,11 +33,11 @@ class UserListCreateAPIView(generics.ListCreateAPIView):
         )
 
         class Meta:
-            model = Users
+            model = User
             fields = []
 
     serializer_class = UserSerializer
-    queryset = Users.objects.all()
+    queryset = User.objects.all()
     filter_backends = [django_filters.rest_framework.DjangoFilterBackend]
     filter_class = UsersFilter
 
@@ -46,7 +46,7 @@ class UserRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     """Retrieve, update or delete a user."""
 
     serializer_class = UserSerializer
-    queryset = Users.objects.all()
+    queryset = User.objects.all()
 
 
 class UserBulkDeleteAPIView(generics.DestroyAPIView):
@@ -62,7 +62,7 @@ class UserBulkDeleteAPIView(generics.DestroyAPIView):
     """
 
     serializer_class = UserBulkDeleteSerializer
-    queryset = Users.objects.all()
+    queryset = User.objects.all()
 
     def destroy(self, request, *args, **kwargs):
         """Delete multiple users."""

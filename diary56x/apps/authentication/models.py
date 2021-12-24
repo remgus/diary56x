@@ -7,7 +7,7 @@ from .manager import UserManager
 from .utils import ACCOUNT_TYPE_CHOICES, UserTypes
 
 
-class Users(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin):
     """User model."""
 
     email = models.EmailField("Почта", unique=True)
@@ -21,6 +21,14 @@ class Users(AbstractBaseUser, PermissionsMixin):
     surname = models.CharField("Фамилия", max_length=100)
     registration_date = models.DateField(
         "Дата регистрации", auto_now_add=True, null=True
+    )
+
+    school = models.ForeignKey(
+        "core.School",
+        models.SET_NULL,
+        verbose_name="Образовательное учреждение",
+        null=True,
+        blank=True,
     )
 
     objects = UserManager()
@@ -68,13 +76,18 @@ class Users(AbstractBaseUser, PermissionsMixin):
         return self.get_username()
 
 
-class Teachers(models.Model):
-    """Teacher model."""
+class Teacher(models.Model):
+    """
+    User options for teacher accounts.
+
+    As well as this model is connected with `User` through one2one relationship,
+    this model can also be used to mention all teacher users.
+    """
 
     account = models.OneToOneField(
-        Users,
+        User,
         on_delete=models.CASCADE,
-        related_name="teacher",
+        related_name="options_teacher",
         verbose_name="Пользователь",
         primary_key=True,
     )
@@ -89,25 +102,31 @@ class Teachers(models.Model):
         return "{}".format(self.account.get_full_name())
 
 
-class Students(models.Model):
-    """Student model."""
+class Student(models.Model):
+    """
+    Options for student accounts.
+
+    As well as this model is connected with `User` through one2one relationship,
+    this model can also be used to mention all student users.
+    """
 
     account = models.OneToOneField(
-        Users,
+        User,
         on_delete=models.CASCADE,
         verbose_name="Пользователь",
         primary_key=True,
-        related_name="student",
+        related_name="options_student",
     )
-    # TODO: Add klass field.
-    # klass = models.ForeignKey(
-    #     "Classes",
-    #     on_delete=models.SET_NULL,
-    #     null=True,
-    #     default=None,
-    #     verbose_name="Класс",
-    #     blank=True,
-    # )
+
+    klass = models.ForeignKey(
+        "core.Klass",
+        on_delete=models.SET_NULL,
+        null=True,
+        default=None,
+        verbose_name="Класс",
+        blank=True,
+    )
+
     is_monitor = models.BooleanField(verbose_name="Староста", default=False)
 
     class Meta:
@@ -118,3 +137,24 @@ class Students(models.Model):
     def __str__(self):
         # TODO: Show student's klass in __str__
         return "{}".format(self.account.get_short_name())
+
+
+class Admin(models.Model):
+    """
+    Options for admin accounts.
+
+    As well as this model is connected with `User` through one2one relationship,
+    this model can also be used to mention all admin users.
+    """
+
+    account = models.OneToOneField(
+        User,
+        on_delete=models.CASCADE,
+        verbose_name="Пользователь",
+        primary_key=True,
+        related_name="options_admin",
+    )
+
+    class Meta:
+        verbose_name = "Параметры администратора"
+        verbose_name_plural = "Параметры администраторов"

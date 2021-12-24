@@ -7,13 +7,13 @@ from . import models
 
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Students
+        model = models.Student
         exclude = ["account"]
 
 
 class TeacherSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Teachers
+        model = models.Teacher
         exclude = ["account"]
 
 
@@ -22,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
     teacher = TeacherSerializer()
 
     class Meta:
-        model = models.Users
+        model = models.User
         fields = [
             "id",
             "account_type",
@@ -49,7 +49,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class StudentCreateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Users
+        model = models.User
         fields = [
             "account_type",
             "email",
@@ -60,7 +60,7 @@ class StudentCreateSerializer(serializers.ModelSerializer):
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
-        user = models.Users.objects.create(
+        user = models.User.objects.create(
             account_type=validated_data["account_type"],
             surname=validated_data["surname"],
             first_name=validated_data["first_name"],
@@ -74,7 +74,7 @@ class StudentCreateSerializer(serializers.ModelSerializer):
 
 class TeacherCreateSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Users
+        model = models.User
         fields = [
             "account_type",
             "email",
@@ -85,7 +85,7 @@ class TeacherCreateSerializer(serializers.ModelSerializer):
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
-        user = models.Users.objects.create(
+        user = models.User.objects.create(
             account_type=validated_data["account_type"],
             surname=validated_data["surname"],
             first_name=validated_data["first_name"],
