@@ -1,10 +1,6 @@
 # Virtual environment
 .venv
 
-# Poetry & yarn lock files
-yarn.lock
-poetry.lock
-
 # Node modules
 node_modules
 
