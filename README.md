@@ -4,8 +4,8 @@
 
 Digital diary for schools made with Django & Vue.
 
-<img alt="Python 3.9+" src="https://img.shields.io/badge/Python_Version-3.9+-blue.svg">
-<img alt="Python 3.9+" src="https://img.shields.io/badge/License-MIT-yellow.svg">
+<img alt="Python 3.9+" src="https://img.shields.io/badge/Python_Version-3.9+-blue.svg?style=flat-square">
+<img alt="GNU GPLv3" src="https://img.shields.io/github/license/AlanTheKnight/diary56x?style=flat-square">
 
 </div>
 
