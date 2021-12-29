@@ -27,4 +27,4 @@ pnpm-debug.log*
 __pycache__/
 
 # VueJS dist
-diary56x/static/vue/dist
+dist
