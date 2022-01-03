@@ -110,17 +110,12 @@ export default defineComponent({
       searchButton.value?.blur();
 
       posts.value = null;
-      const start = performance.now();
       APIService.blog
         .list({
           page: page.value,
           search: search.value ? search.value : undefined,
         })
-        .then(async (data) => {
-          const t = performance.now() - start;
-          if (t < 300) {
-            await new Promise((r) => setTimeout(r, 300 - t));
-          }
+        .then((data) => {
           posts.value = data.data;
           searchDone.value = Boolean(search.value);
         });

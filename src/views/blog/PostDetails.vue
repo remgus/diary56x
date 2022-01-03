@@ -22,26 +22,48 @@
         </ol>
       </nav>
 
+      <div class="my-3">
+        <button class="btn btn-outline-danger me-2" @click="showConfirmDialog">
+          <i class="bi-trash me-2"></i>Удалить
+        </button>
+        <button class="btn btn-outline-primary">
+          <i class="bi-pen me-2"></i>Изменить
+        </button>
+      </div>
+
       <div class="text-center mb-3">
         <h1>{{ post?.title }}</h1>
       </div>
       <div v-html="post?.content"></div>
+
+      <confirm-dialog
+        title="Подтверждение удаления"
+        content="Вы уверены, что хотите удалить эту запись?"
+        :callback="deletePost"
+        ref="confirmDialog"
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, onMounted, ref } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import APIService from "@/api";
 import { APIPost } from "@/api/types";
 import { getMarked } from "@/utils/marked";
+import { useConfirmDialog } from "@/utils/dialog";
+import { ConfirmDialog } from "@/components";
 
 export default defineComponent({
+  components: { ConfirmDialog },
   setup() {
     const route = useRoute();
+    const router = useRouter();
     const post = ref<APIPost | null>(null);
     const postDoesNotExist = ref(false);
+
+    const { showConfirmDialog, confirmDialog } = useConfirmDialog();
 
     const getPost = () => {
       const slug = route.params.slug as string;
@@ -58,11 +80,29 @@ export default defineComponent({
         });
     };
 
+    const deletePost = () => {
+      if (!post.value) return;
+      APIService.blog
+        .delete(post.value.slug)
+        .then(() => {
+          router.push("/blog");
+        })
+        .catch(() => {
+          postDoesNotExist.value = true;
+        });
+    };
+
     onMounted(() => {
       getPost();
     });
 
-    return { post, postDoesNotExist };
+    return {
+      post,
+      postDoesNotExist,
+      deletePost,
+      showConfirmDialog,
+      confirmDialog,
+    };
   },
 });
 </script>

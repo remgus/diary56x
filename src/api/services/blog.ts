@@ -11,6 +11,7 @@ export enum BlogAPIURLS {
   LIST = "blog/",
   RETRIEVE = "blog/",
   CREATE = "blog/",
+  DELETE = "blog/",
 }
 
 export default class BlogService {
@@ -44,5 +45,9 @@ export default class BlogService {
         "Content-Type": `multipart/form-data;`,
       },
     });
+  }
+
+  public delete(slug: string): Promise<AxiosResponse> {
+    return this.API.axios.delete(BlogAPIURLS.DELETE + slug);
   }
 }
