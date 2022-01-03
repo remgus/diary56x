@@ -1,3 +1,6 @@
+import { AxiosError } from "axios";
+import { getFileSize } from "./files";
+
 export interface FormDataField {
   value: string;
   checkers?: CustomValidators;
@@ -26,6 +29,15 @@ export interface Validator {
   check: (value: string) => boolean;
   errorMessage: string;
 }
+
+export interface FormFile {
+  type: string;
+  size: number;
+  size_verbose: string;
+  file: File;
+}
+
+export type FileEventTarget = EventTarget & { files: FileList };
 
 type Validators = {
   [index in keyof InBuiltValidators]: InBuiltValidators[index];
@@ -118,4 +130,51 @@ export const unboundForm = (f: FormBuilder): void => {
   Object.keys(f).forEach((key) => {
     f[key].isBound = false;
   });
+};
+
+export const handleFile = (file: File): FormFile => {
+  return {
+    type: file.type,
+    size: file.size,
+    size_verbose: getFileSize(file.size),
+    file,
+  };
+};
+
+export const handleFilesEvent = (e: InputEvent): FormFile[] => {
+  const files: FileList = (e.target as FileEventTarget).files;
+  const filesArray: FormFile[] = [];
+  for (let i = 0; i < files.length; i++) {
+    filesArray.push(handleFile(files[i]));
+  }
+  return filesArray;
+};
+
+interface ErrorRule {
+  [key: string]: (errorText?: string) => void;
+}
+
+interface BackendErrorRules {
+  [key: string]: ErrorRule;
+}
+
+export const handleBackendError = (
+  error: AxiosError,
+  rules: BackendErrorRules
+): void => {
+  if (!error.response) return;
+  for (const rule in rules) {
+    // Error status code matches a rule
+    if (error.response.status === Number(rule)) {
+      for (const field in rules[rule]) {
+        // Default case
+        if (field.startsWith("_")) continue;
+
+        // Field matches a field in the error
+        if (Object.prototype.hasOwnProperty.call(error.response.data, field)) {
+          rules[rule][field](error.response.data[field]);
+        }
+      }
+    }
+  }
 };

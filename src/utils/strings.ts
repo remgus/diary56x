@@ -8,6 +8,7 @@ export const getSlug = (s: string): string => {
   return slugify(s, {
     replacement: "-",
     strict: true,
+    lower: true,
   });
 };
 

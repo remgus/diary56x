@@ -1,7 +1,7 @@
-const getFileSize = (size: number): string => {
+export const getFileSize = (size: number): string => {
   let c = 0,
     s = size;
-  const sizes = ["б", "Кб", "Мб", "Гб"];
+  const sizes = ["Б", "Кб", "Мб", "Гб"];
   while (s > 1024) {
     s /= 1024;
     c++;

@@ -1023,6 +1023,27 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "sorl-thumbnail"
+version = "12.7.0"
+description = "Thumbnails for Django"
+category = "main"
+optional = false
+python-versions = ">=3.4"
+
+[[package]]
+name = "sorl-thumbnail-serializer-field"
+version = "0.2.1"
+description = "An image serializer field for use with sorl and Django REST Framework."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Django = ">=1.5.0"
+djangorestframework = ">=3.2.3"
+sorl-thumbnail = ">=12.3"
+
+[[package]]
 name = "sqlparse"
 version = "0.4.2"
 description = "A non-validating SQL parser."
@@ -1147,7 +1168,7 @@ testing = ["pytest (>=4.6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytes
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "ac3bd2e271dd11cd6f8dd0db4c936797ed2e94e5f7d0db9b5e62deb44b6715c6"
+content-hash = "992e06b8b98d6b45b9eda2a182f091b927ee96af28e022d13b683b248668560a"
 
 [metadata.files]
 asgiref = [
@@ -1766,6 +1787,14 @@ six = [
 snowballstemmer = [
     {file = "snowballstemmer-2.2.0-py2.py3-none-any.whl", hash = "sha256:c8e1716e83cc398ae16824e5572ae04e0d9fc2c6b985fb0f900f5f0c96ecba1a"},
     {file = "snowballstemmer-2.2.0.tar.gz", hash = "sha256:09b16deb8547d3412ad7b590689584cd0fe25ec8db3be37788be3810cbf19cb1"},
+]
+sorl-thumbnail = [
+    {file = "sorl-thumbnail-12.7.0.tar.gz", hash = "sha256:fbe6dfd66a1aceb7e0203895ff5622775e50266f8d8cfd841fe1500bd3e19018"},
+    {file = "sorl_thumbnail-12.7.0-py3-none-any.whl", hash = "sha256:c56cd651feab3bdc415d5301600198e2e70c08234dad48b8f6cfa4746cc102c7"},
+]
+sorl-thumbnail-serializer-field = [
+    {file = "sorl-thumbnail-serializer-field-0.2.1.tar.gz", hash = "sha256:905a05a81e83bceb9c49392010802981a7d8100478cc67ef4acfb53beb1ab505"},
+    {file = "sorl_thumbnail_serializer_field-0.2.1-py2.py3-none-any.whl", hash = "sha256:6f4adb757d798c3cd556668333c83dc17926dd6bea420dff293fb35ec170e03e"},
 ]
 sqlparse = [
     {file = "sqlparse-0.4.2-py3-none-any.whl", hash = "sha256:48719e356bb8b42991bdbb1e8b83223757b93789c00910a616a071910ca4a64d"},

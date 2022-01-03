@@ -36,6 +36,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "django_filters",
     "rest_framework_simplejwt.token_blacklist",
+    "sorl_thumbnail_serializer",
+    "sorl.thumbnail",
 ]
 
 MIDDLEWARE = [
@@ -118,6 +120,9 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "dist" / "static"
 STATICFILES_DIRS = []
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = "media"
 
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

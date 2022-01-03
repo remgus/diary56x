@@ -182,11 +182,16 @@ it's transparent and hovered.
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
-#avatar {
+#main-navbar #avatar {
   width: 45px;
   height: 45px;
   background-color: white;
-  border-radius: 50%;
+  border-radius: 10%;
+}
+
+#main-navbar.bg-solid #avatar {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 #navbarDropdown::after {

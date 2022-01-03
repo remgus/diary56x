@@ -1,3 +1,5 @@
+from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.views.decorators.cache import never_cache
@@ -11,3 +13,6 @@ urlpatterns = [
     path("api/private/auth/", include("backend.apps.authentication.urls")),
     path("api/private/blog/", include("backend.apps.blog.urls")),
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

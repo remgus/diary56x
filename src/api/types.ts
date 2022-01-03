@@ -35,13 +35,14 @@ export interface APIPost {
   image: string;
   slug: string;
   id: number;
+  thumbnail: string;
 }
 
 export interface APICreatePost {
   title: string;
   content: string;
   author: string;
-  image?: string;
+  image?: File;
   slug: string;
 }
 

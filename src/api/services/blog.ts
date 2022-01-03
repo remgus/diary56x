@@ -28,8 +28,8 @@ export default class BlogService {
     });
   }
 
-  public retrieve(id: number): Promise<AxiosResponse<APIPost>> {
-    return this.API.noAuthAxios.get<APIPost>(BlogAPIURLS.RETRIEVE + id);
+  public retrieve(slug: string): Promise<AxiosResponse<APIPost>> {
+    return this.API.noAuthAxios.get<APIPost>(BlogAPIURLS.RETRIEVE + slug);
   }
 
   /**

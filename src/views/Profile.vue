@@ -1,7 +1,6 @@
 <template>
-  <div class="container rt-wp">
-    <!-- Avatar -->
-    <div class="text-center mt-5">
+  <div class="container rt-wp mt-4">
+    <div class="text-center">
       <div class="avatar d-flex justify-content-center w-100">
         <svg v-html="jdenticon" id="avatar"></svg>
       </div>
@@ -87,10 +86,11 @@ export default defineComponent({
 #avatar {
   width: 100px;
   height: 100px;
-  border-radius: 50%;
+  border-radius: 10%;
   background-color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 </style>

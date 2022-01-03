@@ -5,13 +5,7 @@ from .models import Posts
 from .serializers import PostCreateSerializer, PostSerializer
 
 
-class PostCreateView(generics.CreateAPIView):
-    """Create a new post."""
-
-    serializer_class = PostCreateSerializer
-
-
-class PostsListAPIView(generics.ListAPIView):
+class PostsListCreateAPIView(generics.ListCreateAPIView):
     """List posts."""
 
     class PostsFilter(django_filters.FilterSet):
@@ -26,7 +20,11 @@ class PostsListAPIView(generics.ListAPIView):
                 content__icontains=value
             )
 
-    serializer_class = PostSerializer
+    def get_serializer_class(self):
+        if self.request.method == "POST":
+            return PostCreateSerializer
+        return PostSerializer
+
     queryset = Posts.objects.all()
     ordering_fields = ["date", "title"]
     filter_class = PostsFilter
@@ -37,3 +35,4 @@ class PostsDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
 
     serializer_class = PostSerializer
     queryset = Posts.objects.all()
+    lookup_field = "slug"

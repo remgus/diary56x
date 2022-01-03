@@ -8,7 +8,7 @@ module.exports = {
   runtimeCompiler: true,
   devServer: {
     proxy: {
-      "/api*": {
+      "/api/private/*": {
         target: "http://localhost:8000/",
       },
     },

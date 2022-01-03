@@ -5,6 +5,7 @@ export const BlogMDEOptions: Options = {
   autosave: {
     enabled: true,
     uniqueId: "blog-create-easymde",
+    delay: 1000,
   },
   renderingConfig: {
     singleLineBreaks: false,
@@ -12,4 +13,5 @@ export const BlogMDEOptions: Options = {
   },
   placeholder: "Даже Чехов боялся чистого листа. Просто начните писать.",
   tabSize: 4,
+  spellChecker: false,
 };

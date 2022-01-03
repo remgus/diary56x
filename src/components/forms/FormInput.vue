@@ -15,8 +15,9 @@
       }"
       :maxlength="maxlength"
       @input="$emit('update:modelValue', $event.target.value)"
-      @change="$emit('change', $event.target.value)"
+      @change="$emit('change', $event)"
       @keyup="$emit('keyup', $event)"
+      ref="inputRef"
     />
 
     <div v-if="isBound && error" class="invalid-feedback order-1">
@@ -63,14 +64,23 @@ export default defineComponent({
     };
 
     const inputType = ref(props.type);
+    const inputRef = ref<HTMLInputElement | null>(null);
 
     const showHidePassword = () => {
       inputType.value = inputType.value === "password" ? "text" : "password";
     };
 
+    const getValue = () => {
+      if (props.type === "file" && inputRef.value) {
+        return inputRef.value.files;
+      }
+      return props.modelValue;
+    };
+
     return {
       clearValue,
       showHidePassword,
+      getValue,
       inputType,
     };
   },

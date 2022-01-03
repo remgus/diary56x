@@ -1,5 +1,5 @@
 <template>
-  <div class="container my-5 rt-wp">
+  <div class="container mt-4 rt-wp">
     <div class="row">
       <div
         v-if="user && isAdmin(user)"
@@ -10,7 +10,7 @@
         </router-link>
       </div>
 
-      <form id="search-form" class="mb-5 col w-100" @submit.prevent="refresh">
+      <form id="search-form" class="mb-4 col w-100" @submit.prevent="refresh">
         <div class="input-group">
           <a
             v-if="searchDone"
@@ -52,35 +52,12 @@
       </div>
     </div>
     <div v-else>
-      <div class="mb-5">
-        <div
-          v-for="post in posts.results"
-          :key="post.id"
-          class="card card-body"
-        >
-          <li class="row mt-2">
-            <div class="col">
-              <div>
-                <h5 class="mt-0">{{ post.title }}</h5>
-              </div>
-              <p class="my-0">Автор: {{ post.author }}</p>
-              <p class="text-muted my-0">
-                {{ processDate(post) }}
-              </p>
-            </div>
-
-            <div class="col-auto">
-              <div class="w-100">
-                <img
-                  :src="getImage(post)"
-                  class="align-self-center mr-3 post-image"
-                  alt=""
-                  height="70"
-                  width="70"
-                />
-              </div>
-            </div>
-          </li>
+      <div class="mb-4">
+        <div v-for="(post, index) in posts.results" :key="post.id">
+          <post-card
+            :blogPost="post"
+            :no-margin="index + 1 === posts?.results.length"
+          ></post-card>
         </div>
       </div>
 
@@ -102,12 +79,12 @@ import { LocationQueryValue, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { key } from "@/store";
 import APIService from "@/api";
-import { toShortDateTime } from "@/utils/date";
 import Pagination from "@/components/Pagination.vue";
 import { isAdmin } from "@/utils/models/user";
+import PostCard from "./PostCard.vue";
 
 export default defineComponent({
-  components: { Pagination },
+  components: { Pagination, PostCard },
   setup() {
     const store = useStore(key);
     const route = useRoute();
@@ -140,7 +117,6 @@ export default defineComponent({
           search: search.value ? search.value : undefined,
         })
         .then(async (data) => {
-          console.log(data);
           const t = performance.now() - start;
           if (t < 300) {
             await new Promise((r) => setTimeout(r, 300 - t));
@@ -153,14 +129,6 @@ export default defineComponent({
     const clearSearch = () => {
       search.value = null;
       refresh();
-    };
-
-    const getImage = (p: APIPost) => {
-      return p.image ? p.image : require("@/assets/icons/document.svg");
-    };
-
-    const processDate = (p: APIPost) => {
-      return toShortDateTime(new Date(p.date));
     };
 
     const nextPage = () => {
@@ -179,8 +147,6 @@ export default defineComponent({
       search,
       searchDone,
       refresh,
-      getImage,
-      processDate,
       clearSearch,
       prevPage,
       nextPage,
