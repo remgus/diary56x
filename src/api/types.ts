@@ -32,7 +32,7 @@ export interface APIPost {
   title: string;
   content: string;
   author: APICompactUser;
-  image: string;
+  image: string | null;
   slug: string;
   id: number;
   thumbnail: string;

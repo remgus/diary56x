@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/Home.vue";
 import { handleMetaViews } from "./utils";
+import { Collapse } from "bootstrap";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -38,23 +39,26 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/blog",
     name: "Blog",
-    component: () => import("../views/blog/NewsList.vue"),
+    component: () => import("../views/blog/List.vue"),
   },
   {
     path: "/blog/:slug",
     name: "BlogPost",
-    component: () => import("../views/blog/PostDetails.vue"),
+    component: () => import("../views/blog/Details.vue"),
   },
   {
     path: "/blog/create/",
     name: "CreatePost",
-    component: () => import("../views/blog/CreatePost.vue"),
+    component: () => import("../views/blog/Create.vue"),
   },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+  scrollBehavior() {
+    return { top: 0 };
+  },
 });
 
 router.beforeEach((to, from, next) => {

@@ -14,12 +14,6 @@
 .rt-wp {
   padding-top: 60px;
 }
-
-@media (max-width: 979px) {
-  .rt-wp {
-    padding-top: 0px;
-  }
-}
 </style>
 
 <script lang="ts">

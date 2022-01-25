@@ -1,3 +1,10 @@
+/**
+ * Pluri
+ * @param n Quantity
+ * @param x Array of strings with Russian translations
+ * @param showNum Whether to show the quantity
+ * @returns Russian translation
+ */
 export const plural = (n: number, x: string[], showNum = false): string => {
   let p = 2;
   if (n % 10 === 1 && n % 100 === 1) p = 0;

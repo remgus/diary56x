@@ -3,21 +3,23 @@
     class="navbar navbar-expand-lg navbar-light w-100 fixed-top"
     id="main-navbar"
     :class="{
-      'bg-solid': solid,
-      scrolled: isScrolled,
+      scrolled: isScrolled || navbarToggled,
     }"
   >
     <div class="container">
       <button
         class="navbar-toggler"
         type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbarcontent"
+        @click.prevent="toggleNavbar"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
 
-      <div class="collapse navbar-collapse" id="navbarcontent">
+      <div
+        class="collapse navbar-collapse"
+        id="mainNavbarContent"
+        ref="navbarContent"
+      >
         <router-link to="/" class="navbar-brand d-none d-lg-block">
           <img
             src="@/assets/icons/logo.svg"
@@ -42,47 +44,43 @@
         <li class="d-flex">
           <ul class="navbar-nav">
             <li class="nav-item">
-              <router-link
-                to="/login"
-                class="me-2 btn"
-                :class="{
-                  'btn-primary': solid,
-                  'btn-light': !solid,
-                }"
-              >
+              <router-link to="/login" class="me-2 btn btn-primary">
                 Войти</router-link
               >
             </li>
           </ul>
         </li>
       </div>
-      <div class="d-flex" v-else>
-        <div class="navbar-text d-flex align-items-center me-3 fw-bold">
-          {{ user.surname }} {{ user.first_name }}
-        </div>
-        <div class="dropdown">
-          <div
-            class="dropdown-toggle"
-            data-bs-toggle="dropdown"
-            id="navbarDropdown"
-            title="Аккаунт"
-          >
-            <svg v-html="jdenticon" id="avatar"></svg>
+      <div class="dropdown d-flex" v-else @click="toggleDropdown">
+        <div
+          class="d-flex dropdown-toggle align-items-center"
+          data-bs-toggle="dropdown"
+          id="mainNavbarDropdown"
+          ref="dropdownEl"
+        >
+          <div class="navbar-text me-3 fw-bold">
+            {{ user.surname }} {{ user.first_name }}
           </div>
-          <ul class="dropdown-menu dropdown-menu-end">
-            <li>
-              <router-link class="dropdown-item" to="/profile">
-                <i class="bi bi-person me-2"></i> <span>Аккаунт</span>
-              </router-link>
-            </li>
-            <li>
-              <a class="dropdown-item" href="#" @click.prevent="logout">
-                <i class="bi bi-box-arrow-right me-2"></i>
-                Выйти
-              </a>
-            </li>
-          </ul>
+          <svg v-html="jdenticon" id="avatar"></svg>
         </div>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <router-link class="dropdown-item" to="/profile">
+              <i class="bi bi-person me-2"></i> <span>Аккаунт</span>
+            </router-link>
+          </li>
+          <li>
+            <router-link class="dropdown-item" to="/profile">
+              <i class="bi bi-bell me-2"></i> <span>Уведомления</span>
+            </router-link>
+          </li>
+          <li>
+            <a class="dropdown-item" href="#" @click.prevent="logout">
+              <i class="bi bi-box-arrow-right me-2"></i>
+              Выйти
+            </a>
+          </li>
+        </ul>
       </div>
     </div>
   </nav>
@@ -94,6 +92,7 @@ import { toSvg } from "jdenticon";
 import { useStore } from "vuex";
 import { key } from "@/store";
 import { useRoute } from "vue-router";
+import { Collapse, Dropdown } from "bootstrap";
 
 export default defineComponent({
   setup() {
@@ -107,6 +106,13 @@ export default defineComponent({
 
     const isScrolled = ref(false);
 
+    const navbarContent = ref<null | HTMLElement>(null);
+    const navbarToggled = ref(false);
+    const navbarCollapse = ref<null | Collapse>(null);
+
+    const dropdown = ref<null | Dropdown>(null);
+    const dropdownEl = ref<null | HTMLElement>(null);
+
     const logout = () => {
       store.dispatch("logout");
     };
@@ -115,16 +121,28 @@ export default defineComponent({
       isScrolled.value = window.scrollY > 0;
     };
 
-    const solid = computed(() => {
-      if (options.value?.transparent) {
-        return isScrolled.value;
-      }
-      return true;
-    });
+    const toggleNavbar = () => {
+      navbarCollapse.value?.toggle();
+      navbarToggled.value = !navbarToggled.value;
+    };
+
+    const toggleDropdown = () => {
+      dropdown.value?.toggle();
+    };
 
     onMounted(() => {
       window.addEventListener("scroll", onScroll);
+      if (navbarContent.value)
+        navbarCollapse.value = Collapse.getOrCreateInstance(
+          navbarContent.value,
+          {
+            toggle: navbarToggled.value,
+          }
+        );
+      if (dropdownEl.value)
+        dropdown.value = Dropdown.getOrCreateInstance(dropdownEl.value);
     });
+
     onUnmounted(() => {
       window.removeEventListener("scroll", onScroll);
     });
@@ -135,7 +153,11 @@ export default defineComponent({
       logout,
       isScrolled,
       options,
-      solid,
+      navbarContent,
+      navbarToggled,
+      dropdownEl,
+      toggleNavbar,
+      toggleDropdown,
     };
   },
 });
@@ -146,11 +168,7 @@ export default defineComponent({
   transition: background-color 0.3s ease-in-out;
 }
 
-#main-navbar:not(.bg-solid) {
-  background-color: #ffffff00;
-}
-
-#main-navbar.bg-solid {
+#main-navbar {
   background-color: #ffffff;
 }
 
@@ -169,17 +187,9 @@ export default defineComponent({
   font-weight: bold;
 }
 
-/**
-Shadow is dispayed if navbar was scrolled or
-it's transparent and hovered.
-*/
-#main-navbar:hover:not(.bg-solid) {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  transition: box-shadow 0.3s ease-in-out;
-}
-
 #main-navbar.scrolled {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.5s ease-in-out;
 }
 
 #main-navbar #avatar {
@@ -189,12 +199,12 @@ it's transparent and hovered.
   border-radius: 10%;
 }
 
-#main-navbar.bg-solid #avatar {
+#main-navbar #avatar {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.3s ease-in-out;
 }
 
-#navbarDropdown::after {
+#mainNavbarDropdown::after {
   content: none;
 }
 </style>
