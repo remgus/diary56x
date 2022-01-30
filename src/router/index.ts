@@ -1,5 +1,5 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
-import Home from "../views/Home.vue";
+import Home from "../views/home/Home.vue";
 import { handleMetaViews } from "./utils";
 import { Collapse } from "bootstrap";
 
@@ -31,7 +31,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/profile",
     name: "Profile",
-    component: () => import("../views/Profile.vue"),
+    component: () => import("../views/auth/Profile.vue"),
     meta: {
       requiresAuth: true,
     },

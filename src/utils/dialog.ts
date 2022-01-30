@@ -26,3 +26,7 @@ export const useConfirmDialog = (): UseConfirmDialog => {
     hideConfirmDialog,
   };
 };
+
+export default {
+  useConfirmDialog,
+};

@@ -17,8 +17,8 @@
 </style>
 
 <script lang="ts">
-import Navbar from "@/views/base/Navbar.vue";
-import BaseFooter from "@/views/base/BaseFooter.vue";
+import Navbar from "@/components/Navbar.vue";
+import BaseFooter from "@/components/BaseFooter.vue";
 
 export default {
   name: "App",

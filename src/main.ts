@@ -9,9 +9,5 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 
 import "./assets/styles/base.css";
 
-import API from "./api";
-import utils from "./utils";
-
 const app = createApp(App);
-app.config.globalProperties.$api = API;
-app.use(store, key).use(router).use(utils).mount("#app");
+app.use(store, key).use(router).mount("#app");

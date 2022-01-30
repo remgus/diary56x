@@ -30,6 +30,9 @@ INSTALLED_APPS = [
     "backend.apps.authentication.apps.AuthConfig",
     "backend.apps.blog.apps.BlogConfig",
     "backend.apps.core.apps.CoreConfig",
+    "backend.apps.notifications.apps.NotificationsConfig",
+    "backend.apps.timetable.apps.TimetableConfig",
+
     # Third-party apps
     "whitenoise.runserver_nostatic",
     "corsheaders",

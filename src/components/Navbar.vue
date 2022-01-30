@@ -87,12 +87,20 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, onUnmounted, ref } from "vue";
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  onUpdated,
+  ref,
+} from "vue";
 import { toSvg } from "jdenticon";
 import { useStore } from "vuex";
 import { key } from "@/store";
 import { useRoute } from "vue-router";
 import { Collapse, Dropdown } from "bootstrap";
+import router from "@/router";
 
 export default defineComponent({
   setup() {
@@ -115,6 +123,7 @@ export default defineComponent({
 
     const logout = () => {
       store.dispatch("logout");
+      router.push("/");
     };
 
     const onScroll = () => {
@@ -130,8 +139,7 @@ export default defineComponent({
       dropdown.value?.toggle();
     };
 
-    onMounted(() => {
-      window.addEventListener("scroll", onScroll);
+    const enableElements = () => {
       if (navbarContent.value)
         navbarCollapse.value = Collapse.getOrCreateInstance(
           navbarContent.value,
@@ -141,7 +149,14 @@ export default defineComponent({
         );
       if (dropdownEl.value)
         dropdown.value = Dropdown.getOrCreateInstance(dropdownEl.value);
+    };
+
+    onMounted(() => {
+      window.addEventListener("scroll", onScroll);
+      enableElements();
     });
+
+    onUpdated(enableElements);
 
     onUnmounted(() => {
       window.removeEventListener("scroll", onScroll);

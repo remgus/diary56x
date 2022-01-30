@@ -8,3 +8,7 @@ export const getImage = (post: APIPost, thumbnail = false): string | null => {
   }
   return post.image;
 };
+
+export default {
+  getImage,
+};
