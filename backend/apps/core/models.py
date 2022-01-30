@@ -1,6 +1,6 @@
-from django.db import models
-
 from backend.apps.authentication.models import Student, Teacher
+
+from django.db import models
 
 
 class School(models.Model):
@@ -23,8 +23,24 @@ class Klass(models.Model):
     head_teacher = models.ForeignKey(
         Teacher, models.SET_NULL, null=True, blank=True, related_name="managed_classes"
     )
+    description = models.TextField("Описание", blank=True)
 
     class Meta:
         verbose_name = "Класс"
         verbose_name_plural = "Классы"
         ordering = ["name"]
+
+
+class Subject(models.Model):
+    """Subject model."""
+
+    title = models.CharField("Название", max_length=100, unique=True)
+    icon = models.ImageField("Иконка", upload_to="subjects/", blank=True)
+
+    class Meta:
+        ordering = ["title"]
+        verbose_name = "Предмет"
+        verbose_name_plural = "Предметы"
+
+    def __str__(self):
+        return self.title
