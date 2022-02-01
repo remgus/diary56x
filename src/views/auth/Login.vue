@@ -117,6 +117,7 @@ export default defineComponent({
         .dispatch("login", data)
         .then(() => {
           store.dispatch("me").then(() => {
+            store.dispatch("fetchNotifications");
             router.push("/");
           });
         })

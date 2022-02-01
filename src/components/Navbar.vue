@@ -53,7 +53,7 @@
       </div>
       <div class="dropdown d-flex" v-else @click="toggleDropdown">
         <div
-          class="d-flex dropdown-toggle align-items-center"
+          class="d-flex dropdown-toggle align-items-center position-relative"
           data-bs-toggle="dropdown"
           id="mainNavbarDropdown"
           ref="dropdownEl"
@@ -61,7 +61,14 @@
           <div class="navbar-text me-3 fw-bold">
             {{ user.surname }} {{ user.first_name }}
           </div>
+
           <svg v-html="jdenticon" id="avatar"></svg>
+          <span
+            v-if="unreadNotificationsCount"
+            id="notification-count-badge"
+            class="position-absolute bg-danger border border-light rounded-circle"
+          >
+          </span>
         </div>
         <ul class="dropdown-menu dropdown-menu-end">
           <li>
@@ -70,8 +77,15 @@
             </router-link>
           </li>
           <li>
-            <router-link class="dropdown-item" to="/profile">
-              <i class="bi bi-bell me-2"></i> <span>Уведомления</span>
+            <router-link class="dropdown-item" to="/notifications">
+              <i class="bi bi-bell me-2"> </i>
+              <span>Уведомления</span>
+              <span
+                class="ms-2 badge bg-danger"
+                v-if="unreadNotificationsCount"
+              >
+                {{ unreadNotificationsCount }}
+              </span>
             </router-link>
           </li>
           <li>
@@ -111,6 +125,9 @@ export default defineComponent({
     const options = computed(() => meta.value.navbar);
     const user = computed(() => store.state.user);
     const jdenticon = computed(() => toSvg(user.value?.id, 45));
+    const unreadNotificationsCount = computed<number>(
+      () => store.getters["unreadNotificationsCount"]
+    );
 
     const isScrolled = ref(false);
 
@@ -165,6 +182,7 @@ export default defineComponent({
     return {
       user,
       jdenticon,
+      unreadNotificationsCount,
       logout,
       isScrolled,
       options,
@@ -221,5 +239,11 @@ export default defineComponent({
 
 #mainNavbarDropdown::after {
   content: none;
+}
+
+#notification-count-badge {
+  padding: 0.45em;
+  top: calc(-0.45em + 2px);
+  right: calc(-0.45em + 2px);
 }
 </style>

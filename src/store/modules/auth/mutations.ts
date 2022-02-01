@@ -4,6 +4,7 @@ import {
   LocalData,
   setLocalData,
 } from "@/api/local";
+import { listNotifications } from "@/api/services/notifications";
 import { Actions } from "vuex-smart-module";
 import { RootMutations } from "./actions";
 import { RootGetters } from "./getters";
@@ -63,6 +64,21 @@ export class RootActions extends Actions<
           this.commit("clearUser");
           this.commit("clearTokens");
           clearLocalDataAfterLogout();
+          resolve();
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  fetchNotifications(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      if (this.state.user == null) return;
+
+      listNotifications({ read: false, user: this.state.user.id })
+        .then((response) => {
+          this.commit("setNotifications", response.data.results);
           resolve();
         })
         .catch((error) => {

@@ -1,4 +1,5 @@
 import { getLocalData, LocalData } from "@/api/local";
+import { APINotification } from "@/api/services/notifications";
 import { APIUser } from "@/api/types";
 
 const getUser = (): APIUser | null => {
@@ -14,6 +15,7 @@ export class RootState {
   refreshToken: string | null = getLocalData(LocalData.REFRESH_TOKEN);
   user: APIUser | null = getUser();
   messages: Message[] = [];
+  unread_notifications: APINotification[] = [];
 }
 
 export interface UserCredentials {

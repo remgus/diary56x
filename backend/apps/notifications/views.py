@@ -1,4 +1,5 @@
-from rest_framework.generics import (CreateAPIView, ListAPIView,
+import django_filters
+from rest_framework.generics import (ListCreateAPIView,
                                      RetrieveUpdateDestroyAPIView,
                                      UpdateAPIView)
 
@@ -6,32 +7,25 @@ from .models import Notification
 from .serializers import NotificationSerializer
 
 
-class MessageList(ListAPIView):
+class NotificationsList(ListCreateAPIView):
     """List all messages."""
+
+    class NotificationFilter(django_filters.FilterSet):
+        """Filter for notifications."""
+
+        class Meta:
+            """Meta class for filter."""
+
+            model = Notification
+            fields = ["user", "read"]
 
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
     ordering = ["-created_at"]
+    filter_class = NotificationFilter
 
 
-class UserMessagesList(ListAPIView):
-    """List all messages sent to the current user."""
-
-    serializer_class = NotificationSerializer
-
-    def get_queryset(self):
-        """Return all messages sent to the current user."""
-        user = self.request.user
-        return Notification.objects.filter(user=user)
-
-
-class CreateMessage(CreateAPIView):
-    """Create a new message."""
-
-    serializer_class = NotificationSerializer
-
-
-class RetrieveMessage(RetrieveUpdateDestroyAPIView):
+class NotificationDetails(RetrieveUpdateDestroyAPIView):
     """Retrieve/update/destroy a message."""
 
     queryset = Notification.objects.all()

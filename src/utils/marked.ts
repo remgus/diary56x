@@ -15,7 +15,8 @@ const markedOptions: marked.MarkedOptions = {
   smartypants: true,
 };
 
-export const getMarked = (content: string): string => {
+export const getMarked = (content: string, inline = false): string => {
   const sanitizedContent = DomPurify.sanitize(content);
+  if (inline) return marked.parseInline(sanitizedContent, markedOptions);
   return marked(sanitizedContent, markedOptions);
 };

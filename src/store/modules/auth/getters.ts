@@ -9,4 +9,8 @@ export class RootGetters extends Getters<RootState> {
   get messagesLength(): number {
     return this.state.messages.length;
   }
+
+  get unreadNotificationsCount(): number {
+    return this.state.unread_notifications.length;
+  }
 }

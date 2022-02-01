@@ -1,4 +1,5 @@
 from backend.apps.core.models import Klass, School, Subject
+
 from django.db import models
 
 

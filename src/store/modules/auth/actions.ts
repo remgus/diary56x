@@ -1,3 +1,4 @@
+import { APINotification } from "@/api/services/notifications";
 import { APIUser } from "@/api/types";
 import { Mutations } from "vuex-smart-module";
 import { Message, RootState } from "./types";
@@ -23,5 +24,9 @@ export class RootMutations extends Mutations<RootState> {
 
   addMessage(payload: Message): void {
     this.state.messages.push(payload);
+  }
+
+  setNotifications(notifications: APINotification[]): void {
+    this.state.unread_notifications = notifications;
   }
 }

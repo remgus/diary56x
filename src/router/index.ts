@@ -1,7 +1,6 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/home/Home.vue";
 import { handleMetaViews } from "./utils";
-import { Collapse } from "bootstrap";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -50,6 +49,14 @@ const routes: Array<RouteRecordRaw> = [
     path: "/blog/create/",
     name: "CreatePost",
     component: () => import("../views/blog/Create.vue"),
+  },
+  {
+    path: "/notifications",
+    name: "Notifications",
+    component: () => import("../views/Notifications.vue"),
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
 

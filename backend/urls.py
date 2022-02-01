@@ -12,6 +12,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/private/auth/", include("backend.apps.authentication.urls")),
     path("api/private/blog/", include("backend.apps.blog.urls")),
+    path("api/private/notifications/", include("backend.apps.notifications.urls")),
 ]
 
 if settings.DEBUG:
