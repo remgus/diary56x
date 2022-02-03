@@ -1,6 +1,5 @@
-from django.db import models
-
 from backend.apps.authentication.models import User
+from django.db import models
 
 
 class Posts(models.Model):
@@ -26,4 +25,4 @@ class Posts(models.Model):
         verbose_name = "Новость"
 
     def __str__(self):
-        return "{} {}".format(str(self.date), self.title)
+        return "{}".format(self.title)

@@ -32,6 +32,9 @@
 
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
+            <router-link to="/" class="nav-link">Главная</router-link>
+          </li>
+          <li class="nav-item">
             <router-link to="/blog" class="nav-link">Новости</router-link>
           </li>
           <li class="nav-item">
@@ -43,15 +46,22 @@
       <div v-if="!user">
         <li class="d-flex">
           <ul class="navbar-nav">
+            <ul class="navbar-nav">
+              <li class="nav-item">
+                <router-link to="/login" class="me-2 nav-link"
+                  >Войти</router-link
+                >
+              </li>
+            </ul>
             <li class="nav-item">
-              <router-link to="/login" class="me-2 btn btn-primary">
-                Войти</router-link
+              <router-link to="/register" class="me-2 btn btn-outline-primary">
+                Создать аккаунт</router-link
               >
             </li>
           </ul>
         </li>
       </div>
-      <div class="dropdown d-flex" v-else @click="toggleDropdown">
+      <div v-else class="dropdown d-flex" @click="toggleDropdown">
         <div
           class="d-flex dropdown-toggle align-items-center position-relative"
           data-bs-toggle="dropdown"

@@ -30,9 +30,12 @@
                 'text-secondary': msg.read,
               }"
               @click="selectCard(msg.id)"
-              @contextmenu.prevent="showDeleteDialog(msg.id)"
             >
-              <div class="card-body">
+              <div class="card-body position-relative">
+                <i
+                  class="bi-x-lg text-danger position-absolute delete-notification"
+                  @click="showDeleteDialog(msg.id)"
+                ></i>
                 <div v-if="!msg.read && selectedCard === msg.id" class="mb-2">
                   <div
                     class="btn btn-sm btn-outline-primary me-2"
@@ -186,5 +189,12 @@ export default defineComponent({
 
 .title {
   font-size: 1.1rem;
+}
+
+.delete-notification {
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  font-size: 1.2rem;
 }
 </style>

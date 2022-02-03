@@ -13,6 +13,9 @@ class School(models.Model):
         verbose_name_plural = "Образовательные учреждения"
         ordering = ["name"]
 
+    def __str__(self):
+        return self.name
+
 
 class Klass(models.Model):
     """A class."""
@@ -24,6 +27,8 @@ class Klass(models.Model):
         Teacher, models.SET_NULL, null=True, blank=True, related_name="managed_classes"
     )
     description = models.TextField("Описание", blank=True)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
+    subjects = models.ManyToManyField("Subject", related_name="classes")
 
     class Meta:
         verbose_name = "Класс"
@@ -36,6 +41,7 @@ class Subject(models.Model):
 
     title = models.CharField("Название", max_length=100, unique=True)
     icon = models.ImageField("Иконка", upload_to="subjects/", blank=True)
+    description = models.TextField("Описание", blank=True)
 
     class Meta:
         ordering = ["title"]

@@ -37,11 +37,14 @@ import {
 import { Toast } from "bootstrap";
 import { defineComponent, onMounted, PropType, ref } from "vue";
 import { getMarked } from "@/utils/marked";
+import { useStore } from "vuex";
+import { key } from "@/store";
 
 export default defineComponent({
   emits: ["toast-closed"],
   setup(props, { emit }) {
     const toast = ref<HTMLDivElement | null>(null);
+    const store = useStore(key);
 
     onMounted(() => {
       if (toast.value) {
@@ -72,6 +75,7 @@ export default defineComponent({
     const markAsRead = async () => {
       if (props.notification.id) {
         markNotificationAsRead(props.notification.id);
+        store.dispatch("fetchNotifications");
       }
     };
 

@@ -36,6 +36,14 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
+    path: "/register",
+    name: "Register",
+    component: () => import("../views/auth/Register.vue"),
+    meta: {
+      requiresAuth: false,
+    },
+  },
+  {
     path: "/blog",
     name: "Blog",
     component: () => import("../views/blog/List.vue"),
@@ -49,6 +57,9 @@ const routes: Array<RouteRecordRaw> = [
     path: "/blog/create/",
     name: "CreatePost",
     component: () => import("../views/blog/Create.vue"),
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: "/notifications",
