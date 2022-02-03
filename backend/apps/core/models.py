@@ -1,5 +1,4 @@
 from backend.apps.authentication.models import Student, Teacher
-
 from django.db import models
 
 
@@ -7,6 +6,7 @@ class School(models.Model):
     """A school."""
 
     name = models.CharField("Наименование", max_length=100)
+    plugins = models.ManyToManyField("Plugin", blank=True)
 
     class Meta:
         verbose_name = "Образовательное учреждение"
@@ -50,3 +50,23 @@ class Subject(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Plugin(models.Model):
+    """Plugin model.
+
+    Plugins can be attached to schools. Each plugin unlocks
+    functionality specific to a school it's attached to.
+    """
+
+    name = models.CharField("Название", max_length=100, unique=True)
+    description = models.TextField("Описание", blank=True)
+    icon = models.ImageField("Иконка", upload_to="plugins/", blank=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "Плагин"
+        verbose_name_plural = "Плагины"
+        ordering = ["name"]
