@@ -15,21 +15,28 @@
         <span class="navbar-toggler-icon"></span>
       </button>
 
+      <router-link
+        to="/"
+        class="navbar-brand d-lg-block"
+        :class="{
+          'd-block': !user,
+          'd-none': user,
+        }"
+      >
+        <img
+          src="@/assets/icons/logo.svg"
+          id="logo"
+          class="d-inline-block align-center me-2"
+          alt=""
+        />
+        <span id="brand-name">Diary56x</span>
+      </router-link>
+
       <div
         class="collapse navbar-collapse"
         id="mainNavbarContent"
         ref="navbarContent"
       >
-        <router-link to="/" class="navbar-brand d-none d-lg-block">
-          <img
-            src="@/assets/icons/logo.svg"
-            id="logo"
-            class="d-inline-block align-center me-2"
-            alt=""
-          />
-          <span id="brand-name">Diary56x</span>
-        </router-link>
-
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <router-link to="/" class="nav-link">Главная</router-link>
@@ -41,27 +48,31 @@
             <span class="nav-link">Помощь</span>
           </li>
         </ul>
-      </div>
 
-      <div v-if="!user">
-        <li class="d-flex">
-          <ul class="navbar-nav">
+        <div v-if="!user">
+          <li class="d-flex">
             <ul class="navbar-nav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <router-link to="/login" class="me-2 nav-link"
+                    >Войти</router-link
+                  >
+                </li>
+              </ul>
               <li class="nav-item">
-                <router-link to="/login" class="me-2 nav-link"
-                  >Войти</router-link
+                <router-link
+                  to="/register"
+                  class="me-2 btn btn-outline-primary"
+                >
+                  Создать аккаунт</router-link
                 >
               </li>
             </ul>
-            <li class="nav-item">
-              <router-link to="/register" class="me-2 btn btn-outline-primary">
-                Создать аккаунт</router-link
-              >
-            </li>
-          </ul>
-        </li>
+          </li>
+        </div>
       </div>
-      <div v-else class="dropdown d-flex" @click="toggleDropdown">
+
+      <div v-if="user" class="dropdown d-flex" @click="toggleDropdown">
         <div
           class="d-flex dropdown-toggle align-items-center position-relative"
           data-bs-toggle="dropdown"
