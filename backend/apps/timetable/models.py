@@ -3,32 +3,19 @@ from backend.apps.core.models import Klass, School, Subject
 from django.db import models
 
 
-class TimeTable(models.Model):
-    """TimeTable model."""
-
-    school = models.OneToOneField(School, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name = "TimeTable"
-        verbose_name_plural = "TimeTables"
-
-    def __str__(self):
-        return self.school.name
-
-
 class Bell(models.Model):
     """Bell model.
 
-    Each bell is a lesson in a school day.
+    Represents lesson's number in a timetable.
     """
 
-    timetable = models.ForeignKey("TimeTable", on_delete=models.CASCADE)
+    school = models.ForeignKey(School, on_delete=models.CASCADE)
     n = models.IntegerField(verbose_name="Номер урока")
     start = models.TimeField(verbose_name="Начало урока")
     end = models.TimeField(verbose_name="Конец урока")
 
     class Meta:
-        ordering = ["timetable", "n"]
+        ordering = ["n"]
         verbose_name = "Звонок"
         verbose_name_plural = "Звонки"
 
@@ -36,8 +23,11 @@ class Bell(models.Model):
         return "{} - Урок №{}".format(self.timetable, self.n)
 
 
-class Lesson(models.Model):
-    """Lesson model."""
+class TimetableLesson(models.Model):
+    """TimetableLesson model.
+
+    Represents a lesson in a timetable.
+    """
 
     WEEKDAYS = (
         (0, "Monday"),
@@ -54,11 +44,11 @@ class Lesson(models.Model):
         related_name="lessons",
         verbose_name="Класс",
     )
-    day = models.IntegerField("День недели", choices=WEEKDAYS)
     number = models.ForeignKey(
         Bell, on_delete=models.CASCADE, verbose_name="Номер урока"
     )
     subject = models.ForeignKey(
         Subject, on_delete=models.CASCADE, verbose_name="Предмет"
     )
+    day = models.IntegerField("День недели", choices=WEEKDAYS)
     classroom = models.CharField(max_length=50, verbose_name="Кабинет")
