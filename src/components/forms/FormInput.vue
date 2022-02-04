@@ -35,7 +35,8 @@
     <button
       class="btn btn-outline-secondary"
       href="#"
-      @click="showHidePassword"
+      type="button"
+      @click.prevent="showHidePassword"
       v-if="password"
     >
       <i
@@ -63,7 +64,7 @@ export default defineComponent({
       emit("update:modelValue", "");
     };
 
-    const inputType = ref(props.type);
+    const inputType = ref(props.password ? "password" : props.type);
     const inputRef = ref<HTMLInputElement | null>(null);
 
     const showHidePassword = () => {

@@ -7,7 +7,7 @@ from . import views
 app_name = "auth"
 
 urlpatterns = [
-    path("users/", views.UserListCreateAPIView.as_view(), name="users-list"),
+    path("users/", views.UserListAPIView.as_view(), name="users-list"),
     path(
         "users/<int:pk>",
         views.UserRetrieveUpdateDeleteAPIView.as_view(),
@@ -20,4 +20,6 @@ urlpatterns = [
     path("token", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh", TokenRefreshView.as_view(), name="token_refresh"),
     path("logout", views.LogoutView.as_view(), name="logout"),
+
+    path("users/create-student", views.CreateStudentAPIView.as_view(), name="create-student"),
 ]

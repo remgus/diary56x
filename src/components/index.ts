@@ -5,6 +5,7 @@ import FormSelect from "./forms/FormSelect.vue";
 import MarkdownEditor from "./forms/MarkdownEditor.vue";
 import Pagination from "./Pagination.vue";
 import ConfirmDialog from "./ConfirmDialog.vue";
+import Loading from "./Loading.vue";
 
 export {
   DropZone,
@@ -14,4 +15,5 @@ export {
   MarkdownEditor,
   Pagination,
   ConfirmDialog,
+  Loading,
 };

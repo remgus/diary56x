@@ -74,7 +74,9 @@
             alt=""
             class="mb-3"
             id="cactus-icon"
+            width="80"
           />
+          <div class="text-muted">Уведомлений нет</div>
         </div>
       </div>
     </div>

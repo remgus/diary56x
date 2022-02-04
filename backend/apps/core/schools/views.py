@@ -10,3 +10,4 @@ class SchoolsListAPIView(ListAPIView):
     queryset = School.objects.all()
     serializer_class = SchoolSerializer
     ordering_fields = ("name",)
+    pagination_class = None

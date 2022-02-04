@@ -18,7 +18,6 @@
             </div>
             <div class="mb-3">
               <form-input
-                :type="passwordType"
                 name="password"
                 label="Пароль"
                 v-model="credentials.password.value"
@@ -93,13 +92,6 @@ export default defineComponent({
       },
     });
 
-    const passwordType = ref<"password" | "text">("password");
-
-    const showHidePassword = (): void => {
-      passwordType.value =
-        passwordType.value === "password" ? "text" : "password";
-    };
-
     const processLogin = (): void => {
       authError.value = null;
       const verdict = validateForm(credentials.value);
@@ -137,8 +129,6 @@ export default defineComponent({
 
     return {
       credentials,
-      passwordType,
-      showHidePassword,
       processLogin,
     };
   },

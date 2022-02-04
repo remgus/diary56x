@@ -18,7 +18,7 @@ interface InBuiltValidators {
   required: Validator;
   email: Validator;
   slug: Validator;
-  password: Validator;
+  password1: Validator;
 }
 
 export type FormBuilder = {
@@ -26,7 +26,7 @@ export type FormBuilder = {
 };
 
 export interface Validator {
-  check: (value: string) => boolean;
+  check: (value: string, data?: FormBuilder) => boolean;
   errorMessage: string;
 }
 
@@ -58,9 +58,16 @@ export const inBuiltValidators: Validators = {
     errorMessage:
       "Некорректный формат ссылки - используйте только буквы, цифры и тире",
   },
-  password: {
-    check: (value: string) => value.length > 8,
-    errorMessage: "Пароль должен быть не менее 8 символов",
+  password1: {
+    check: (value: string) =>
+      Boolean(
+        value.length >= 8 &&
+          value.length <= 32 &&
+          /[A-Za-z]/i.test(value) &&
+          /[0-9]/i.test(value)
+      ),
+    errorMessage:
+      "Пароль должен быть от 8 до 32 символов, содержать буквы и цифры",
   },
 };
 
@@ -68,7 +75,10 @@ export const inBuiltValidators: Validators = {
  * Validates a field
  * @param data Field to validate
  */
-export const validateField = (data: FormDataField): boolean => {
+export const validateField = (
+  data: FormDataField,
+  state: FormBuilder
+): boolean => {
   const { validators, transform, checkers } = data;
   let value = data.value;
   data.errorMessage = "";
@@ -89,7 +99,7 @@ export const validateField = (data: FormDataField): boolean => {
   if (checkers) {
     Object.keys(checkers).forEach((key) => {
       const validator = checkers[key];
-      if (!validator.check(value)) {
+      if (!validator.check(value, state)) {
         errors.push(validator.errorMessage);
       }
     });
@@ -103,7 +113,7 @@ export const validateField = (data: FormDataField): boolean => {
 export const validateForm = (data: FormBuilder, makeBound = true): boolean => {
   let isValid = true;
   Object.keys(data).forEach((key) => {
-    const res = validateField(data[key]);
+    const res = validateField(data[key], data);
     isValid = res && isValid;
     if (makeBound) data[key].isBound = true;
   });

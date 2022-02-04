@@ -1,6 +1,8 @@
 <template>
   <div class="form-input-wrapper">
-    <label :for="prefix + '_' + name" v-if="label">{{ label }}</label>
+    <label :for="prefix + '_' + name" v-if="label" class="form-label">{{
+      label
+    }}</label>
     <select
       :name="name"
       :id="prefix + '_' + name"
@@ -8,7 +10,15 @@
       :disabled="disabled"
       :autofocus="autofocus"
       class="form-select"
+      :class="{
+        'is-invalid': isBound && error.length,
+        'is-valid': isBound && !error.length,
+      }"
+      @change="$emit('update:modelValue', $event.target.value)"
     >
+      <option v-if="placeholder" hidden disabled selected value="">
+        {{ placeholder }}
+      </option>
       <option
         :value="option.value ? option.value : index"
         :selected="option.selected"
@@ -18,6 +28,10 @@
         {{ option.label }}
       </option>
     </select>
+
+    <div v-if="isBound && error" class="invalid-feedback order-1">
+      {{ error }}
+    </div>
   </div>
 </template>
 
@@ -32,6 +46,7 @@ export interface SelectOption {
 
 export default defineComponent({
   name: "Field",
+  emits: ["update:modelValue"],
   props: {
     label: {
       type: String,
@@ -64,6 +79,19 @@ export default defineComponent({
     autofocus: {
       type: Boolean,
       required: false,
+      default: false,
+    },
+    placeholder: {
+      type: String,
+      required: false,
+      default: "",
+    },
+    error: {
+      type: String,
+      default: "",
+    },
+    isBound: {
+      type: Boolean,
       default: false,
     },
   },

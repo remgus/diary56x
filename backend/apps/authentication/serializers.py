@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from . import models
+from .utils import UserTypes
 
 
 class StudentSerializer(serializers.ModelSerializer):
@@ -70,27 +71,26 @@ class CompactUserSerializer(serializers.ModelSerializer):
 
 
 class StudentCreateSerializer(serializers.ModelSerializer):
+    """Serializer for creating new student users."""
+
     class Meta:
         model = models.User
-        fields = [
-            "account_type",
-            "email",
-            "first_name",
-            "second_name",
-            "surname",
-        ]
+        fields = ["email", "first_name", "second_name", "surname", "school", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data):
+        """Create a new student."""
         user = models.User.objects.create(
-            account_type=validated_data["account_type"],
+            account_type=UserTypes.STUDENT.value,
             surname=validated_data["surname"],
             first_name=validated_data["first_name"],
             second_name=validated_data["second_name"],
             email=validated_data["email"],
+            school=validated_data["school"],
         )
         user.set_password(validated_data["password"])
         user.save()
+        models.Student.objects.create(account=user)
         return user
 
 

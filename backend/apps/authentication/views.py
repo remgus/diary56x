@@ -10,7 +10,7 @@ from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
-from .serializers import (RefreshTokenSerializer, UserBulkDeleteSerializer,
+from .serializers import (RefreshTokenSerializer, StudentCreateSerializer, UserBulkDeleteSerializer,
                           UserSerializer)
 from .utils import ACCOUNT_TYPE_CHOICES
 
@@ -26,8 +26,8 @@ class RetrieveCurrentUserView(generics.RetrieveAPIView):
         return self.request.user
 
 
-class UserListCreateAPIView(generics.ListCreateAPIView):
-    """List users or create a new user."""
+class UserListAPIView(generics.ListAPIView):
+    """List users."""
 
     class UsersFilter(django_filters.FilterSet):
         account_type = django_filters.MultipleChoiceFilter(
@@ -93,3 +93,10 @@ class LogoutView(APIView):
         except Exception as e:
             raise TokenError(e)
         return Response(status=status.HTTP_205_RESET_CONTENT)
+
+
+class CreateStudentAPIView(generics.CreateAPIView):
+    """Create a new student account."""
+
+    serializer_class = StudentCreateSerializer
+    queryset = User.objects.all()
