@@ -12,6 +12,8 @@ export enum NotificationAPIURLS {
   CREATE = "notifications/",
 }
 
+export type NotificationCatergory = "system" | "headteacher" | "event";
+
 export interface APINotification {
   id: number;
   title: string;
@@ -19,12 +21,14 @@ export interface APINotification {
   read: boolean;
   created_at: string;
   user: number;
+  category: NotificationCatergory;
 }
 
 export interface CreateNotification {
   title: string;
   text: string;
   user: number;
+  category: NotificationCatergory;
 }
 
 interface ListNotificationsParams extends PageParam {

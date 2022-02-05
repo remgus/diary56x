@@ -1,4 +1,5 @@
 import django_filters
+
 from rest_framework.generics import (ListCreateAPIView,
                                      RetrieveUpdateDestroyAPIView,
                                      UpdateAPIView)
@@ -17,7 +18,7 @@ class NotificationsList(ListCreateAPIView):
             """Meta class for filter."""
 
             model = Notification
-            fields = ["user", "read"]
+            fields = ["user", "read", "category"]
 
     queryset = Notification.objects.all()
     serializer_class = NotificationSerializer
