@@ -92,3 +92,32 @@ export const isTeacher = (user: APIUser): boolean => {
 export const isStudent = (user: APIUser): boolean => {
   return user.account_type === AccountTypes.STUDENT;
 };
+
+type CheckTypes = "admin" | "teacher" | "student" | "root";
+
+export const is = (user: APIUser, types: CheckTypes[]): boolean => {
+  for (const type of types) {
+    switch (type) {
+      case "admin":
+        if (isAdmin(user)) return true;
+        break;
+      case "teacher":
+        if (isTeacher(user)) return true;
+        break;
+      case "student":
+        if (isStudent(user)) return true;
+        break;
+      case "root":
+        if (user.account_type === AccountTypes.ROOT) return true;
+        break;
+      default:
+        break;
+    }
+  }
+  return false;
+};
+
+export const pluginEnabled = (user: APIUser, name: string): boolean => {
+  if (!user.school) return false;
+  return user.school.plugins.findIndex((plugin) => plugin.name === name) !== -1;
+};
