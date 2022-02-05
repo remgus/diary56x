@@ -150,7 +150,7 @@ JWT_AUTH = {
     "REFRESH_TOKEN_LIFETIME": datetime.timedelta(days=14),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
-    "UPDATE_LAST_LOGIN": False,
+    "UPDATE_LAST_LOGIN": True,
 }
 
 

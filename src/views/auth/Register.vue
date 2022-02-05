@@ -165,7 +165,7 @@ export default defineComponent({
     const isBound = ref(false);
 
     onMounted(() => {
-      listSchools().then((res) => {
+      listSchools(true).then((res) => {
         schools.value = res.data.map((school) => {
           return {
             value: String(school.id),

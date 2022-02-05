@@ -44,7 +44,7 @@
       <confirm-dialog
         title="Подтверждение удаления"
         content="Вы уверены, что хотите удалить эту запись?"
-        :callback="deletePost"
+        :callback="deleteBlogPost"
         ref="confirmDialog"
       />
     </div>
@@ -54,15 +54,14 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import APIService from "@/api";
-import { APIPost } from "@/api/types";
+import { APIPost, deletePost, retrievePost } from "@/api/services/blog";
 import { getMarked } from "@/utils/marked";
 import { useConfirmDialog } from "@/utils/dialog";
 import { ConfirmDialog } from "@/components";
 import { getImage } from "@/utils/blog";
 import { useStore } from "vuex";
 import { key } from "@/store";
-import { isAdmin } from "@/utils/models/user";
+import { isAdmin } from "@/api/services/auth";
 
 export default defineComponent({
   components: { ConfirmDialog },
@@ -78,8 +77,7 @@ export default defineComponent({
     const getPost = () => {
       const slug = route.params.slug as string;
 
-      APIService.blog
-        .retrieve(slug)
+      retrievePost(slug)
         .then((response) => {
           postDoesNotExist.value = false;
           post.value = response.data;
@@ -90,10 +88,9 @@ export default defineComponent({
         });
     };
 
-    const deletePost = () => {
+    const deleteBlogPost = () => {
       if (!post.value) return;
-      APIService.blog
-        .delete(post.value.slug)
+      deletePost(post.value.slug)
         .then(() => {
           router.push("/blog");
         })
@@ -109,7 +106,7 @@ export default defineComponent({
     return {
       post,
       postDoesNotExist,
-      deletePost,
+      deleteBlogPost,
       showConfirmDialog,
       confirmDialog,
       postImage: computed(() => (post.value ? getImage(post.value) : null)),

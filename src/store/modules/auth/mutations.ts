@@ -1,4 +1,3 @@
-import API from "@/api";
 import {
   clearLocalDataAfterLogout,
   LocalData,
@@ -9,6 +8,7 @@ import { Actions } from "vuex-smart-module";
 import { RootMutations } from "./actions";
 import { RootGetters } from "./getters";
 import { Message, RootState, UserCredentials } from "./types";
+import { getCurrentUser, login, logout } from "@/api/services/auth";
 
 export class RootActions extends Actions<
   RootState,
@@ -18,7 +18,7 @@ export class RootActions extends Actions<
 > {
   login(credentials: UserCredentials): Promise<void> {
     return new Promise((resolve, reject) => {
-      API.login(credentials)
+      login(credentials)
         .then((response) => {
           const { access, refresh } = response.data;
           setLocalData(LocalData.ACCESS_TOKEN, access);
@@ -37,7 +37,7 @@ export class RootActions extends Actions<
 
   me(): Promise<void> {
     return new Promise((resolve, reject) => {
-      API.getCurrentUser()
+      getCurrentUser()
         .then((response) => {
           this.commit("setUser", response.data);
           setLocalData(LocalData.USER, JSON.stringify(response.data));
@@ -59,7 +59,7 @@ export class RootActions extends Actions<
       if (!this.state.refreshToken) {
         return Promise.reject("Refresh token is null.");
       }
-      API.logout(this.state.refreshToken)
+      logout(this.state.refreshToken)
         .then(() => {
           this.commit("clearUser");
           this.commit("clearTokens");

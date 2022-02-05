@@ -1,5 +1,5 @@
 import { APINotification } from "@/api/services/notifications";
-import { APIUser } from "@/api/types";
+import { APIUser } from "@/api/services/auth";
 import { Mutations } from "vuex-smart-module";
 import { Message, RootState } from "./types";
 

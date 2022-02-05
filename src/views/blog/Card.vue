@@ -26,10 +26,9 @@
 
 <script lang="ts">
 import { computed, defineComponent, PropType } from "vue";
-import { APIPost } from "@/api/types";
+import { APIPost, postAuthor } from "@/api/services/blog";
 import { toShortDate } from "@/utils/date";
 import { getImage } from "@/utils/blog";
-import { postAuthor } from "@/utils/models/post";
 
 export default defineComponent({
   setup(props) {

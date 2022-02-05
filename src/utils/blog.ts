@@ -1,4 +1,4 @@
-import { APIPost } from "@/api/types";
+import { APIPost } from "@/api/services/blog";
 
 export const getImage = (post: APIPost, thumbnail = false): string | null => {
   if (thumbnail) {

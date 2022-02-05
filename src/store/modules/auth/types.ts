@@ -1,6 +1,6 @@
 import { getLocalData, LocalData } from "@/api/local";
 import { APINotification } from "@/api/services/notifications";
-import { APIUser } from "@/api/types";
+import { APIUser } from "@/api/services/auth";
 
 const getUser = (): APIUser | null => {
   const v = getLocalData(LocalData.USER);

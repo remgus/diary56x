@@ -73,15 +73,15 @@
 </template>
 
 <script lang="ts">
-import { APIPost, Paginator } from "@/api/types";
+import { Paginator } from "@/api/types";
 import { computed, defineComponent, onMounted, ref } from "@vue/runtime-core";
 import { LocationQueryValue, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { key } from "@/store";
-import APIService from "@/api";
 import Pagination from "@/components/Pagination.vue";
-import { isAdmin } from "@/utils/models/user";
+import { isAdmin } from "@/api/services/auth";
 import Card from "./Card.vue";
+import { APIPost, listPosts } from "@/api/services/blog";
 
 export default defineComponent({
   components: { Pagination, Card },
@@ -110,15 +110,13 @@ export default defineComponent({
       searchButton.value?.blur();
 
       posts.value = null;
-      APIService.blog
-        .list({
-          page: page.value,
-          search: search.value ? search.value : undefined,
-        })
-        .then((data) => {
-          posts.value = data.data;
-          searchDone.value = Boolean(search.value);
-        });
+      listPosts({
+        page: page.value,
+        search: search.value ? search.value : undefined,
+      }).then((data) => {
+        posts.value = data.data;
+        searchDone.value = Boolean(search.value);
+      });
     };
 
     const clearSearch = () => {

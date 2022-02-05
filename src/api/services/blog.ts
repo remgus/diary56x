@@ -1,6 +1,26 @@
 import { AxiosResponse } from "axios";
-import { APIServiceType } from "..";
-import { APIPost, Paginator } from "../types";
+import API from "..";
+import { Paginator } from "../types";
+import { APICompactUser } from "./auth";
+
+export interface APIPost {
+  date: string;
+  title: string;
+  content: string;
+  author: APICompactUser;
+  image: string | null;
+  slug: string;
+  id: number;
+  thumbnail: string;
+}
+
+export interface APICreatePost {
+  title: string;
+  content: string;
+  author: string;
+  image?: File;
+  slug: string;
+}
 
 export interface BlogListParams {
   page?: number;
@@ -14,40 +34,43 @@ export enum BlogAPIURLS {
   DELETE = "blog/",
 }
 
-export default class BlogService {
-  API: APIServiceType;
+export const listPosts = (
+  params?: BlogListParams
+): Promise<AxiosResponse<Paginator<APIPost>>> => {
+  return API.noAuthAxios.get<Paginator<APIPost>>(BlogAPIURLS.LIST, {
+    params: params,
+  });
+};
 
-  constructor(api: APIServiceType) {
-    this.API = api;
-  }
+export const retrievePost = (slug: string): Promise<AxiosResponse<APIPost>> => {
+  return API.noAuthAxios.get<APIPost>(BlogAPIURLS.RETRIEVE + slug);
+};
 
-  public list(
-    params?: BlogListParams
-  ): Promise<AxiosResponse<Paginator<APIPost>>> {
-    return this.API.noAuthAxios.get<Paginator<APIPost>>(BlogAPIURLS.LIST, {
-      params: params,
-    });
-  }
+/**
+ * Create a new blog post.
+ *
+ * @param fd ``FormData`` object
+ * @returns ``AxiosResponse``
+ */
+export const createPost = (fd: FormData): Promise<AxiosResponse> => {
+  return API.axios.post(BlogAPIURLS.CREATE, fd, {
+    headers: {
+      "Content-Type": `multipart/form-data;`,
+    },
+  });
+};
 
-  public retrieve(slug: string): Promise<AxiosResponse<APIPost>> {
-    return this.API.noAuthAxios.get<APIPost>(BlogAPIURLS.RETRIEVE + slug);
-  }
+export const deletePost = (slug: string): Promise<AxiosResponse> => {
+  return API.axios.delete(BlogAPIURLS.DELETE + slug);
+};
 
-  /**
-   * Create a new blog post.
-   *
-   * @param fd ``FormData`` object
-   * @returns ``AxiosResponse``
-   */
-  public create(fd: FormData): Promise<AxiosResponse> {
-    return this.API.axios.post(BlogAPIURLS.CREATE, fd, {
-      headers: {
-        "Content-Type": `multipart/form-data;`,
-      },
-    });
-  }
-
-  public delete(slug: string): Promise<AxiosResponse> {
-    return this.API.axios.delete(BlogAPIURLS.DELETE + slug);
-  }
-}
+/**
+ * Get a name of an author of a post.
+ *
+ * @param post The post object.
+ * @returns Name of the author of the post.
+ */
+export const postAuthor = (post: APIPost): string => {
+  if (post.author.is_staff) return "ATK Dev Studio";
+  return `${post.author.surname} ${post.author.first_name} ${post.author.second_name}`;
+};

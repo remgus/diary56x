@@ -1,3 +1,4 @@
+from backend.apps.core.schools.serializers import SchoolSerializer
 from rest_framework import serializers
 
 from . import models
@@ -25,6 +26,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     options_student = StudentSerializer()
     options_teacher = TeacherSerializer()
+    school = SchoolSerializer()
 
     class Meta:
         model = models.User
@@ -42,6 +44,7 @@ class UserSerializer(serializers.ModelSerializer):
             "is_superuser",
             "is_staff",
             "is_active",
+            "school",
         ]
         read_only_fields = [
             "id",
@@ -66,6 +69,9 @@ class CompactUserSerializer(serializers.ModelSerializer):
             "is_superuser",
             "is_staff",
             "account_type",
+            "is_active",
+            "last_login",
+            "registration_date",
         ]
         read_only_fields = ["id"]
 

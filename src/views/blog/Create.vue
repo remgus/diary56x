@@ -41,7 +41,11 @@
         label="Текст"
         :options="editorOptions"
       />
-      <button class="btn btn-primary" type="submit" @click.prevent="createPost">
+      <button
+        class="btn btn-primary"
+        type="submit"
+        @click.prevent="createPostWrapper"
+      >
         Добавить
       </button>
     </form>
@@ -52,7 +56,7 @@
 import { computed, defineComponent, reactive, ref } from "vue";
 
 import { FormInput, MarkdownEditor } from "@/components";
-import { APICreatePost } from "@/api/types";
+import { APICreatePost, createPost } from "@/api/services/blog";
 
 import { getSlug } from "@/utils/strings";
 import { BlogMDEOptions } from "@/utils/mde";
@@ -65,7 +69,6 @@ import {
 } from "@/utils/forms";
 import { useStore } from "vuex";
 import { key } from "@/store";
-import APIService from "@/api";
 import { useRouter } from "vue-router";
 import { AxiosError } from "axios";
 
@@ -97,7 +100,7 @@ export default defineComponent({
       if (files.length) image.value = files[0];
     };
 
-    const createPost = () => {
+    const createPostWrapper = () => {
       const verdict = validateForm(data);
       if (!isBound.value) isBound.value = true;
       if (!verdict || image.value === undefined || user.value === null) return;
@@ -122,8 +125,7 @@ export default defineComponent({
 
       if (newPost.image) fd.append("image", newPost.image);
 
-      APIService.blog
-        .create(fd)
+      createPost(fd)
         .then(() => {
           mdeRef.value && mdeRef.value.clearAutosavedValue();
           router.push("/blog");
@@ -145,7 +147,7 @@ export default defineComponent({
       data,
       getSlug,
       isBound,
-      createPost,
+      createPostWrapper,
       handleFileChange,
       editorOptions: BlogMDEOptions,
     };

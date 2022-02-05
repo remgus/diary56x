@@ -59,8 +59,7 @@ import { toSvg } from "jdenticon";
 import { toShortDate } from "@/utils/date";
 import { useStore } from "vuex";
 import { key } from "@/store";
-import { APIUser } from "@/api/types";
-import { isStudent } from "@/utils/models/user";
+import { APIUser, isStudent } from "@/api/services/auth";
 
 export default defineComponent({
   setup() {

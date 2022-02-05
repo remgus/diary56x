@@ -1,10 +1,4 @@
-import { UserCredentials } from "@/store/modules/auth/types";
-import axios, {
-  AxiosError,
-  AxiosInstance,
-  AxiosRequestConfig,
-  AxiosResponse,
-} from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import {
   clearLocalDataAfterLogout,
   getLocalData,
@@ -12,8 +6,6 @@ import {
   setLocalData,
 } from "./local";
 import router from "@/router";
-import BlogService from "./services/blog";
-import { APITokens, APIUser } from "./types";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 
 axios.defaults.xsrfCookieName = "csrftoken";
@@ -89,25 +81,6 @@ export type APIServiceType = APIService;
 export class APIService {
   public readonly axios: AxiosInstance = instance;
   public readonly noAuthAxios: AxiosInstance = noAuthInstance;
-  public readonly URLS = APIURLS;
-  public readonly blog = new BlogService(this);
-
-  public getCurrentUser(): Promise<AxiosResponse<APIUser>> {
-    return this.axios.get<APIUser>(APIURLS.CURRENT_USER);
-  }
-
-  public logout(refreshToken: string): Promise<AxiosResponse> {
-    return this.axios.post(APIURLS.REMOVE_TOKEN, {
-      refresh: refreshToken,
-    });
-  }
-
-  public login(credentials: UserCredentials): Promise<AxiosResponse> {
-    return this.noAuthAxios.post<APITokens>(API.URLS.GET_TOKEN, {
-      email: credentials.email,
-      password: credentials.password,
-    });
-  }
 }
 
 const API = new APIService();
