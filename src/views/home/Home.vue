@@ -1,6 +1,6 @@
 <template>
   <div v-if="isAuthenticated" class="rt-wp mt-4 container">
-    <div class="row">
+    <div class="row" v-if="is(user, ['student'])">
       <card
         icon="timetable"
         title="Расписание"
@@ -17,6 +17,9 @@
         v-if="pluginEnabled(user, 'notes')"
       />
     </div>
+    <div class="row" v-if="isAdmin(user)">
+      <card icon="panel" title="Панель администратора" link="/admin" />
+    </div>
   </div>
   <div v-else>
     <landing />
@@ -32,7 +35,7 @@ import Card from "./components/Card.vue";
 import { key } from "@/store";
 import { useStore } from "vuex";
 
-import { APIUser, is, pluginEnabled } from "@/api/services/auth";
+import { APIUser, is, pluginEnabled, isAdmin } from "@/api/services/auth";
 
 export default defineComponent({
   name: "Home",
@@ -46,7 +49,7 @@ export default defineComponent({
     const isAuthenticated = computed(() => store.getters["isAuthenticated"]);
     const user = computed(() => store.state.user as APIUser);
 
-    return { isAuthenticated, pluginEnabled, user, is };
+    return { isAuthenticated, pluginEnabled, user, is, isAdmin };
   },
 });
 </script>

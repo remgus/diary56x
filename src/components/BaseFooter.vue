@@ -41,7 +41,7 @@
       </div>
     </div>
     <div id="version-info">Версия: {{ version }}</div>
-    <div id="authors-info">ATK Dev Studio, {{ year }}</div>
+    <div id="authors-info">AlanTheKnight, {{ year }}</div>
   </footer>
 </template>
 

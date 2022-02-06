@@ -69,6 +69,11 @@ const routes: Array<RouteRecordRaw> = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/admin",
+    name: "Admin dashboard",
+    component: () => import("../views/admin/main/Dashboard.vue"),
+  },
 ];
 
 const router = createRouter({

@@ -1,12 +1,11 @@
 <template>
   <div class="col-6 col-md-6 col-sm-6 col-lg-6 col-xl-4 mb-3">
     <div class="card h-100">
-      <router-link to="/">
-        <img :src="getImage(icon)" class="card-img-top icon" :alt="title" />
-        <div class="card-body text-center">
-          <h5 class="card-title">{{ title }}</h5>
-        </div>
-      </router-link>
+      <img :src="getImage(icon)" class="card-img-top icon" :alt="title" />
+      <div class="card-body text-center">
+        <h5 class="card-title">{{ title }}</h5>
+      </div>
+      <router-link :to="link" class="stretched-link"> </router-link>
     </div>
   </div>
 </template>
@@ -23,6 +22,10 @@ export default defineComponent({
     title: {
       type: String,
       required: true,
+    },
+    link: {
+      type: String,
+      default: "/",
     },
   },
   setup() {
