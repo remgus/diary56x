@@ -14,7 +14,7 @@ class SchoolsListAPIView(ListAPIView):
 
     def get_serializer(self, *args, **kwargs):
         """Return compact serializer."""
-        if self.request.query_params.get("compact", False).lower() == "true":
+        if self.request.query_params.get("compact", "False").lower() == "true":
             self.serializer_class = CompactSchoolSerializer
         return super().get_serializer(*args, **kwargs)
 

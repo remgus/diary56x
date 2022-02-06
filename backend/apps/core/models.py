@@ -21,8 +21,8 @@ class Klass(models.Model):
     """A class."""
 
     name = models.CharField("Класс", max_length=20)
-    students = models.ManyToManyField(Student, related_name="students")
-    teachers = models.ManyToManyField(Teacher)
+    students = models.ManyToManyField(Student, related_name="students", blank=True)
+    teachers = models.ManyToManyField(Teacher, blank=True)
     head_teacher = models.ForeignKey(
         Teacher, models.SET_NULL, null=True, blank=True, related_name="managed_classes"
     )
@@ -34,6 +34,9 @@ class Klass(models.Model):
         verbose_name = "Класс"
         verbose_name_plural = "Классы"
         ordering = ["name"]
+
+    def __str__(self):
+        return f"{self.name} ({self.school})"
 
 
 class Subject(models.Model):

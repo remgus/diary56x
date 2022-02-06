@@ -20,9 +20,9 @@ export const listSchools = (
   compact = false
 ): Promise<AxiosResponse<APISchool[]>> => {
   const params = { compact };
-  return API.axios.get<APISchool[]>(SchoolsAPIURLS.LIST, { params });
+  return API.axios.get(SchoolsAPIURLS.LIST, { params });
 };
 
 export const getSchool = (id: number): Promise<AxiosResponse<APISchool>> => {
-  return API.axios.get<APISchool>(SchoolsAPIURLS.DETAILS + id + "/");
+  return API.axios.get(SchoolsAPIURLS.DETAILS + id + "/");
 };

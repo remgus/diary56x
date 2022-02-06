@@ -14,7 +14,10 @@
         'is-invalid': isBound && error.length,
         'is-valid': isBound && !error.length,
       }"
-      @change="$emit('update:modelValue', $event.target.value)"
+      @change="
+        $emit('update:modelValue', $event.target.value);
+        $emit('change', $event.target.value);
+      "
     >
       <option v-if="placeholder" hidden disabled selected value="">
         {{ placeholder }}
@@ -46,7 +49,7 @@ export interface SelectOption {
 
 export default defineComponent({
   name: "Field",
-  emits: ["update:modelValue"],
+  emits: ["update:modelValue", "change"],
   props: {
     label: {
       type: String,

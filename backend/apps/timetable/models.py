@@ -1,5 +1,4 @@
 from backend.apps.core.models import Klass, School, Subject
-
 from django.db import models
 
 
@@ -20,7 +19,7 @@ class Bell(models.Model):
         verbose_name_plural = "Звонки"
 
     def __str__(self):
-        return "{} - Урок №{}".format(self.timetable, self.n)
+        return "{} - Урок №{}".format(self.school.name, self.n)
 
 
 class TimetableLesson(models.Model):
@@ -30,12 +29,13 @@ class TimetableLesson(models.Model):
     """
 
     WEEKDAYS = (
-        (0, "Monday"),
-        (1, "Tuesday"),
-        (2, "Wednesday"),
-        (3, "Thursday"),
-        (4, "Friday"),
-        (5, "Saturday"),
+        (1, "Monday"),
+        (2, "Tuesday"),
+        (3, "Wednesday"),
+        (4, "Thursday"),
+        (5, "Friday"),
+        (6, "Saturday"),
+        (0, "Sunday"),
     )
 
     klass = models.ForeignKey(

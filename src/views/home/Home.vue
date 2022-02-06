@@ -5,6 +5,7 @@
         icon="timetable"
         title="Расписание"
         v-if="pluginEnabled(user, 'timetable')"
+        link="/timetable"
       />
       <card
         icon="homework"

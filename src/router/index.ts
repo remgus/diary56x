@@ -74,6 +74,16 @@ const routes: Array<RouteRecordRaw> = [
     name: "Admin dashboard",
     component: () => import("../views/admin/main/Dashboard.vue"),
   },
+  {
+    path: "/admin/timetable",
+    name: "Admin timetable",
+    component: () => import("../views/admin/timetable/List.vue"),
+  },
+  {
+    path: "/timetable",
+    name: "Timetable",
+    component: () => import("../views/Timetable.vue"),
+  }
 ];
 
 const router = createRouter({

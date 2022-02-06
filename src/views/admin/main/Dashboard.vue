@@ -5,7 +5,9 @@
         <li class="breadcrumb-item">
           <router-link to="/">Главная</router-link>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">Панель администратора</li>
+        <li class="breadcrumb-item active" aria-current="page">
+          Панель администратора
+        </li>
       </ol>
     </nav>
 
@@ -22,9 +24,9 @@
     <div class="row">
       <card icon="person" title="Пользователи" link="/"></card>
       <card icon="people" title="Классы" link="/"></card>
-      <card icon="calendar-week" title="Расписание" link="/" />
+      <card icon="calendar-week" title="Расписание" link="/admin/timetable" />
       <card icon="newspaper" title="Новости" link="/" />
-      <card icon="pie-chart" title="Статистика успеваемости" link="/" />
+      <card icon="pie-chart" title="Успеваемость" link="/" />
       <card icon="file-earmark-text" title="Минимумы" link="/" />
     </div>
 
