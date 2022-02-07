@@ -15,7 +15,7 @@ const adminRoutes: RouteRecordRaw[] = [
     path: "/admin/plugins",
     name: "Plugins",
     component: () => import("../views/admin/plugins/Plugins.vue"),
-  }
+  },
 ];
 
 export default adminRoutes;

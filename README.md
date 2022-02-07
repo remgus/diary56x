@@ -19,8 +19,7 @@ Digital diary for schools made with Django & Vue.
     - [Recommended VSCode plugins](#recommended-vscode-plugins)
     - [Dependencies](#dependencies)
     - [Server setup](#server-setup)
-    - [Frontend VSCode settings](#frontend-vscode-settings)
-    - [Backend VSCode settings](#backend-vscode-settings)
+    - [VSCode configuration](#vscode-configuration)
 
 ## About
 
@@ -44,19 +43,8 @@ Digital diary for schools made with Django & Vue.
 
 ### Dependencies
 
-Backend's dependencies can be installed with Poetry from the root folder.
-
 ```bash
-# Install python dependencies
 poetry install
-```
-
-Frontend's dependencies can be installed with Yarn from ``diary56x/frontend`` folder.
-
-```bash
-cd diary56x/frontend
-
-# Install NPM packages
 yarn
 ```
 
@@ -78,38 +66,20 @@ poetry run python manage.py createsuperuser
 Open up a new terminal in the root folder.
 
 ```bash
-cd diary56x
-
-# Django server
-poetry run python manage.py runserver
+# Django development server
+poetry run python manage.py runserver 0.0.0.0:8000
 ```
 
 Open up a new terminal in the root folder.
 
 ```bash
-cd diary56x/frontend
-
-# Vue server
+# Vue development server
 yarn serve
 ```
 
-### Frontend VSCode settings
+### VSCode configuration
 
-If you work on frontend, it's recommended to open ``diary56x/frontend`` folder in VSCode. _If you try yo work with Vue frontend from the root
-folder of the project, Vetur extension doesn't work properly._
-
-Recommended VSCode ``settings.json``:
-
-```json
-{
-    "vetur.validation.interpolation": true,
-    "vetur.experimental.templateInterpolationService": true
-}
-```
-
-### Backend VSCode settings
-
-Recommended VSCode ``settings.json``:
+Recommended VSCode ``.vscode/settings.json``:
 
 ```json
 {
@@ -141,5 +111,10 @@ Recommended VSCode ``settings.json``:
   "emmet.includeLanguages": {
     "django-html": "html"
   },
+  "vetur.validation.template": true,
+  "vetur.validation.script": true,
+  "vetur.validation.style": true,
+  "vetur.validation.interpolation": true,
+  "vetur.experimental.templateInterpolationService": true,
 }
 ```
