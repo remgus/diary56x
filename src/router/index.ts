@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/home/Home.vue";
 import { handleMetaViews } from "./utils";
+import adminRoutes from "./admin";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -70,25 +71,15 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/admin",
-    name: "Admin dashboard",
-    component: () => import("../views/admin/main/Dashboard.vue"),
-  },
-  {
-    path: "/admin/timetable",
-    name: "Admin timetable",
-    component: () => import("../views/admin/timetable/List.vue"),
-  },
-  {
     path: "/timetable",
     name: "Timetable",
     component: () => import("../views/Timetable.vue"),
-  }
+  },
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
-  routes,
+  routes: [...routes, ...adminRoutes],
   scrollBehavior() {
     return { top: 0 };
   },

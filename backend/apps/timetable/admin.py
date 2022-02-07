@@ -5,7 +5,7 @@ from .models import Bell, TimetableLesson
 
 class TimetableLessonAdmin(admin.ModelAdmin):
     list_display = ("number", "day", "klass", "subject", "classroom")
-    list_filter = ("klass",)
+    list_filter = ("klass__school",)
     search_fields = ("number", "day", "klass", "subject", "classroom")
 
 

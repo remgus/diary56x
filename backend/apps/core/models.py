@@ -1,4 +1,5 @@
 from backend.apps.authentication.models import Student, Teacher
+
 from django.db import models
 
 
@@ -6,7 +7,9 @@ class School(models.Model):
     """A school."""
 
     name = models.CharField("Наименование", max_length=100)
-    plugins = models.ManyToManyField("Plugin", blank=True)
+    plugins = models.ManyToManyField(
+        "Plugin", blank=True, verbose_name="Плагины", related_name="schools"
+    )
 
     class Meta:
         verbose_name = "Образовательное учреждение"
@@ -65,6 +68,7 @@ class Plugin(models.Model):
     name = models.CharField("Название", max_length=100, unique=True)
     description = models.TextField("Описание", blank=True)
     icon = models.ImageField("Иконка", upload_to="plugins/", blank=True)
+    month_price = models.PositiveIntegerField("Месячная стоимость", default=0)
 
     def __str__(self):
         return self.name

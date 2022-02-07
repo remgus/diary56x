@@ -52,3 +52,11 @@ class TimetableLesson(models.Model):
     )
     day = models.IntegerField("День недели", choices=WEEKDAYS)
     classroom = models.CharField(max_length=50, verbose_name="Кабинет")
+
+    class Meta:
+        ordering = ["klass", "number"]
+        verbose_name = "Урок"
+        verbose_name_plural = "Уроки"
+
+    def __str__(self):
+        return "{} - {} - {}".format(self.klass, self.number.n, self.subject)

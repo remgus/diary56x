@@ -43,7 +43,7 @@
     </div>
 
     <div class="row">
-      <card icon="box" title="Плагины" link="/" />
+      <card icon="box" title="Плагины" link="/admin/plugins" />
       <card icon="book" title="Предметы" link="/" />
     </div>
   </div>
