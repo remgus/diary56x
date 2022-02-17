@@ -7,6 +7,7 @@ import {
 } from "./local";
 import router from "@/router";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
+import store from "@/store";
 
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
@@ -69,9 +70,10 @@ const refreshAuthLogic = (failedRequest: AxiosError) =>
       return Promise.resolve();
     })
     .catch((error) => {
-      clearLocalDataAfterLogout();
-      router.push("/login");
-      return Promise.reject(error);
+      store.dispatch("logout").then(() => {
+        router.push("/login");
+        return Promise.reject(error);
+      });
     });
 
 createAuthRefreshInterceptor(instance, refreshAuthLogic);

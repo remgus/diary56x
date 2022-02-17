@@ -3,7 +3,9 @@ import { RootState } from "./types";
 
 export class RootGetters extends Getters<RootState> {
   get isAuthenticated(): boolean {
-    return this.state.accessToken !== null;
+    return Boolean(
+      this.state.accessToken && this.state.refreshToken && this.state.user
+    );
   }
 
   get messagesLength(): number {
