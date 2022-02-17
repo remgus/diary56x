@@ -11,15 +11,14 @@ Digital diary for schools made with Django & Vue.
 
 ## Table of contents
 
-- [Diary56x](#diary56x)
-  - [Table of contents](#table-of-contents)
-  - [About](#about)
-  - [Development setup](#development-setup)
-    - [Tools to install](#tools-to-install)
-    - [Recommended VSCode plugins](#recommended-vscode-plugins)
-    - [Dependencies](#dependencies)
-    - [Server setup](#server-setup)
-    - [VSCode configuration](#vscode-configuration)
+- [Table of contents](#table-of-contents)
+- [About](#about)
+- [Development setup](#development-setup)
+  - [Tools to install](#tools-to-install)
+  - [Recommended VSCode plugins](#recommended-vscode-plugins)
+  - [Dependencies](#dependencies)
+  - [Server setup](#server-setup)
+  - [VSCode configuration](#vscode-configuration)
 
 ## About
 
