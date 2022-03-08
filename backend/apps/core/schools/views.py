@@ -1,4 +1,4 @@
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveUpdateAPIView
 
 from ..models import School
 from .serializers import CompactSchoolSerializer, SchoolSerializer
@@ -19,7 +19,7 @@ class SchoolsListAPIView(ListAPIView):
         return super().get_serializer(*args, **kwargs)
 
 
-class SchoolDetailAPIView(RetrieveAPIView):
+class SchoolDetailAPIView(RetrieveUpdateAPIView):
     """Retrieve a school."""
 
     queryset = School.objects.all()

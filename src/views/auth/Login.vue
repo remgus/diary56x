@@ -71,7 +71,6 @@ export default defineComponent({
 
     const authChecker: Validator = {
       check: () => {
-        console.log(authError.value);
         return authError.value === null;
       },
       errorMessage: "Неверный логин или пароль",

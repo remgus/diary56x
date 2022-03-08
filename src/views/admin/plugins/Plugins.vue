@@ -13,7 +13,7 @@
     </nav>
 
     <div v-if="plugins">
-      <div class="btn btn-outline-primary mb-3">
+      <div class="btn btn-outline-primary mb-3" @click="saveChanges">
         <i class="bi-cloud-upload me-2"></i>Сохранить
       </div>
 
@@ -31,7 +31,7 @@
 <script lang="ts">
 import { APIUser } from "@/api/services/auth";
 import { APIPlugin, listPlugins } from "@/api/services/plugins";
-import { APISchool } from "@/api/services/schools";
+import { APISchool, UpdateSchool, updateSchool } from "@/api/services/schools";
 import { Paginator } from "@/api/types";
 import { key } from "@/store";
 import { computed, defineComponent, onMounted, ref } from "vue";
@@ -88,12 +88,24 @@ export default defineComponent({
       }
     };
 
+    const saveChanges = () => {
+      const data: UpdateSchool = {
+        plugins: pluginsUpdates.value,
+      };
+
+      updateSchool(school.value.id, data).then((res) => {
+        console.log(res.data);
+        // pluginsUpdates.value = school.value.plugins.slice();
+      });
+    };
+
     return {
       isLoading,
       school,
       plugins,
       pluginsUpdates,
       pluginStateChanged,
+      saveChanges,
     };
   },
 });

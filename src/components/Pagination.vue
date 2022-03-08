@@ -26,7 +26,7 @@ export default defineComponent({
   emits: ["prevPage", "nextPage"],
   props: {
     paginator: {
-      type: Object as PropType<Paginator<Array<unknown>>>,
+      type: Object as PropType<Paginator<unknown>>,
       required: true,
     },
     curPage: {

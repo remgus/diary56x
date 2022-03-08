@@ -23,13 +23,7 @@
   <div class="spacer"></div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  name: "Landing",
-});
-</script>
+<script lang="ts" setup></script>
 
 <style scoped>
 .parallax {
@@ -49,7 +43,7 @@ export default defineComponent({
 .spacer {
   aspect-ratio: 10/1;
   transform: translateY(calc((-95vw / 10)));
-  background-image: url(~@/assets/images/wave.svg);
+  background-image: url(@/assets/images/wave.svg);
   background-repeat: no-repeat;
   background-size: 100%;
   box-sizing: border-box;

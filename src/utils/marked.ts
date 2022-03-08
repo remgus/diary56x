@@ -1,5 +1,5 @@
 import { marked } from "marked";
-import * as DomPurify from "dompurify";
+import DomPurify from "dompurify";
 import hljs from "highlight.js";
 
 const markedOptions: marked.MarkedOptions = {

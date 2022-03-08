@@ -4,7 +4,7 @@
     data-bs-backdrop="static"
     data-bs-keyboard="false"
     tabindex="-1"
-    ref="modal"
+    ref="modalEl"
   >
     <div class="modal-dialog">
       <div class="modal-content">
@@ -41,70 +41,57 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, ref } from "vue";
+<script lang="ts" setup>
+import { onMounted, ref } from "vue";
 import { Modal } from "bootstrap";
 
-export default defineComponent({
-  setup(props) {
-    const modal = ref<HTMLElement | null>(null);
-    const bsModal = ref<Modal | null>(null);
-
-    onMounted(() => {
-      if (!modal.value) return;
-      bsModal.value = new Modal(modal.value);
-    });
-
-    const open = () => {
-      if (!bsModal.value) return;
-      bsModal.value.show();
-    };
-
-    const close = () => {
-      if (!bsModal.value) return;
-      bsModal.value.hide();
-    };
-
-    const successCallback = () => {
-      bsModal.value?.hide();
-      if (props.callback) props.callback();
-    };
-
-    const toggle = () => {
-      if (!bsModal.value) return;
-      bsModal.value.toggle();
-    };
-
-    const dispose = () => {
-      if (!bsModal.value) return;
-      bsModal.value.dispose();
-    };
-
-    return {
-      modal,
-      bsModal,
-      open,
-      close,
-      successCallback,
-      toggle,
-      dispose,
-    };
+const props = defineProps({
+  title: {
+    type: String,
+    default: "",
   },
-  props: {
-    title: {
-      type: String,
-      default: "",
-    },
-    content: {
-      type: String,
-      default: "",
-    },
-    callback: {
-      type: Function,
-      required: false,
-    },
+  content: {
+    type: String,
+    default: "",
+  },
+  callback: {
+    type: Function,
+    required: false,
   },
 });
+
+const modalEl = ref<HTMLElement | null>(null);
+const bsModal = ref<Modal | null>(null);
+
+onMounted(() => {
+  if (!modalEl.value) return;
+  bsModal.value = new Modal(modalEl.value);
+});
+
+const open = () => {
+  if (!bsModal.value) return;
+  bsModal.value.show();
+};
+
+const close = () => {
+  if (!bsModal.value) return;
+  bsModal.value.hide();
+};
+
+const successCallback = () => {
+  bsModal.value?.hide();
+  if (props.callback) props.callback();
+};
+
+const toggle = () => {
+  if (!bsModal.value) return;
+  bsModal.value.toggle();
+};
+
+const dispose = () => {
+  if (!bsModal.value) return;
+  bsModal.value.dispose();
+};
 </script>
 
 <style></style>

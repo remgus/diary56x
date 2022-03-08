@@ -51,7 +51,7 @@ import { defineComponent } from "vue";
 export default defineComponent({
   name: "BaseFooter",
   setup() {
-    const version = process.env.VUE_APP_VERSION as string;
+    const version = __APP_VERSION__;
     const year = new Date().getFullYear();
     return { version, year };
   },

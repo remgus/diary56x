@@ -55,20 +55,15 @@ export class RootActions extends Actions<
   }
 
   logout(): Promise<void> {
-    return new Promise((resolve, reject) => {
+    return new Promise(() => {
       if (!this.state.refreshToken) {
         return Promise.reject("Refresh token is null.");
       }
-      logout(this.state.refreshToken)
-        .then(() => {
-          this.commit("clearUser");
-          this.commit("clearTokens");
-          clearLocalDataAfterLogout();
-          resolve();
-        })
-        .catch((error) => {
-          reject(error);
-        });
+      logout(this.state.refreshToken).finally(() => {
+        this.commit("clearUser");
+        this.commit("clearTokens");
+        clearLocalDataAfterLogout();
+      });
     });
   }
 

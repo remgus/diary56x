@@ -10,10 +10,7 @@
       </ol>
     </nav>
 
-    <div v-if="loading" class="text-center">
-      <div class="spinner-border text-primary" role="status"></div>
-    </div>
-    <div v-else>
+    <loading :is-loading="is_loading">
       <div v-if="notifications.length">
         <div
           class="row"
@@ -69,17 +66,11 @@
       </div>
       <div v-else>
         <div class="text-center">
-          <img
-            src="@/assets/icons/cactus.svg"
-            alt=""
-            class="mb-3"
-            id="cactus-icon"
-            width="80"
-          />
+          <img :src="cactus" alt="" class="mb-3" id="cactus-icon" width="80" />
           <div class="text-muted">Уведомлений нет</div>
         </div>
       </div>
-    </div>
+    </loading>
 
     <confirm-dialog
       title="Подтверждение удаления"
@@ -90,7 +81,7 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import {
   APINotification,
   listNotifications,
@@ -98,90 +89,71 @@ import {
   deleteNotification,
 } from "@/api/services/notifications";
 import { key } from "@/store";
-import { defineComponent, onMounted, ref } from "vue";
+import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { toShortDateTime } from "@/utils/date";
 import { useConfirmDialog } from "@/utils/dialog";
-import { ConfirmDialog } from "@/components";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import { Loading } from "@/components";
+import cactus from "@/assets/icons/cactus.svg";
 
-export default defineComponent({
-  components: {
-    ConfirmDialog,
-  },
-  setup() {
-    const notifications = ref<APINotification[]>([]);
-    const store = useStore(key);
-    const lastPage = ref(1);
-    const loading = ref(true);
-    const hasMore = ref(true);
-    const selectedCard = ref<number | null>(null);
-    const notificationToDelete = ref<number | null>(null);
+const notifications = ref<APINotification[]>([]);
+const store = useStore(key);
+const lastPage = ref(1);
+const is_loading = ref(true);
+const hasMore = ref(true);
+const selectedCard = ref<number | null>(null);
+const notificationToDelete = ref<number | null>(null);
 
-    const retrieveNotifications = async () => {
-      if (!store.state.user) return;
+const retrieveNotifications = async () => {
+  if (!store.state.user) return;
 
-      const { data } = await listNotifications({
-        page: lastPage.value,
-        user: store.state.user.id,
-      });
-      notifications.value = [...notifications.value, ...data.results];
-      lastPage.value++;
-      hasMore.value = Boolean(data.next);
-    };
+  const { data } = await listNotifications({
+    page: lastPage.value,
+    user: store.state.user.id,
+  });
+  notifications.value = [...notifications.value, ...data.results];
+  lastPage.value++;
+  hasMore.value = Boolean(data.next);
+};
 
-    onMounted(() => {
-      retrieveNotifications().then(() => {
-        loading.value = false;
-      });
-    });
-
-    const deleteN = () => {
-      if (!notificationToDelete.value) return;
-
-      deleteNotification(notificationToDelete.value).then(() => {
-        notifications.value = notifications.value.filter(
-          (n) => n.id !== notificationToDelete.value
-        );
-        notificationToDelete.value = null;
-      });
-    };
-
-    const selectCard = (id: number) => {
-      selectedCard.value = id;
-    };
-
-    const markAsRead = (id: number) => {
-      markNotificationAsRead(id).then(() => {
-        const index = notifications.value.findIndex((msg) => msg.id === id);
-        if (index !== -1) {
-          notifications.value[index].read = true;
-        }
-        store.dispatch("fetchNotifications");
-      });
-    };
-
-    const { showConfirmDialog, confirmDialog } = useConfirmDialog();
-
-    const showDeleteDialog = (id: number) => {
-      notificationToDelete.value = id;
-      showConfirmDialog();
-    };
-
-    return {
-      notifications,
-      loading,
-      hasMore,
-      retrieveNotifications,
-      toShortDateTime,
-      selectedCard,
-      selectCard,
-      markAsRead,
-      deleteN,
-      confirmDialog,
-      showDeleteDialog,
-    };
-  },
+onMounted(() => {
+  retrieveNotifications().then(() => {
+    is_loading.value = false;
+  });
 });
+
+const deleteN = () => {
+  if (!notificationToDelete.value) return;
+
+  deleteNotification(notificationToDelete.value).then(() => {
+    notifications.value = notifications.value.filter(
+      (n) => n.id !== notificationToDelete.value
+    );
+    notificationToDelete.value = null;
+  });
+};
+
+const selectCard = (id: number) => {
+  selectedCard.value = id;
+};
+
+const markAsRead = (id: number) => {
+  markNotificationAsRead(id).then(() => {
+    const index = notifications.value.findIndex((msg) => msg.id === id);
+    if (index !== -1) {
+      notifications.value[index].read = true;
+    }
+    store.dispatch("fetchNotifications");
+  });
+};
+
+const { showConfirmDialog, confirmDialog } = useConfirmDialog();
+
+const showDeleteDialog = (id: number) => {
+  notificationToDelete.value = id;
+  showConfirmDialog();
+};
 </script>
 
 <style>

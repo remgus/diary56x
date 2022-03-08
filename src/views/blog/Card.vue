@@ -37,7 +37,7 @@ export default defineComponent({
     };
 
     return {
-      postImage: computed(() => getImage(props.blogPost, true)),
+      postImage: computed(() => getImage(props.blogPost, true) as string),
       postDate: computed(() => processDate()),
       author: computed(() => postAuthor(props.blogPost)),
     };

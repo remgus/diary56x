@@ -43,12 +43,7 @@
     </div>
     <div v-else-if="!posts.results.length">
       <div class="text-center">
-        <img
-          src="@/assets/icons/cactus.svg"
-          alt=""
-          class="mb-3"
-          id="cactus-icon"
-        />
+        <img :src="cactus" alt="" class="mb-3" id="cactus-icon" />
       </div>
     </div>
     <div v-else>
@@ -72,82 +67,63 @@
   </div>
 </template>
 
-<script lang="ts">
-import { Paginator } from "@/api/types";
-import { computed, defineComponent, onMounted, ref } from "@vue/runtime-core";
+<script lang="ts" setup>
+import { computed, onMounted, ref } from "vue";
 import { LocationQueryValue, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { key } from "@/store";
+import { Paginator } from "@/api/types";
 import Pagination from "@/components/Pagination.vue";
 import { isAdmin } from "@/api/services/auth";
-import Card from "./Card.vue";
 import { APIPost, listPosts } from "@/api/services/blog";
+import Card from "./Card.vue";
+import cactus from "@/assets/icons/cactus.svg";
 
-export default defineComponent({
-  components: { Pagination, Card },
-  setup() {
-    const store = useStore(key);
-    const route = useRoute();
+const store = useStore(key);
+const route = useRoute();
+const search = ref<string | null>(null);
+const searchDone = ref(false);
+const page = ref(1);
+const searchInput = ref<HTMLElement | null>(null);
+const searchButton = ref<HTMLElement | null>(null);
+const posts = ref<null | Paginator<APIPost>>(null);
 
-    const search = ref<string | null>(null);
-    const searchDone = ref(false);
-    const page = ref(1);
-
-    const searchInput = ref<HTMLElement | null>(null);
-    const searchButton = ref<HTMLElement | null>(null);
-
-    const posts = ref<null | Paginator<APIPost>>(null);
-
-    onMounted(() => {
-      search.value = route.query.search as LocationQueryValue;
-      const queryPage = Number(route.query.page as LocationQueryValue);
-      if (queryPage) page.value = queryPage;
-      refresh();
-    });
-
-    const refresh = () => {
-      searchInput.value?.blur();
-      searchButton.value?.blur();
-
-      posts.value = null;
-      listPosts({
-        page: page.value,
-        search: search.value ? search.value : undefined,
-      }).then((data) => {
-        posts.value = data.data;
-        searchDone.value = Boolean(search.value);
-      });
-    };
-
-    const clearSearch = () => {
-      search.value = null;
-      refresh();
-    };
-
-    const nextPage = () => {
-      if (posts.value?.next) page.value++;
-      refresh();
-    };
-
-    const prevPage = () => {
-      if (posts.value?.previous) page.value--;
-      refresh();
-    };
-
-    return {
-      posts,
-      page,
-      search,
-      searchDone,
-      refresh,
-      clearSearch,
-      prevPage,
-      nextPage,
-      isAdmin,
-      user: computed(() => store.state.user),
-    };
-  },
+onMounted(() => {
+  search.value = route.query.search as LocationQueryValue;
+  const queryPage = Number(route.query.page as LocationQueryValue);
+  if (queryPage) page.value = queryPage;
+  refresh();
 });
+
+const refresh = () => {
+  searchInput.value?.blur();
+  searchButton.value?.blur();
+  posts.value = null;
+  listPosts({
+    page: page.value,
+    search: search.value ? search.value : undefined,
+  }).then((data) => {
+    posts.value = data.data;
+    searchDone.value = Boolean(search.value);
+  });
+};
+
+const clearSearch = () => {
+  search.value = null;
+  refresh();
+};
+
+const nextPage = () => {
+  if (posts.value?.next) page.value++;
+  refresh();
+};
+
+const prevPage = () => {
+  if (posts.value?.previous) page.value--;
+  refresh();
+};
+
+const user = computed(() => store.state.user);
 </script>
 
 <style scoped>

@@ -49,80 +49,64 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, defineComponent, onMounted, ref } from "vue";
 import { FormSelect, Loading } from "@/components";
 import { listClassesCompact } from "@/api/services/klasses";
 import { useStore } from "vuex";
 import { key } from "@/store";
 import { SelectOption } from "@/components/forms/FormSelect.vue";
-import LessonCard from "@/components/timetable/LessonCard.vue";
+import LessonCard from "./LessonCard.vue";
 import { APIUser } from "@/api/services/auth";
 import { APITimetable, getTimeTable } from "@/api/services/timetable";
 
-export default defineComponent({
-  components: { FormSelect, Loading, LessonCard },
-  setup() {
-    const store = useStore(key);
-    const isLoading = ref(true);
-    const ttLoading = ref(true);
-    const user = computed(() => store.state.user as APIUser);
-    const klassOptions = ref<SelectOption[]>([]);
-    const selectedKlass = ref<string>(String(user.value.school?.id));
-    const timetable = ref<APITimetable[]>([]);
+const store = useStore(key);
+const isLoading = ref(true);
+const ttLoading = ref(true);
+const user = computed(() => store.state.user as APIUser);
+const klassOptions = ref<SelectOption[]>([]);
+const selectedKlass = ref<string>(String(user.value.school?.id));
+const timetable = ref<APITimetable[]>([]);
 
-    const getClassesList = async () => {
-      const res = await listClassesCompact(parseInt(selectedKlass.value));
-      klassOptions.value = res.data.map((klass) => ({
-        value: String(klass.id),
-        label: klass.name,
-        selected: klass.id === parseInt(selectedKlass.value),
-      }));
-      isLoading.value = false;
-    };
+const getClassesList = async () => {
+  const res = await listClassesCompact(parseInt(selectedKlass.value));
+  klassOptions.value = res.data.map((klass) => ({
+    value: String(klass.id),
+    label: klass.name,
+    selected: klass.id === parseInt(selectedKlass.value),
+  }));
+  isLoading.value = false;
+};
 
-    const refreshTimetable = () => {
-      if (!selectedKlass.value) {
-        return;
-      }
+const refreshTimetable = () => {
+  if (!selectedKlass.value) {
+    return;
+  }
 
-      getTimeTable(parseInt(selectedKlass.value)).then((res) => {
-        timetable.value = res.data;
-        ttLoading.value = false;
-      });
-    };
+  getTimeTable(parseInt(selectedKlass.value)).then((res) => {
+    timetable.value = res.data;
+    ttLoading.value = false;
+  });
+};
 
-    onMounted(() => {
-      getClassesList().then(() => {
-        refreshTimetable();
-      });
-    });
+onMounted(() => {
+  getClassesList().then(() => {
+    refreshTimetable();
+  });
+});
 
-    const getTomorrowDay = () => {
-      const date = new Date();
-      date.setDate(date.getDate() + 1);
-      const day = date.getDay();
-      if (!timetable.value) return;
-      return timetable.value.find((item) => item.weekday === day);
-    };
+const tomorrow = computed(() => {
+  const date = new Date();
+  date.setDate(date.getDate() + 1);
+  const day = date.getDay();
+  if (!timetable.value) return;
+  return timetable.value.find((item) => item.weekday === day);
+});
 
-    const getToday = () => {
-      const day = new Date().getDay();
-      if (!timetable.value) return;
-      return timetable.value.find((item) => item.weekday === day);
-    };
-
-    return {
-      isLoading,
-      klassOptions,
-      selectedKlass,
-      ttLoading,
-      timetable,
-      tomorrow: computed(() => getTomorrowDay()),
-      today: computed(() => getToday()),
-      refreshTimetable,
-    };
-  },
+const today = computed(() => {
+  const day = new Date().getDay();
+  if (!timetable.value) return;
+  return timetable.value.find((item) => item.weekday === day);
 });
 </script>
 

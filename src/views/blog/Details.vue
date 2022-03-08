@@ -1,12 +1,7 @@
 <template>
   <div class="container mt-4 rt-wp">
     <div v-if="postDoesNotExist" class="text-center mt-5">
-      <img
-        class="mb-3"
-        src="@/assets/icons/not-found.svg"
-        alt=""
-        id="not-found-icon"
-      />
+      <img class="mb-3" :src="not_found" alt="" id="not-found-icon" />
       <h2>Запись не найдена</h2>
       <router-link to="/blog">Перейти к списку записей</router-link>
     </div>
@@ -51,74 +46,62 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue";
+<script lang="ts" setup>
+import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { APIPost, deletePost, retrievePost } from "@/api/services/blog";
 import { getMarked } from "@/utils/marked";
 import { useConfirmDialog } from "@/utils/dialog";
-import { ConfirmDialog } from "@/components";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { getImage } from "@/utils/blog";
 import { useStore } from "vuex";
 import { key } from "@/store";
 import { isAdmin } from "@/api/services/auth";
+import not_found from "@/assets/icons/not-found.svg";
 
-export default defineComponent({
-  components: { ConfirmDialog },
-  setup() {
-    const route = useRoute();
-    const router = useRouter();
-    const post = ref<APIPost | null>(null);
-    const postDoesNotExist = ref(false);
-    const store = useStore(key);
+const route = useRoute();
+const router = useRouter();
+const post = ref<APIPost | null>(null);
+const postDoesNotExist = ref(false);
+const store = useStore(key);
 
-    const { showConfirmDialog, confirmDialog } = useConfirmDialog();
+const { showConfirmDialog, confirmDialog } = useConfirmDialog();
 
-    const getPost = () => {
-      const slug = route.params.slug as string;
+const getPost = () => {
+  const slug = route.params.slug as string;
 
-      retrievePost(slug)
-        .then((response) => {
-          postDoesNotExist.value = false;
-          post.value = response.data;
-          post.value.content = getMarked(post.value?.content || "");
-        })
-        .catch(() => {
-          postDoesNotExist.value = true;
-        });
-    };
-
-    const deleteBlogPost = () => {
-      if (!post.value) return;
-      deletePost(post.value.slug)
-        .then(() => {
-          router.push("/blog");
-        })
-        .catch(() => {
-          postDoesNotExist.value = true;
-        });
-    };
-
-    onMounted(() => {
-      getPost();
+  retrievePost(slug)
+    .then((response) => {
+      postDoesNotExist.value = false;
+      post.value = response.data;
+      post.value.content = getMarked(post.value?.content || "");
+    })
+    .catch(() => {
+      postDoesNotExist.value = true;
     });
+};
 
-    return {
-      post,
-      postDoesNotExist,
-      deleteBlogPost,
-      showConfirmDialog,
-      confirmDialog,
-      postImage: computed(() => (post.value ? getImage(post.value) : null)),
-      user: computed(() => store.state.user),
-      isAdmin: isAdmin,
-    };
-  },
+const deleteBlogPost = () => {
+  if (!post.value) return;
+  deletePost(post.value.slug)
+    .then(() => {
+      router.push("/blog");
+    })
+    .catch(() => {
+      postDoesNotExist.value = true;
+    });
+};
+
+onMounted(() => {
+  getPost();
 });
+
+const postImage = computed(() => (post.value ? getImage(post.value) : null));
+const user = computed(() => store.state.user);
 </script>
 
 <style>
-@import "~highlight.js/styles/nord.css";
+@import "highlight.js/styles/nord.css";
 
 #not-found-icon {
   width: 100px;

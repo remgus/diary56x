@@ -38,45 +38,37 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
+<script lang="ts" setup>
+import { defineProps, PropType } from "vue";
 import { APITimetable } from "@/api/services/timetable";
 
-export default defineComponent({
-  props: {
-    day: {
-      type: Object as PropType<APITimetable>,
-      required: true,
-    },
-    isToday: {
-      type: Boolean,
-      default: false,
-    },
-    isTomorrow: {
-      type: Boolean,
-      default: false,
-    },
+const props = defineProps({
+  day: {
+    type: Object as PropType<APITimetable>,
+    required: true,
   },
-  setup() {
-    const getDayName = (day: number) => {
-      let now = new Date();
-      let distance = day - now.getDay();
-      now.setDate(now.getDate() + distance);
-
-      let r = now.toLocaleString("ru", { weekday: "long" });
-      r = r[0].toUpperCase() + r.slice(1);
-      return r;
-    };
-    const renderTime = (s: string) => {
-      return s.slice(s[0] === "0" ? 1 : 0, 5);
-    };
-
-    return {
-      getDayName,
-      renderTime,
-    };
+  isToday: {
+    type: Boolean,
+    default: false,
+  },
+  isTomorrow: {
+    type: Boolean,
+    default: false,
   },
 });
+
+const getDayName = (day: number) => {
+  let now = new Date();
+  let distance = day - now.getDay();
+  now.setDate(now.getDate() + distance);
+
+  let r = now.toLocaleString("ru", { weekday: "long" });
+  r = r[0].toUpperCase() + r.slice(1);
+  return r;
+};
+const renderTime = (s: string) => {
+  return s.slice(s[0] === "0" ? 1 : 0, 5);
+};
 </script>
 
 <style scoped>

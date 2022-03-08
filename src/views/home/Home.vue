@@ -11,15 +11,17 @@
         icon="homework"
         title="Домашнее задание"
         v-if="pluginEnabled(user, 'homework')"
+        link="/"
       />
       <card
         icon="notes"
         title="Конспекты"
         v-if="pluginEnabled(user, 'notes')"
+        link="/"
       />
     </div>
     <div class="row" v-if="isAdmin(user)">
-      <card icon="panel" title="Панель администратора" link="/admin" />
+      <card icon="admin" title="Панель администратора" link="/admin" />
     </div>
   </div>
   <div v-else>

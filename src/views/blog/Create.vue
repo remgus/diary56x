@@ -52,14 +52,14 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { computed, defineComponent, reactive, ref } from "vue";
 
 import { FormInput, MarkdownEditor } from "@/components";
 import { APICreatePost, createPost } from "@/api/services/blog";
 
 import { getSlug } from "@/utils/strings";
-import { BlogMDEOptions } from "@/utils/mde";
+import { BlogMDEOptions as editorOptions } from "@/utils/mde";
 import {
   FormBuilder,
   FormFile,
@@ -72,91 +72,72 @@ import { key } from "@/store";
 import { useRouter } from "vue-router";
 import { AxiosError } from "axios";
 
-export default defineComponent({
-  setup() {
-    const mdeRef = ref<typeof MarkdownEditor | undefined>(undefined);
-    const isBound = ref(false);
-    const image = ref<FormFile | null>(null);
+const mdeRef = ref<typeof MarkdownEditor | undefined>(undefined);
+const isBound = ref(false);
+const image = ref<FormFile | null>(null);
 
-    const store = useStore(key);
-    const user = computed(() => store.state.user);
+const store = useStore(key);
+const user = computed(() => store.state.user);
 
-    const router = useRouter();
+const router = useRouter();
 
-    const data = reactive<FormBuilder>({
-      title: {
-        value: "",
-        validators: ["required"],
-      },
-      image: {
-        value: "",
-        validators: [],
-      },
-    });
-
-    const handleFileChange = (e: InputEvent) => {
-      console.log(e);
-      const files = handleFilesEvent(e);
-      if (files.length) image.value = files[0];
-    };
-
-    const createPostWrapper = () => {
-      const verdict = validateForm(data);
-      if (!isBound.value) isBound.value = true;
-      if (!verdict || image.value === undefined || user.value === null) return;
-
-      const slug = getSlug(data.title.value);
-      const content = mdeRef.value?.getValue ? mdeRef.value.getValue() : "";
-
-      const newPost: APICreatePost = {
-        title: data.title.value,
-        content: content,
-        author: String(user.value.id),
-        slug: slug,
-      };
-
-      if (image.value) newPost.image = image.value.file;
-
-      const fd = new FormData();
-      fd.append("title", newPost.title);
-      fd.append("content", newPost.content);
-      fd.append("slug", newPost.slug);
-      fd.append("author", newPost.author);
-
-      if (newPost.image) fd.append("image", newPost.image);
-
-      createPost(fd)
-        .then(() => {
-          mdeRef.value && mdeRef.value.clearAutosavedValue();
-          router.push("/blog");
-        })
-        .catch((e: AxiosError) => {
-          handleBackendError(e, {
-            "400": {
-              slug: () => {
-                data.title.errorMessage =
-                  "Запись с таким именем уже существует";
-              },
-            },
-          });
-        });
-    };
-
-    return {
-      mdeRef,
-      data,
-      getSlug,
-      isBound,
-      createPostWrapper,
-      handleFileChange,
-      editorOptions: BlogMDEOptions,
-    };
+const data = reactive<FormBuilder>({
+  title: {
+    value: "",
+    validators: ["required"],
   },
-  components: {
-    FormInput,
-    MarkdownEditor,
+  image: {
+    value: "",
+    validators: [],
   },
 });
+
+const handleFileChange = (e: InputEvent) => {
+  console.log(e);
+  const files = handleFilesEvent(e);
+  if (files.length) image.value = files[0];
+};
+
+const createPostWrapper = () => {
+  const verdict = validateForm(data);
+  if (!isBound.value) isBound.value = true;
+  if (!verdict || image.value === undefined || user.value === null) return;
+
+  const slug = getSlug(data.title.value);
+  const content = mdeRef.value?.getValue ? mdeRef.value.getValue() : "";
+
+  const newPost: APICreatePost = {
+    title: data.title.value,
+    content: content,
+    author: String(user.value.id),
+    slug: slug,
+  };
+
+  if (image.value) newPost.image = image.value.file;
+
+  const fd = new FormData();
+  fd.append("title", newPost.title);
+  fd.append("content", newPost.content);
+  fd.append("slug", newPost.slug);
+  fd.append("author", newPost.author);
+
+  if (newPost.image) fd.append("image", newPost.image);
+
+  createPost(fd)
+    .then(() => {
+      mdeRef.value && mdeRef.value.clearAutosavedValue();
+      router.push("/blog");
+    })
+    .catch((e: AxiosError) => {
+      handleBackendError(e, {
+        "400": {
+          slug: () => {
+            data.title.errorMessage = "Запись с таким именем уже существует";
+          },
+        },
+      });
+    });
+};
 </script>
 
 <style></style>

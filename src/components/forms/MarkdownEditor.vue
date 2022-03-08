@@ -78,5 +78,5 @@ export default defineComponent({
 </script>
 
 <style>
-@import "~easymde/dist/easymde.min.css";
+@import "easymde/dist/easymde.min.css";
 </style>

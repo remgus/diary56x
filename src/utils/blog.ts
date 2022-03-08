@@ -1,12 +1,12 @@
 import { APIPost } from "@/api/services/blog";
+import document_icon from "@/assets/icons/document.svg";
 
 export const getImage = (post: APIPost, thumbnail = false): string | null => {
-  if (thumbnail) {
-    return post.thumbnail
+  return thumbnail
+    ? post.thumbnail
       ? post.thumbnail
-      : require("@/assets/icons/document.svg");
-  }
-  return post.image;
+      : document_icon
+    : post.image;
 };
 
 export default {
