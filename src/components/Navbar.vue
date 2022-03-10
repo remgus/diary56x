@@ -121,99 +121,67 @@
   </nav>
 </template>
 
-<script lang="ts">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  onUnmounted,
-  onUpdated,
-  ref,
-} from "vue";
+<script lang="ts" setup>
+import { computed, onMounted, onUnmounted, onUpdated, ref } from "vue";
 import { toSvg } from "jdenticon";
 import { useStore } from "vuex";
 import { key } from "@/store";
-import { useRoute } from "vue-router";
 import { Collapse, Dropdown } from "bootstrap";
 import router from "@/router";
 
-export default defineComponent({
-  setup() {
-    const store = useStore(key);
-    const route = useRoute();
+const store = useStore(key);
 
-    const meta = computed(() => route.meta);
-    const options = computed(() => meta.value.navbar);
-    const user = computed(() => store.state.user);
-    const jdenticon = computed(() => toSvg(user.value?.id, 45));
-    const unreadNotificationsCount = computed<number>(
-      () => store.getters["unreadNotificationsCount"]
-    );
+const user = computed(() => store.state.user);
+const jdenticon = computed(() => toSvg(user.value?.id, 45));
+const unreadNotificationsCount = computed<number>(
+  () => store.getters["unreadNotificationsCount"]
+);
 
-    const isScrolled = ref(false);
+const isScrolled = ref(false);
 
-    const navbarContent = ref<null | HTMLElement>(null);
-    const navbarToggled = ref(false);
-    const navbarCollapse = ref<null | Collapse>(null);
+const navbarContent = ref<null | HTMLElement>(null);
+const navbarToggled = ref(false);
+const navbarCollapse = ref<null | Collapse>(null);
 
-    const dropdown = ref<null | Dropdown>(null);
-    const dropdownEl = ref<null | HTMLElement>(null);
+const dropdown = ref<null | Dropdown>(null);
+const dropdownEl = ref<null | HTMLElement>(null);
 
-    const logout = () => {
-      store.dispatch("logout");
-      router.push("/");
-    };
+const logout = () => {
+  store.dispatch("logout");
+  router.push("/");
+};
 
-    const onScroll = () => {
-      isScrolled.value = window.scrollY > 0;
-    };
+const onScroll = () => {
+  isScrolled.value = window.scrollY > 0;
+};
 
-    const toggleNavbar = () => {
-      navbarCollapse.value?.toggle();
-      navbarToggled.value = !navbarToggled.value;
-    };
+const toggleNavbar = () => {
+  navbarCollapse.value?.toggle();
+  navbarToggled.value = !navbarToggled.value;
+};
 
-    const toggleDropdown = () => {
-      dropdown.value?.toggle();
-    };
+const toggleDropdown = () => {
+  dropdown.value?.toggle();
+};
 
-    const enableElements = () => {
-      if (navbarContent.value)
-        navbarCollapse.value = Collapse.getOrCreateInstance(
-          navbarContent.value,
-          {
-            toggle: navbarToggled.value,
-          }
-        );
-      if (dropdownEl.value)
-        dropdown.value = Dropdown.getOrCreateInstance(dropdownEl.value);
-    };
-
-    onMounted(() => {
-      window.addEventListener("scroll", onScroll);
-      enableElements();
+const enableElements = () => {
+  if (navbarContent.value)
+    navbarCollapse.value = Collapse.getOrCreateInstance(navbarContent.value, {
+      toggle: navbarToggled.value,
     });
+  if (dropdownEl.value)
+    dropdown.value = Dropdown.getOrCreateInstance(dropdownEl.value);
+};
 
-    onUpdated(enableElements);
+onMounted(() => {
+  window.addEventListener("scroll", onScroll);
+  enableElements();
+});
 
-    onUnmounted(() => {
-      window.removeEventListener("scroll", onScroll);
-    });
+onUpdated(enableElements);
 
-    return {
-      user,
-      jdenticon,
-      unreadNotificationsCount,
-      logout,
-      isScrolled,
-      options,
-      navbarContent,
-      navbarToggled,
-      dropdownEl,
-      toggleNavbar,
-      toggleDropdown,
-    };
-  },
+onUnmounted(() => {
+  window.removeEventListener("scroll", onScroll);
 });
 </script>
 

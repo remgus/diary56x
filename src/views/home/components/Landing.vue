@@ -1,55 +1,74 @@
 <template>
-  <div class="parallax rt-wp">
-    <div class="container" id="parallaxInner">
-      <div class="row align-items-center h-100">
-        <div class="col-12 text-center text-md-start col-md-6 col-lg-4">
-          <h1 class="display-1 font-black">Diary56x</h1>
-          <div class="fs-3">
-            Электронный дневник, сделанный<br />
-            учениками для учеников
-          </div>
-          <button class="btn btn-outline-light mt-4 btn-lg">Начать</button>
+  <div class="rt-wp container">
+    <div id="hero">
+      <h1 class="font-heavy display-2" id="slogan">
+        Электронный Дневник<br /><span class="parallax"
+          >Следующего Поколения</span
+        >
+      </h1>
+      <div class="description text-muted mt-4">
+        Прогрессивная, удобная и свободная электронная система для школ
+      </div>
+      <div>
+        <div class="btn btn-primary me-3">О проекте</div>
+        <div class="btn btn-outline-primary">Начать</div>
+      </div>
+    </div>
+    <div class="row mx-5 gx-5 gy-4">
+      <div class="col-12 col-md-4">
+        <div class="text-larger mb-2">Прогрессивность</div>
+        <div class="text-muted">
+          Использование современных инструментов и библиотек помогло создать
+          надежную систему с широким функционалом
         </div>
-        <div class="col-md-6 d-none d-md-flex col-lg-8">
-          <img
-            src="@/assets/images/circles.png"
-            alt=""
-            style="width: 100%; height: 100%"
-          />
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="text-larger mb-2">Удобство</div>
+        <div class="text-muted">
+          Легкий и понятный интерфейс позволяет использовать дневник и взрослым,
+          и детям без особых усилий
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="text-larger mb-2">Свобода</div>
+        <div class="text-muted">
+          Открытость исходного кода и возможность вносить свой вклад позволяют
+          развивать проект в правильном направлении
         </div>
       </div>
     </div>
   </div>
-  <div class="spacer"></div>
 </template>
 
 <script lang="ts" setup></script>
 
 <style scoped>
 .parallax {
-  background-color: #4158d0;
-  background-image: linear-gradient(
-    43deg,
-    #4158d0 0%,
-    #c850c0 46%,
-    #ffcc70 100%
-  );
-  background-attachment: fixed;
-  background-size: cover;
+  background: linear-gradient(43deg, #4158d0 0%, #d45fcd 46%, #ffbd43 100%);
   height: 120vh;
   color: white;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -moz-background-clip: text;
+  -moz-text-fill-color: transparent;
+  -o-background-clip: text;
+  -o-text-fill-color: transparent;
 }
 
-.spacer {
-  aspect-ratio: 10/1;
-  transform: translateY(calc((-95vw / 10)));
-  background-image: url(@/assets/images/wave.svg);
-  background-repeat: no-repeat;
-  background-size: 100%;
-  box-sizing: border-box;
+#hero {
+  padding: 96px 32px;
+  text-align: center;
 }
 
-#parallaxInner {
-  height: 100vh;
+.description {
+  font-size: 1.4rem;
+  line-height: 1.5;
+  margin-bottom: 40px;
+}
+
+.text-larger {
+  font-size: 1.3rem;
+  font-weight: 700;
 }
 </style>
