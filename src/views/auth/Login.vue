@@ -36,7 +36,7 @@
             <div class="text-center mt-3">
               <div>
                 Ещё не зарегистрировались?
-                <a href="{% url 'register' %}"> Создайте аккаунт</a>
+                <router-link to="/register"> Создайте аккаунт</router-link>
               </div>
               <div class="mt-2">
                 <a href="{% url 'reset_password' %}">Забыли пароль?</a>
