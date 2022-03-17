@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "backend.apps.core.apps.CoreConfig",
     "backend.apps.notifications.apps.NotificationsConfig",
     "backend.apps.timetable.apps.TimetableConfig",
+    "backend.apps.help.apps.HelpConfig",
 
     # Third-party apps
     "whitenoise.runserver_nostatic",

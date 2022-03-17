@@ -14,6 +14,7 @@ urlpatterns = [
     path("api/private/blog/", include("backend.apps.blog.urls")),
     path("api/private/notifications/", include("backend.apps.notifications.urls")),
     path("api/private/timetable/", include("backend.apps.timetable.urls")),
+    path("api/private/help/", include("backend.apps.help.urls")),
     path("api/private/", include("backend.apps.core.urls")),
 ]
 
