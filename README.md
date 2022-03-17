@@ -11,14 +11,15 @@ Digital diary for schools made with Django & Vue.
 
 ## Table of contents
 
-- [Table of contents](#table-of-contents)
-- [About](#about)
-- [Development setup](#development-setup)
-  - [Tools to install](#tools-to-install)
-  - [Recommended VSCode plugins](#recommended-vscode-plugins)
-  - [Dependencies](#dependencies)
-  - [Server setup](#server-setup)
-  - [VSCode configuration](#vscode-configuration)
+- [Diary56x](#diary56x)
+  - [Table of contents](#table-of-contents)
+  - [About](#about)
+  - [Development setup](#development-setup)
+    - [Tools to install](#tools-to-install)
+    - [Recommended VSCode plugins](#recommended-vscode-plugins)
+    - [Dependencies](#dependencies)
+    - [Server setup](#server-setup)
+    - [VSCode configuration](#vscode-configuration)
 
 ## About
 
@@ -38,7 +39,7 @@ Digital diary for schools made with Django & Vue.
 - [Django](https://marketplace.visualstudio.com/items?itemName=batisteo.vscode-django)
 - [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- [Vetur](https://marketplace.visualstudio.com/items?itemName=octref.vetur)
+- [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
 
 ### Dependencies
 
@@ -73,7 +74,7 @@ Open up a new terminal in the root folder.
 
 ```bash
 # Vue development server
-yarn serve
+yarn dev
 ```
 
 ### VSCode configuration
@@ -110,10 +111,5 @@ Recommended VSCode ``.vscode/settings.json``:
   "emmet.includeLanguages": {
     "django-html": "html"
   },
-  "vetur.validation.template": true,
-  "vetur.validation.script": true,
-  "vetur.validation.style": true,
-  "vetur.validation.interpolation": true,
-  "vetur.experimental.templateInterpolationService": true,
 }
 ```
