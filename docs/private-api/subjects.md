@@ -1,12 +1,10 @@
-# Diary56x private API
-
-## Subjects
+# Subjects
 
 Subject is an area of knowledge that is studied in school.
 
 Model: ``backend.apps.core.models.Subject``
 
-### Fields
+## Fields
 
 | Field      | Type    | Description                |
 | ---------- | ------- | -------------------------- |
@@ -15,18 +13,18 @@ Model: ``backend.apps.core.models.Subject``
 | icon       | string  | Icon of the subject        |
 | descrition | string  | Description of the subject |
 
-### Example
+## Example
 
 ```json
 {
     "id": 2,
-    "name": "Астрономия",
+    "name": "Astronomy",
     "icon": "http://127.0.0.1:8000/media/subjects/astronomy.png",
     "description": "Astronomy is a natural science that studies celestial objects and phenomena."
 }
 ```
 
-### API endpoints
+## API endpoints
 
 | Endpoint                     | Methods                 | Desciption                      |
 | ---------------------------- | ----------------------- | ------------------------------- |

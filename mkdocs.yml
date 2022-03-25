@@ -1,0 +1,5 @@
+site_name: Diary56x documentation
+theme: readthedocs
+repo_url: https://github.com/AlanTheKnight/diary56x
+site_author: Maxim Gusev
+dev_addr: "127.0.0.1:3000"

@@ -9,6 +9,7 @@ class School(models.Model):
     plugins = models.ManyToManyField(
         "Plugin", blank=True, verbose_name="Плагины", related_name="schools"
     )
+    description = models.TextField("Описание", blank=True)
 
     class Meta:
         verbose_name = "Образовательное учреждение"

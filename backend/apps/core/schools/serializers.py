@@ -17,6 +17,8 @@ class SchoolSerializer(serializers.ModelSerializer):
 class CompactSchoolSerializer(serializers.ModelSerializer):
     """Compact school serializer."""
 
+    plugins = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
     class Meta:
         model = School
-        fields = ["id", "name"]
+        fields = ["id", "name", "plugins", "description"]
