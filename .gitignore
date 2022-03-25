@@ -31,3 +31,6 @@ dist
 
 # Development media files
 media
+
+# MkDocs documentation
+site/
