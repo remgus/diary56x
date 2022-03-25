@@ -41,6 +41,7 @@
 <script lang="ts" setup>
 import { defineProps, PropType } from "vue";
 import { APITimetable } from "@/api/services/timetable";
+import { getDayName, renderTime } from "@/utils/date";
 
 const props = defineProps({
   day: {
@@ -56,19 +57,6 @@ const props = defineProps({
     default: false,
   },
 });
-
-const getDayName = (day: number) => {
-  let now = new Date();
-  let distance = day - now.getDay();
-  now.setDate(now.getDate() + distance);
-
-  let r = now.toLocaleString("ru", { weekday: "long" });
-  r = r[0].toUpperCase() + r.slice(1);
-  return r;
-};
-const renderTime = (s: string) => {
-  return s.slice(s[0] === "0" ? 1 : 0, 5);
-};
 </script>
 
 <style scoped>

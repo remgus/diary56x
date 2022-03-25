@@ -50,7 +50,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineComponent, onMounted, ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import { FormSelect, Loading } from "@/components";
 import { listClassesCompact } from "@/api/services/klasses";
 import { useStore } from "vuex";
@@ -79,9 +79,7 @@ const getClassesList = async () => {
 };
 
 const refreshTimetable = () => {
-  if (!selectedKlass.value) {
-    return;
-  }
+  if (!selectedKlass.value) return;
 
   getTimeTable(parseInt(selectedKlass.value)).then((res) => {
     timetable.value = res.data;

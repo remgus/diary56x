@@ -12,7 +12,7 @@ def get_timetable(lessons: QuerySet[TimetableLesson]):
     """Transform lessons to timetable."""
     return [
         {"weekday": weekday, "lessons": lessons.filter(day=weekday)}
-        for weekday in range(0, 7)
+        for weekday in list(range(1, 7)) + [0]
     ]
 
 

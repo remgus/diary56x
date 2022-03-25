@@ -1,5 +1,4 @@
 from backend.apps.authentication.models import Student, Teacher
-
 from django.db import models
 
 
@@ -45,17 +44,17 @@ class Klass(models.Model):
 class Subject(models.Model):
     """Subject model."""
 
-    title = models.CharField("Название", max_length=100, unique=True)
+    name = models.CharField("Название", max_length=100, unique=True)
     icon = models.ImageField("Иконка", upload_to="subjects/", blank=True)
     description = models.TextField("Описание", blank=True)
 
     class Meta:
-        ordering = ["title"]
+        ordering = ["name"]
         verbose_name = "Предмет"
         verbose_name_plural = "Предметы"
 
     def __str__(self):
-        return self.title
+        return self.name
 
 
 class Plugin(models.Model):

@@ -20,11 +20,16 @@ export const getCurrentYear = (): number => {
   return new Date().getFullYear();
 };
 
-const dateUtils = {
-  toShortDate,
-  toShortDateTime,
-  getCurrentYear,
+export const getDayName = (day: number) => {
+  let now = new Date();
+  let distance = day - now.getDay();
+  now.setDate(now.getDate() + distance);
+
+  let r = now.toLocaleString("ru", { weekday: "long" });
+  r = r[0].toUpperCase() + r.slice(1);
+  return r;
 };
 
-export type DateUtils = typeof dateUtils;
-export default dateUtils;
+export const renderTime = (s: string) => {
+  return s.slice(s[0] === "0" ? 1 : 0, 5);
+};

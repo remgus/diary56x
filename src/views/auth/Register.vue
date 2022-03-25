@@ -9,9 +9,9 @@
               <div class="d-flex flex-row align-items-center mb-3">
                 <i class="bi bi-exclamation-circle-fill text-danger me-3"></i>
                 <div>
-                  Регистрируйтесь внимательно, так как для изменения указанных
-                  данных потребуется время. Настоятельно рекомендуется указывать
-                  полное ФИО.
+                  Пожалуйста, внимательно проверьте предоставленные
+                  данные перед завершением регистрации - для их
+                  последующего изменения потребуется время
                 </div>
               </div>
               <div class="mb-3">
@@ -86,7 +86,14 @@
                   :error="data.school.errorMessage"
                   :isBound="isBound"
                 />
+                <div class="text-muted mt-1" id="school-not-in-list">
+                  <router-link to="/"
+                    >Что делать, если моего образовательного учреждения нет в
+                    списке?</router-link
+                  >
+                </div>
               </div>
+
               <div class="text-center">
                 <button
                   type="submit"
@@ -223,4 +230,9 @@ export default defineComponent({
 });
 </script>
 
-<style></style>
+<style scoped>
+#school-not-in-list > a {
+  text-decoration: none;
+  color: var(--bs-text-muted);
+}
+</style>
