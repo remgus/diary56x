@@ -1,9 +1,10 @@
 from backend.apps.authentication.models import Student, Teacher
+
 from django.db import models
 
 
 class School(models.Model):
-    """A school."""
+    """School model."""
 
     name = models.CharField("Наименование", max_length=100)
     plugins = models.ManyToManyField(
@@ -21,7 +22,7 @@ class School(models.Model):
 
 
 class Klass(models.Model):
-    """A class."""
+    """Class model."""
 
     name = models.CharField("Класс", max_length=20)
     students = models.ManyToManyField(Student, related_name="students", blank=True)
@@ -45,7 +46,7 @@ class Klass(models.Model):
 class Subject(models.Model):
     """Subject model."""
 
-    name = models.CharField("Название", max_length=100, unique=True)
+    name = models.CharField("Название", max_length=100)
     icon = models.ImageField("Иконка", upload_to="subjects/", blank=True)
     description = models.TextField("Описание", blank=True)
 

@@ -15,10 +15,7 @@ export interface APIKlass extends APIKlassCompact {
   subjects: number[];
 }
 
-export enum KlassAPIURLS {
-  LIST = "klasses/",
-  DETAIL = "klasses/",
-}
+export const KlassAPIEndpoint = "klasses/";
 
 export const listClassesCompact = (
   school: number
@@ -27,15 +24,15 @@ export const listClassesCompact = (
     school,
     compact: true,
   };
-  return API.axios.get(KlassAPIURLS.LIST, { params });
+  return API.axios.get(KlassAPIEndpoint, { params });
 };
 
 export const listClasses = (
   school: number
 ): Promise<AxiosResponse<APIKlass[]>> => {
-  return API.axios.get(KlassAPIURLS.LIST, { params: { school } });
+  return API.axios.get(KlassAPIEndpoint, { params: { school } });
 };
 
 export const getClass = (id: number): Promise<AxiosResponse<APIKlass>> => {
-  return API.axios.get(KlassAPIURLS.DETAIL + id);
+  return API.axios.get(KlassAPIEndpoint + id);
 };
