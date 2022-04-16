@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import { nextTick, onMounted, onUpdated, ref } from "vue";
+import { nextTick, onMounted, onUpdated, ref, watch } from "vue";
 import { Loading } from "@/components";
 import { SelectOption } from "@/components/forms/FormSelect.vue";
 import { APITimetable, getTimeTable } from "@/api/services/timetable";
 import { getDayName } from "@/utils/date";
 import { listSubjects } from "@/api/services/subjects";
 import { onBeforeRouteLeave } from "vue-router";
+import { plural } from "@/utils/translation";
+import { computed } from "@vue/reactivity";
 
 const props = defineProps({
   klass: {
@@ -21,7 +23,7 @@ const isLoading = ref(true);
 const timetable = ref<APITimetable[]>([]);
 
 // Lessons indexes (array from 1 to 10)
-const lessons = Array.from({ length: 10 }, (_, i) => i + 1);
+const lessons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
 const subjectOptions = ref<SelectOption[]>([]);
 
@@ -90,9 +92,7 @@ const refreshTimetable = async () => {
   timetable.value = ttData;
   isLoading.value = false;
 
-  nextTick(() => {
-    setInitialValues();
-  });
+  nextTick(setInitialValues);
 };
 
 const getDayInfo = (lesson: number, day: number): [string, string] => {
@@ -104,32 +104,46 @@ const getDayInfo = (lesson: number, day: number): [string, string] => {
 };
 
 onMounted(refreshTimetable);
-onUpdated(() => {
-  if (timetableChanges.value.size !== 0) {
-    const answer = window.confirm(
-      "Вы действительно хотите выйти? Вы не сохранили изменения."
-    );
-    if (answer) timetableChanges.value.clear();
-  }
-  refreshTimetable();
-});
 
-onBeforeRouteLeave(() => {
+const askForSave = (): boolean => {
   if (timetableChanges.value.size === 0) return true;
   const answer = window.confirm(
     "Вы действительно хотите выйти? Вы не сохранили изменения."
   );
-  // cancel the navigation and stay on the same page
   if (!answer) return false;
   timetableChanges.value.clear();
+  return true;
+};
+
+watch(
+  () => props.klass,
+  (oldKlass, newKlass) => {
+    if (oldKlass === newKlass) return;
+    if (timetableChanges.value.size !== 0) askForSave();
+    refreshTimetable();
+  }
+);
+
+onBeforeRouteLeave(askForSave);
+
+const changesInfo = computed(() => {
+  return plural(
+    timetableChanges.value.size,
+    ["изменение", "изменения", "изменений"],
+    true
+  );
 });
 </script>
 
 <template>
   <loading :is-loading="isLoading">
-    <button class="btn btn-outline-success btn-sm mb-4">
-      <i class="bi bi-cloud-arrow-up me-2"></i> Сохранить
-    </button>
+    <div class="mb-3 w-100 d-flex align-items-center">
+      <button class="btn btn-outline-success btn-sm me-auto">
+        <i class="bi bi-cloud-arrow-up me-2"></i> Сохранить
+      </button>
+      <div v-if="timetableChanges.size">{{ changesInfo }}</div>
+    </div>
+
     <div class="table-responsive">
       <table class="table table-bordered table-sm">
         <thead>

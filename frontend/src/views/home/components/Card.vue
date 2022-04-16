@@ -21,7 +21,7 @@ const imagePath = computed(() => getIconPath(props.icon)?.href);
 </script>
 
 <template>
-  <div class="col-6 col-md-6 col-sm-6 col-lg-6 col-xl-4 mb-3">
+  <div class="col-12 col-md-6 col-sm-6 col-lg-6 col-xl-4 mb-3">
     <div class="card h-100">
       <img :src="imagePath" class="card-img-top icon" :alt="title" />
       <div class="card-body text-center">

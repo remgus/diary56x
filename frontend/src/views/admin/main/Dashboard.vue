@@ -23,11 +23,11 @@
 
     <div class="row">
       <card icon="person" title="Пользователи" link="/"></card>
-      <card icon="people" title="Классы" link="/"></card>
+      <!-- <card icon="people" title="Классы" link="/"></card> -->
       <card icon="calendar-week" title="Расписание" link="/admin/timetable" />
-      <card icon="newspaper" title="Новости" link="/" />
-      <card icon="pie-chart" title="Успеваемость" link="/" />
-      <card icon="file-earmark-text" title="Минимумы" link="/" />
+      <!-- <card icon="newspaper" title="Новости" link="/" /> -->
+      <!-- <card icon="pie-chart" title="Успеваемость" link="/" /> -->
+      <!-- <card icon="file-earmark-text" title="Минимумы" link="/" /> -->
     </div>
 
     <div class="d-flex flex-row mb-3 align-items-center">
@@ -44,7 +44,7 @@
 
     <div class="row">
       <card icon="box" title="Плагины" link="/admin/plugins" />
-      <card icon="book" title="Предметы" link="/" />
+      <!-- <card icon="book" title="Предметы" link="/" /> -->
     </div>
   </div>
 </template>

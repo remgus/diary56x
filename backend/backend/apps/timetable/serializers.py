@@ -39,3 +39,19 @@ class BellSerializer(serializers.ModelSerializer):
     class Meta:
         model = Bell
         fields = "__all__"
+
+
+class EditLessonSerializer(serializers.Serializer):
+    """Serializer for editing timetable lessons."""
+
+    lesson = serializers.IntegerField(min_value=1, max_value=10)
+    weekday = serializers.IntegerField(min_value=0, max_value=6)
+    subject = serializers.CharField(max_length=50, allow_blank=True)
+    classroom = serializers.CharField(max_length=50, allow_blank=True)
+
+
+class EditTimetableSerializer(serializers.Serializer):
+    """Serializer for editing timetable."""
+
+    records = EditLessonSerializer(many=True)
+    klass = serializers.IntegerField(min_value=1)

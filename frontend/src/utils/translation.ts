@@ -1,5 +1,5 @@
 /**
- * Pluri
+ * Pluralization rules for Russian language.
  * @param n Quantity
  * @param x Array of strings with Russian translations
  * @param showNum Whether to show the quantity

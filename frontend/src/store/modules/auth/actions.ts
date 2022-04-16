@@ -5,7 +5,7 @@ import {
 } from "@/api/local";
 import { listNotifications } from "@/api/services/notifications";
 import { Actions } from "vuex-smart-module";
-import { RootMutations } from "./actions";
+import { RootMutations } from "./mutations";
 import { RootGetters } from "./getters";
 import { Message, RootState, UserCredentials } from "./types";
 import { getCurrentUser, login, logout } from "@/api/services/auth";

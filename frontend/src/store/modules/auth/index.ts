@@ -1,7 +1,7 @@
 import { Module } from "vuex-smart-module";
-import { RootMutations } from "./actions";
+import { RootMutations } from "./mutations";
 import { RootGetters } from "./getters";
-import { RootActions } from "./mutations";
+import { RootActions } from "./actions";
 import { RootState } from "./types";
 
 export const root = new Module({
