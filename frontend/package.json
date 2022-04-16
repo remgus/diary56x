@@ -18,7 +18,7 @@
     "easymde": "^2.16.1",
     "highlight.js": "^11.4.0",
     "jdenticon": "^3.1.1",
-    "marked": "4.0.0",
+    "marked": "4.0.10",
     "slugify": "^1.6.5",
     "vue": "^3.2.25",
     "vue-router": "^4.0.0-0",
