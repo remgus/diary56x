@@ -1,29 +1,35 @@
-# Development setup
+# Diary56x backend
 
-## Tools to install
+## Table of contents
+
+- [Diary56x backend](#diary56x-backend)
+  - [Table of contents](#table-of-contents)
+  - [Development setup](#development-setup)
+    - [Tools to install](#tools-to-install)
+    - [Recommended VSCode plugins](#recommended-vscode-plugins)
+    - [Dependencies](#dependencies)
+    - [Server setup](#server-setup)
+    - [VSCode configuration](#vscode-configuration)
+
+## Development setup
+
+### Tools to install
 
 - [Python](https://python.org/downloads/)
 - [Poetry](https://python-poetry.org) (can be installed with _pip_)
-- [VSCode](https://code.visualstudio.com) (recommended)
-- [Yarn](https://yarnpkg.com)
 
-## Recommended VSCode plugins
+### Recommended VSCode plugins
 
 - [Django](https://marketplace.visualstudio.com/items?itemName=batisteo.vscode-django)
 - [Python](https://marketplace.visualstudio.com/items?itemName=ms-python.python)
-- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
-- [Volar](https://marketplace.visualstudio.com/items?itemName=johnsoncodehk.volar)
 
-## Backend setup
-
-### Backend dependencies
+### Dependencies
 
 ```bash
-cd backend
 poetry install
 ```
 
-### Django server
+### Server setup
 
 On your first run, you will need to migrate changes to a development database and create a new root admin user with Django:
 
@@ -38,37 +44,24 @@ poetry run python manage.py migrate
 poetry run python manage.py createsuperuser
 ```
 
-Open up a new terminal in the root folder.
+To start the server, run:
 
 ```bash
 # Django development server
 poetry run python manage.py runserver 0.0.0.0:8000
 ```
 
-## Frontend setup
-
-### Frontend dependencies
-
-```bash
-cd frontend
-yarn
-```
-
-### Vite development server
-
-Open up a new terminal in the root folder.
-
-```bash
-# Vite development server
-yarn dev
-```
-
-## Recommended VSCode config
+### VSCode configuration
 
 Recommended VSCode ``.vscode/settings.json``:
 
 ```json
 {
+  "files.exclude": {
+    "**/.git": true,
+    ".venv": true,
+    "**/__pycache__": true,
+  },
   "python.pythonPath": ".venv/bin/python",
   "python.linting.enabled": true,
   "python.linting.lintOnSave": true,
