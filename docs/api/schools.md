@@ -56,17 +56,15 @@ Model: ``backend.apps.core.models.School``
 
 ## API endpoints
 
-| Endpoint                     | Methods         | Desciption             |
-| ---------------------------- | --------------- | ---------------------- |
-| `/api/private/subjects/`     | GET             | List schools           |
-| `/api/private/subjects/<id>` | GET, PATCH, PUT | Get or update a school |
-
+| Endpoint             | Methods         | Desciption             |
+| -------------------- | --------------- | ---------------------- |
+| `/api/subjects/`     | GET             | List schools           |
+| `/api/subjects/<id>` | GET, PATCH, PUT | Get or update a school |
 
 ## Parameters
 
-### `/api/private/subjects/`
+### `/api/subjects/`
 
 | Parameter | Type    | Description                                            |
 | --------- | ------- | ------------------------------------------------------ |
 | `compact` | boolean | If true, don't show detailed information about plugins |
-

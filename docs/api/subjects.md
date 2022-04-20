@@ -28,5 +28,5 @@ Model: ``backend.apps.core.models.Subject``
 
 | Endpoint                     | Methods                 | Desciption                      |
 | ---------------------------- | ----------------------- | ------------------------------- |
-| `/api/private/subjects/`     | GET, POST               | List subjects / Create subject  |
-| `/api/private/subjects/<id>` | GET, PATCH, PUT, DELETE | Get, update or delete a subject |
+| `/api/subjects/`     | GET, POST               | List subjects / Create subject  |
+| `/api/subjects/<id>` | GET, PATCH, PUT, DELETE | Get, update or delete a subject |
