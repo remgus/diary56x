@@ -16,13 +16,13 @@ django-extensions = "^3.1.2"
 django-filter = "^2.4.0"
 django-widget-tweaks = "^1.4.8"
 djangorestframework = "^3.12.4"
-djangorestframework-simplejwt = "^5.0.0"
 mkdocs = "^1.2"
 poetry = "^1.1.6"
 python = "^3.9"
+sorl-thumbnail-serializer-field = "^0.2.1"
 toml = "^0.10.2"
 whitenoise = "^5.3.0"
-sorl-thumbnail-serializer-field = "^0.2.1"
+djoser = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
 autopep8 = "^1.6.0"
@@ -33,15 +33,15 @@ flake8-docstrings = "^1.6.0"
 flake8-import-order = "^0.18.1"
 flake8-quotes = "^3.3.1"
 isort = "^5.10.1"
+mkdocs = "^1.2.3"
 pylint = "^2.11.1"
 pylint-django = "^2.4.4"
 pytest = "^6.2.5"
 pytest-django = "^4.4.0"
-mkdocs = "^1.2.3"
 
 [build-system]
 build-backend = "poetry.core.masonry.api"
 requires = ["poetry-core>=1.0.0"]
 
 [tool.black]
-line-length = 88
+line-length = 99
