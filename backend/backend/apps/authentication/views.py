@@ -1,21 +1,34 @@
 import django_filters
-
+import requests
 from django.conf import settings
-
+from django.urls import reverse
 from rest_framework import generics, permissions, response, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
-from .serializers import (RefreshTokenSerializer, StudentCreateSerializer, UserBulkDeleteSerializer,
-                          UserSerializer)
+from .serializers import (
+    RefreshTokenSerializer,
+    StudentCreateSerializer,
+    UserBulkDeleteSerializer,
+    UserSerializer,
+)
 from .utils import ACCOUNT_TYPE_CHOICES
 
 
-class RetrieveCurrentUserView(generics.RetrieveAPIView):
+class ActivateUserAPIView(APIView):
+    def get(self, request, uid, token):
+        payload = {"uid": uid, "token": token}
+        url = "{0}://{1}{2}".format(settings.PROTOCOL, settings.DOMAIN, reverse("user-activation"))
+        response = requests.post(url, data=payload)
+        if response.status_code == 204:
+            return Response({"detail": "Account activated"}, status=status.HTTP_200_OK)
+        return Response(response.json())
+
+
+class ProfileView(generics.RetrieveAPIView):
     """Retrieve current user."""
 
     serializer_class = UserSerializer

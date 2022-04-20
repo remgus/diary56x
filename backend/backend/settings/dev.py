@@ -3,16 +3,21 @@
 import datetime
 from pathlib import Path
 
+import toml
+
 SETTINGS_DIR = Path(__file__).resolve().parent.parent
 BASE_DIR = Path(SETTINGS_DIR).parent
+
+
+config = toml.load(BASE_DIR / "config.toml")
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-SECRET_KEY = "django-insecure-bcs-m)x#@u6q=fmf85hc12+y7ehpc9c(^!0x8@2@rq%2mzjng$"
+SECRET_KEY = config["Django"]["SECRET_KEY"]
 
-DEBUG = True
+DEBUG = config["Django"]["DEBUG"]
 ALLOWED_HOSTS = ["*"]
 
 
@@ -32,8 +37,6 @@ INSTALLED_APPS = [
     "backend.apps.core.apps.CoreConfig",
     "backend.apps.notifications.apps.NotificationsConfig",
     "backend.apps.timetable.apps.TimetableConfig",
-    "backend.apps.help.apps.HelpConfig",
-
     # Third-party apps
     "whitenoise.runserver_nostatic",
     "corsheaders",
@@ -42,7 +45,11 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "sorl_thumbnail_serializer",
     "sorl.thumbnail",
+    # Auth
+    "djoser",
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -61,7 +68,7 @@ ROOT_URLCONF = "backend.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["dist"],
+        "DIRS": ["dist", "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -152,8 +159,31 @@ JWT_AUTH = {
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
     "UPDATE_LAST_LOGIN": True,
+    "AUTH_HEADER_TYPES": ("JWT",),
 }
 
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+
+# Email
+DEFAULT_FROM_EMAIL = config["Email"]["DEFAULT_FROM_EMAIL"]
+EMAIL_HOST = config["Email"]["EMAIL_HOST"]
+EMAIL_PORT = config["Email"]["EMAIL_PORT"]
+EMAIL_HOST_USER = config["Email"]["EMAIL_HOST_USER"]
+EMAIL_HOST_PASSWORD = config["Email"]["EMAIL_HOST_PASSWORD"]
+EMAIL_USE_TLS = config["Email"]["EMAIL_USE_TLS"]
+
+
+# Users
+DJOSER = {
+    "SEND_ACTIVATION_EMAIL": True,
+    "ACTIVATION_URL": "api/auth/activate/{uid}/{token}",
+    "EMAIL": {
+        "activation": "backend.apps.authentication.email.ActivationEmail",
+    },
+}
+
+PROTOCOL = "http"
+DOMAIN = "localhost:8000"

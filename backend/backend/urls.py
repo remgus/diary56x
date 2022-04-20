@@ -10,12 +10,15 @@ index_view = never_cache(TemplateView.as_view(template_name="index.html"))
 urlpatterns = [
     path("", TemplateView.as_view(template_name="index.html"), name="index"),
     path("admin/", admin.site.urls),
-    path("api/private/auth/", include("backend.apps.authentication.urls")),
-    path("api/private/blog/", include("backend.apps.blog.urls")),
-    path("api/private/notifications/", include("backend.apps.notifications.urls")),
-    path("api/private/timetable/", include("backend.apps.timetable.urls")),
-    path("api/private/help/", include("backend.apps.help.urls")),
-    path("api/private/", include("backend.apps.core.urls")),
+    path("api/blog/", include("backend.apps.blog.urls")),
+    path("api/notifications/", include("backend.apps.notifications.urls")),
+    path("api/timetable/", include("backend.apps.timetable.urls")),
+    path("api/", include("backend.apps.core.urls")),
+
+    # Djoser & SimpleJWT
+    path("api/auth/", include("backend.apps.authentication.urls")),
+    path("api/auth/", include("djoser.urls")),
+    path("api/auth/", include("djoser.urls.jwt")),
 ]
 
 if settings.DEBUG:

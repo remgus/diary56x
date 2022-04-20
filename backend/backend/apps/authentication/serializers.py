@@ -35,9 +35,9 @@ class UserSerializer(serializers.ModelSerializer):
             "account_type",
             "email",
             "first_name",
-            "second_name",
+            "last_name",
             "surname",
-            "registration_date",
+            "date_joined",
             "last_login",
             "options_student",
             "options_teacher",
@@ -64,14 +64,14 @@ class CompactUserSerializer(serializers.ModelSerializer):
             "id",
             "email",
             "first_name",
-            "second_name",
+            "last_name",
             "surname",
             "is_superuser",
             "is_staff",
             "account_type",
             "is_active",
             "last_login",
-            "registration_date",
+            "date_joined",
         ]
         read_only_fields = ["id"]
 

@@ -4,19 +4,17 @@ import router from "../router";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import store from "../store";
 
+const BASE_URL = "/api/";
+
 axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 
 enum APIURLS {
-  GET_TOKEN = "auth/token",
-  REFRESH_TOKEN = "auth/token/refresh",
-  CURRENT_USER = "auth/users/current",
-  REMOVE_TOKEN = "auth/logout",
-  BASE_URL = "/api/private/",
+  REFRESH_TOKEN = "auth/token/refresh/",
 }
 
 export const instance = axios.create({
-  baseURL: "/api/private/",
+  baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
     "Accept-Language": "ru-RU",
@@ -24,7 +22,7 @@ export const instance = axios.create({
 });
 
 export const noAuthInstance = axios.create({
-  baseURL: "/api/private/",
+  baseURL: BASE_URL,
   headers: {
     "Content-Type": "application/json",
     "Accept-Language": "ru-RU",
@@ -53,7 +51,7 @@ instance.interceptors.request.use(
 
 const refreshAuthLogic = (failedRequest: AxiosError) =>
   axios
-    .post(APIURLS.BASE_URL + APIURLS.REFRESH_TOKEN, {
+    .post(BASE_URL + APIURLS.REFRESH_TOKEN, {
       refresh: getLocalData(LocalData.REFRESH_TOKEN),
     })
     .then((response) => {

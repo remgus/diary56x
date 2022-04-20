@@ -21,3 +21,8 @@ class Notification(models.Model):
     read = models.BooleanField(default=False)
     title = models.CharField(max_length=255, default="")
     category = models.CharField(max_length=255, choices=CATEGORIES, default="system")
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Уведомление"
+        verbose_name_plural = "Уведомления"

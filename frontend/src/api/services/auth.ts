@@ -10,10 +10,10 @@ export interface APITokens {
 
 export enum AuthAPIURLS {
   CREATE_STUDENT = "auth/users/create-student",
-  CURRENT_USER = "auth/users/current",
-  GET_TOKEN = "auth/token",
-  REMOVE_TOKEN = "auth/logout",
-  REFRESH_TOKEN = "auth/token/refresh",
+  CURRENT_USER = "auth/users/me",
+  GET_TOKEN = "auth/jwt/create/",
+  REMOVE_TOKEN = "auth/jwt/blacklist/",
+  REFRESH_TOKEN = "auth/jwt/refresh/",
 }
 
 export enum AccountTypes {
@@ -32,7 +32,7 @@ export interface APICompactUser {
   id: number;
   email: string;
   first_name: string;
-  second_name: string;
+  last_name: string;
   surname: string;
   account_type: AccountTypes;
   is_superuser: boolean;
@@ -49,7 +49,7 @@ export interface APIUser extends APICompactUser {
 export interface CreateStudentData {
   first_name: string;
   surname: string;
-  second_name?: string;
+  last_name?: string;
   email: string;
   password: string;
   school: number;
@@ -65,8 +65,10 @@ export const getCurrentUser = (): Promise<AxiosResponse<APIUser>> => {
   return API.axios.get<APIUser>(AuthAPIURLS.CURRENT_USER);
 };
 
-export const login = (credentials: UserCredentials): Promise<AxiosResponse> => {
-  return API.noAuthAxios.post<APITokens>(AuthAPIURLS.GET_TOKEN, {
+export const login = (
+  credentials: UserCredentials
+): Promise<AxiosResponse<APITokens>> => {
+  return API.noAuthAxios.post(AuthAPIURLS.GET_TOKEN, {
     email: credentials.email,
     password: credentials.password,
   });

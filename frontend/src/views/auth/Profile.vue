@@ -8,7 +8,7 @@
       <div class="mt-2">
         {{ user.surname }} {{ user.first_name }}
         <br />
-        {{ user.second_name }}
+        {{ user.last_name }}
       </div>
     </div>
 

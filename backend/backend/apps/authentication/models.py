@@ -2,6 +2,8 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import PermissionsMixin
 from django.core.mail import send_mail
 from django.db import models
+from django.utils import timezone
+
 
 from .manager import UserManager
 from .utils import ACCOUNT_TYPE_CHOICES, UserTypes
@@ -17,11 +19,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField("Активный", default=True)
     is_staff = models.BooleanField("Администратор", default=False)
     first_name = models.CharField("Имя", max_length=100)
-    second_name = models.CharField("Отчество", max_length=100, blank=True, default="")
+    last_name = models.CharField("Отчество", max_length=100, blank=True, default="")
     surname = models.CharField("Фамилия", max_length=100)
-    registration_date = models.DateField(
-        "Дата регистрации", auto_now_add=True, null=True
-    )
+    date_joined = models.DateTimeField("Дата регистрации", default=timezone.now)
 
     school = models.ForeignKey(
         "core.School",
@@ -33,6 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     objects = UserManager()
 
+    EMAIL_FIELD = "email"
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["account_type", "first_name", "surname"]
 
@@ -43,7 +44,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         """Get a full name of a user (surname, first name & second name)."""
-        return f"{self.surname} {self.first_name} {self.second_name}"
+        return f"{self.surname} {self.first_name} {self.last_name}"
 
     def get_short_name(self):
         """Get a short name of a user (surname and first name)."""

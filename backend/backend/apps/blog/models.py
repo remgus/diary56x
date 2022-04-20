@@ -21,8 +21,8 @@ class Posts(models.Model):
 
     class Meta:
         ordering = ["-date"]
-        verbose_name_plural = "Новости"
-        verbose_name = "Новость"
+        verbose_name_plural = "Записи"
+        verbose_name = "Запись"
 
     def __str__(self):
         return "{}".format(self.title)
