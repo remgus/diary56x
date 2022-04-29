@@ -4,7 +4,7 @@ from ..models import Subject
 
 
 class SubjectSerializer(serializers.ModelSerializer):
-    """Subject serializer."""
+    """Serializer for `Subject` model."""
 
     class Meta:
         model = Subject

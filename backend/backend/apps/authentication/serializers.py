@@ -84,8 +84,9 @@ class StudentCreateSerializer(serializers.ModelSerializer):
         fields = ["email", "first_name", "second_name", "surname", "school", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
-    def create(self, validated_data):
+    def create(self, validated_data: dict):
         """Create a new student."""
+        validated_data.setdefault("school", None)
         user = models.User.objects.create(
             account_type=UserTypes.STUDENT.value,
             surname=validated_data["surname"],

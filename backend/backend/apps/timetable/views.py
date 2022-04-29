@@ -1,42 +1,72 @@
+import django_filters
 from backend.apps.core.models import Klass
-from django.db.models import QuerySet
 from django.shortcuts import get_object_or_404
-from rest_framework.generics import ListAPIView
+from rest_framework import status
+from rest_framework.generics import (
+    DestroyAPIView,
+    ListAPIView,
+    ListCreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from .models import Bell, TimetableLesson
 from .serializers import (
     BellSerializer,
-    EditTimetableSerializer,
-    TimetableSerializer,
+    CreateLessonsSerializer,
+    DeleteLessonSerializer,
+    LessonSerializer,
 )
 
 
-def get_timetable(lessons: QuerySet[TimetableLesson]):
-    """Transform lessons to timetable."""
-    return [
-        {"weekday": weekday, "lessons": lessons.filter(day=weekday)}
-        for weekday in list(range(1, 7)) + [0]
-    ]
+class TimetableAPIView(ListCreateAPIView):
+    """List lessons for a specified class or edit the timetable."""
 
-
-class TimetableListAPIView(ListAPIView):
-    """List timetable."""
-
-    serializer_class = TimetableSerializer
+    pagination_class = None
 
     def get_queryset(self):
         """Return timetable for klass."""
         klass = get_object_or_404(Klass, id=self.kwargs["pk"])
         return TimetableLesson.objects.filter(klass=klass)
 
-    def list(self, request, *args, **kwargs):
-        """Return timetable for klass."""
-        qs = self.get_queryset()
-        output = get_timetable(qs)
-        serializer = self.get_serializer(output, many=True)
-        return Response(serializer.data)
+    def get_serializer_class(self):
+        """Return serializer class."""
+        if self.request.method == "POST":
+            return CreateLessonsSerializer
+        return LessonSerializer
+
+    def create(self, request, *args, **kwargs):
+        """Create multiple timetable records."""
+        serializer = self.get_serializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response({"status": "ok"}, status.HTTP_201_CREATED)
+
+
+class BulkDeleteLessonsAPIView(DestroyAPIView):
+    """Delete multiple lessons."""
+
+    queryset = TimetableLesson.objects.all()
+    serializer_class = DeleteLessonSerializer
+
+    def destroy(self, request, *args, **kwargs):
+        """Delete multiple lessons."""
+        serializer = self.get_serializer(data=request.data, many=True)
+        serializer.is_valid(raise_exception=True)
+        to_delete = []
+        for lesson in serializer.validated_data:
+            try:
+                lsn = TimetableLesson.objects.get(
+                    number__n=lesson["n"],
+                    group=lesson["group"],
+                    day=lesson["day"],
+                    klass=lesson["klass"],
+                )
+                to_delete.append(lsn.id)
+            except TimetableLesson.DoesNotExist:
+                pass
+        TimetableLesson.objects.filter(id__in=to_delete).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ListBellsAPIView(ListAPIView):
@@ -45,21 +75,16 @@ class ListBellsAPIView(ListAPIView):
     serializer_class = BellSerializer
     queryset = Bell.objects.all()
 
+    class BellsFilter(django_filters.FilterSet):
+        """Filter bells."""
 
-class EditTimetableView(APIView):
-    def post(self):
-        serializer = EditTimetableSerializer(data=self.request.data, many=True)
-        serializer.is_valid(raise_exception=True)
+        class Meta:
+            model = Bell
+            fields = ["school"]
 
-        bells = Bell.objects.all()
 
-        for record in serializer.validated_data["records"]:
-            TimetableLesson.objects.update_or_create(
-                number__n=record["lesson"],
-                day=record["weekday"],
-                klass_id=serializer.validated_data["klass"],
-                classroom=record["classroom"],
-                subject=record["subject"],
-            )
-        
+class BellAPIView(RetrieveUpdateDestroyAPIView):
+    """Retrieve, update or delete a bell."""
 
+    queryset = Bell.objects.all()
+    serializer_class = BellSerializer

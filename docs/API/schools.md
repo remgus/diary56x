@@ -10,7 +10,7 @@ Model: ``backend.apps.core.models.School``
 | ----------- | --------------- | ---------------------------------------- |
 | id          | integer         | Unique identifier                        |
 | name        | string          | Name of the school                       |
-| description | string          | Description of the school                |
+| description | string          | Description                              |
 | plugins     | ManyToManyField | Plugins that are enabled for this school |
 
 ## Example
@@ -19,25 +19,25 @@ Model: ``backend.apps.core.models.School``
 
 ```json
 {
-    "id": 1,
-    "plugins": [
-        {
-            "id": 3,
-            "name": "homework",
-            "description": "Дает возможность ученикам просматривать домашнее задание, которое может быть добавлено учителями.",
-            "icon": "http://127.0.0.1:8000/media/plugins/homework.png",
-            "month_price": 0
-        },
-        {
-            "id": 1,
-            "name": "timetable",
-            "description": "Позволяет ученикам просматривать свое расписание, которое задается администраторами для каждого класса.",
-            "icon": "http://127.0.0.1:8000/media/plugins/timetable.png",
-            "month_price": 0
-        }
-    ],
-    "name": "Академическая гимназия №56",
-    "description": ""
+  "id": 1,
+  "plugins": [
+    {
+      "id": 3,
+      "name": "homework",
+      "description": "Дает возможность ученикам просматривать домашнее задание, которое может быть добавлено учителями.",
+      "icon": "http://127.0.0.1:8000/media/plugins/homework.png",
+      "month_price": 0
+    },
+    {
+      "id": 1,
+      "name": "timetable",
+      "description": "Позволяет ученикам просматривать свое расписание, которое задается администраторами для каждого класса.",
+      "icon": "http://127.0.0.1:8000/media/plugins/timetable.png",
+      "month_price": 0
+    }
+  ],
+  "name": "ГБОУ Академическая гимназия №56",
+  "description": ""
 }
 ```
 

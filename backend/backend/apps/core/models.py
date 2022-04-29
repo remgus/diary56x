@@ -4,13 +4,21 @@ from django.db import models
 
 
 class School(models.Model):
-    """School model."""
+    """School model.
 
-    name = models.CharField("Наименование", max_length=100)
+    Fields:
+        name (`CharField`): School name.
+        full_name (`CharField`): School full (official) name.
+        description (`TextField`): School description.
+        plugins (`ManyToManyField`): Plugins enabled for school.
+    """
+
+    name = models.CharField("Название", max_length=100)
     plugins = models.ManyToManyField(
         "Plugin", blank=True, verbose_name="Плагины", related_name="schools"
     )
     description = models.TextField("Описание", blank=True)
+    full_name = models.CharField("Официальное название", max_length=100, blank=True)
 
     class Meta:
         verbose_name = "Образовательное учреждение"
@@ -18,11 +26,21 @@ class School(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return self.name
+        return self.full_name if self.full_name else self.name
 
 
 class Klass(models.Model):
-    """Class model."""
+    """Class model.
+
+    Fields:
+        name (`CharField`): Class name.
+        school (`ForeignKey`): School.
+        students (`ManyToManyField`): Students in class.
+        teachers (`ManyToManyField`): Teachers in class.
+        head_teacher (`ForeignKey`): Head teacher.
+        description (`TextField`): Class description.
+        subjects (`ManyToManyField`): Subjects that are studied in class.
+    """
 
     name = models.CharField("Класс", max_length=20)
     students = models.ManyToManyField(Student, related_name="students", blank=True)
@@ -64,17 +82,21 @@ class Plugin(models.Model):
 
     Plugins can be attached to schools. Each plugin unlocks
     functionality specific to a school it's attached to.
+
+    Fields:
+        name (`CharField`): Plugin name.
+        description (`TextField`): Plugin description.
+        icon (`ImageField`): Plugin icon.
     """
 
     name = models.CharField("Название", max_length=100, unique=True)
     description = models.TextField("Описание", blank=True)
     icon = models.ImageField("Иконка", upload_to="plugins/", blank=True)
-    month_price = models.PositiveIntegerField("Месячная стоимость", default=0)
-
-    def __str__(self):
-        return self.name
 
     class Meta:
         verbose_name = "Плагин"
         verbose_name_plural = "Плагины"
         ordering = ["name"]
+
+    def __str__(self):
+        return self.name

@@ -2,35 +2,20 @@ from backend.apps.core.subjects.serializers import SubjectSerializer
 from rest_framework import serializers
 
 from .models import Bell, TimetableLesson
+from .utils import generate_bell
 
 
-class LessonCreateSerializer(serializers.ModelSerializer):
-    """Lesson create serializer."""
+class LessonSerializer(serializers.ModelSerializer):
+    """Serializer for TimetableLesson model."""
 
-    n = serializers.IntegerField(min_value=1)
-    subject = serializers.CharField(max_length=50, allow_blank=True)
-    classroom = serializers.CharField(max_length=50, allow_blank=True)
+    n = serializers.IntegerField(source="number.n")
+    start = serializers.TimeField(source="number.start")
+    end = serializers.TimeField(source="number.end")
+    subject = SubjectSerializer()
 
     class Meta:
         model = TimetableLesson
-        fields = ["subject", "classroom", "n", "letter", "number", "day", "klass"]
-
-
-class TimetableSerializer(serializers.Serializer):
-    """Serializer for timetable."""
-
-    class LessonSerializer(serializers.ModelSerializer):
-        n = serializers.IntegerField(source="number.n")
-        start = serializers.TimeField(source="number.start")
-        end = serializers.TimeField(source="number.end")
-        subject = SubjectSerializer()
-
-        class Meta:
-            model = TimetableLesson
-            fields = ("n", "start", "end", "subject", "classroom", "id")
-
-    weekday = serializers.IntegerField()
-    lessons = LessonSerializer(many=True)
+        fields = ["n", "start", "end", "subject", "classroom", "id", "group", "day"]
 
 
 class BellSerializer(serializers.ModelSerializer):
@@ -38,20 +23,56 @@ class BellSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Bell
-        fields = "__all__"
+        fields = ["id", "school", "n", "start", "end"]
 
 
-class EditLessonSerializer(serializers.Serializer):
-    """Serializer for editing timetable lessons."""
-
-    lesson = serializers.IntegerField(min_value=1, max_value=10)
-    weekday = serializers.IntegerField(min_value=0, max_value=6)
-    subject = serializers.CharField(max_length=50, allow_blank=True)
-    classroom = serializers.CharField(max_length=50, allow_blank=True)
-
-
-class EditTimetableSerializer(serializers.Serializer):
+class CreateLessonsSerializer(serializers.ModelSerializer):
     """Serializer for editing timetable."""
 
-    records = EditLessonSerializer(many=True)
-    klass = serializers.IntegerField(min_value=1)
+    n = serializers.IntegerField()
+
+    class Meta:
+        model = TimetableLesson
+        fields = ["n", "classroom", "group", "day", "klass", "subject"]
+
+    def create(self, validated_data):
+        """Create lessons."""
+        school = validated_data["klass"].school
+        n = validated_data["n"]
+
+        # Get or create a bell for the lesson
+        try:
+            bell = Bell.objects.get(n=n, school=school)
+        except Bell.DoesNotExist:
+            bell = generate_bell(n, school)
+
+        try:
+            lesson = TimetableLesson.objects.get(
+                number=bell,
+                group=validated_data["group"],
+                day=validated_data["day"],
+                klass=validated_data["klass"],
+            )
+            lesson.classroom = validated_data["classroom"]
+            lesson.subject = validated_data["subject"]
+            lesson.save()
+        except TimetableLesson.DoesNotExist:
+            lesson = TimetableLesson.objects.create(
+                number=bell,
+                group=validated_data["group"],
+                day=validated_data["day"],
+                klass=validated_data["klass"],
+                subject=validated_data["subject"],
+                classroom=validated_data["classroom"],
+            )
+        return lesson
+
+
+class DeleteLessonSerializer(serializers.ModelSerializer):
+    """Serializer for deleting lessons."""
+
+    n = serializers.IntegerField()
+
+    class Meta:
+        model = TimetableLesson
+        fields = ["n", "group", "day", "klass"]

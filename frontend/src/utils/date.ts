@@ -21,10 +21,10 @@ export const getCurrentYear = (): number => {
 };
 
 export const getDayName = (day: number) => {
+  if (day === 7) day = 0;
   let now = new Date();
   let distance = day - now.getDay();
   now.setDate(now.getDate() + distance);
-
   let r = now.toLocaleString("ru", { weekday: "long" });
   r = r[0].toUpperCase() + r.slice(1);
   return r;

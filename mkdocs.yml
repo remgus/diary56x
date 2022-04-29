@@ -1,4 +1,4 @@
-site_name: Diary56x documentation
+site_name: Diary56x
 theme:
   name: material
   language: en
@@ -26,6 +26,8 @@ markdown_extensions:
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.superfences
+  - pymdownx.details
+  - admonition
   - tables
 
 repo_url: https://github.com/AlanTheKnight/diary56x

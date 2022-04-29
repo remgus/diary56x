@@ -1,7 +1,7 @@
-# Diary56x
+# About Diary56x
 
-<div align="center" style="margin-bottom: 30px">
-<img src="images/logo.svg" width="20%"/>
-</div>
-
-**Diary56x** is a new version of Diary56. While the original version uses Django both on backend and frontend, Diary56x uses Django only for backend and VueJS for frontend.
+**Diary56x** is an open-source school management system.
+In other words, it's a website which provides a variety
+of tools for students, teachers and school administrators.
+For instance, it can be used for managing attendance, grades,
+homework, accessing timetable, etc.

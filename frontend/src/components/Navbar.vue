@@ -29,7 +29,7 @@
           class="d-inline-block align-center me-2"
           alt=""
         />
-        <span id="brand-name">DiaryX</span>
+        <span id="brand-name">Diary56x</span>
       </router-link>
 
       <div

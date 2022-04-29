@@ -15,11 +15,8 @@ export interface APITimetableLesson {
   classroom: string;
   subject: APISubject;
   id: number;
-}
-
-export interface APITimetable {
-  weekday: number;
-  lessons: APITimetableLesson[];
+  group: number;
+  day: number;
 }
 
 export enum TimetableAPIURLS {
@@ -28,6 +25,6 @@ export enum TimetableAPIURLS {
 
 export const getTimeTable = (
   klass_id: number
-): Promise<AxiosResponse<APITimetable[]>> => {
+): Promise<AxiosResponse<APITimetableLesson[]>> => {
   return API.axios.get(TimetableAPIURLS.LIST + klass_id);
 };

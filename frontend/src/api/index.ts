@@ -10,7 +10,7 @@ axios.defaults.xsrfCookieName = "csrftoken";
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 
 enum APIURLS {
-  REFRESH_TOKEN = "auth/token/refresh/",
+  REFRESH_TOKEN = "auth/jwt/refresh/",
 }
 
 export const instance = axios.create({

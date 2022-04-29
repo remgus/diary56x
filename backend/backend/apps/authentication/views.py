@@ -16,10 +16,17 @@ from .serializers import (
     UserSerializer,
 )
 from .utils import ACCOUNT_TYPE_CHOICES
+from backend.permissions import IsAdminPermission
+
+
+# TODO: Replace ActivateUserAPIView with frontend page
 
 
 class ActivateUserAPIView(APIView):
+    """Activate user account."""
+
     def get(self, request, uid, token):
+        """Activate user account."""
         payload = {"uid": uid, "token": token}
         url = "{0}://{1}{2}".format(settings.PROTOCOL, settings.DOMAIN, reverse("user-activation"))
         response = requests.post(url, data=payload)
@@ -79,6 +86,7 @@ class UserBulkDeleteAPIView(generics.DestroyAPIView):
 
     serializer_class = UserBulkDeleteSerializer
     queryset = User.objects.all()
+    permission_classes = [IsAdminPermission]
 
     def destroy(self, request, *args, **kwargs):
         """Delete multiple users."""
@@ -93,6 +101,8 @@ class UserBulkDeleteAPIView(generics.DestroyAPIView):
 
 
 class LogoutView(APIView):
+    """Logout users by blacklisting their refresh token."""
+
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
@@ -113,3 +123,6 @@ class CreateStudentAPIView(generics.CreateAPIView):
 
     serializer_class = StudentCreateSerializer
     queryset = User.objects.all()
+
+
+# TODO: CreateAdminAPIView

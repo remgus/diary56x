@@ -1,13 +1,25 @@
 <script setup lang="ts">
-import { nextTick, onMounted, onUpdated, ref, watch } from "vue";
+import { nextTick, onMounted, onUpdated, ref, watch, computed } from "vue";
 import { Loading } from "@/components";
 import { SelectOption } from "@/components/forms/FormSelect.vue";
-import { APITimetable, getTimeTable } from "@/api/services/timetable";
+import { getTimeTable } from "@/api/services/timetable";
 import { getDayName } from "@/utils/date";
 import { listSubjects } from "@/api/services/subjects";
 import { onBeforeRouteLeave } from "vue-router";
 import { plural } from "@/utils/translation";
-import { computed } from "@vue/reactivity";
+
+export interface TimetableLesson {
+  n: number;
+  subject?: string;
+  classroom: string;
+  group: number;
+  day: number;
+}
+
+export interface TimetableDay {
+  weekday: number;
+  lessons: TimetableLesson[];
+}
 
 const props = defineProps({
   klass: {
@@ -16,91 +28,84 @@ const props = defineProps({
   },
 });
 
-// Shows whether the timetable is being loaded
 const isLoading = ref(true);
 
-// Timetable data
-const timetable = ref<APITimetable[]>([]);
-
-// Lessons indexes (array from 1 to 10)
-const lessons = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+// Table data
+const timetable = ref<TimetableDay[]>([]);
 
 const subjectOptions = ref<SelectOption[]>([]);
+const groupOptions = ref<SelectOption[]>([]);
 
 interface TimetableChange {
   subject?: string;
   classroom?: string;
+  group?: string;
 }
 
 const timetableChanges = ref(new Map<string, TimetableChange>());
 
-const setInitialValues = () => {
-  lessons.forEach((lesson) => {
-    timetable.value.forEach((day) => {
-      const [subject, classroom] = getDayInfo(lesson, day.weekday);
-      (
-        document.getElementById(
-          `subject-${day.weekday}-${lesson}`
-        ) as HTMLInputElement
-      ).value = subject;
-      (
-        document.getElementById(
-          `classroom-${day.weekday}-${lesson}`
-        ) as HTMLInputElement
-      ).value = classroom;
-    });
-  });
-};
+const refreshTableValues = () => {
+  for (const day of timetable.value) {
+    for (const lesson of day.lessons) {
+      const n = lesson.n;
+      const classroom = lesson.classroom;
 
-const changeTimetable = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  const id = target.id.split("-");
-  const weekday = parseInt(id[1]);
-  const lesson = parseInt(id[2]);
-  const change_key = [weekday, lesson].join("-");
+      // Find corresponsing HTML elements and set values
 
-  const subject = (
-    document.getElementById(`subject-${weekday}-${lesson}`) as HTMLInputElement
-  ).value;
-  const classroom = (
-    document.getElementById(
-      `classroom-${weekday}-${lesson}`
-    ) as HTMLInputElement
-  ).value;
+      // Lesson number
+      const nEl = document.querySelector(
+        `#n-${day.weekday}-${n}-${lesson.group}`
+      ) as HTMLInputElement;
+      if (nEl) nEl.value = String(n);
 
-  const initialValue = getDayInfo(lesson, weekday);
-  if (subject === initialValue[0] && classroom === initialValue[1]) {
-    timetableChanges.value.delete(change_key);
-  } else {
-    timetableChanges.value.set(change_key, {
-      subject,
-      classroom,
-    });
+      // Classroom
+      const classroomEl = document.querySelector(
+        `#classroom-${day.weekday}-${n}-${lesson.group}`
+      ) as HTMLInputElement;
+      if (classroomEl) classroomEl.value = classroom;
+    }
   }
 };
 
 const refreshTimetable = async () => {
-  const klassId = parseInt(props.klass);
-  const subjects = (await listSubjects()).data;
-  const ttData = (await getTimeTable(klassId)).data;
+  const klassId = parseInt(props.klass); // Selected class
+  // TODO: Fetch subjects depending on selected class
+  const subjects = (await listSubjects()).data; // Fetch subjects
+  const res = (await getTimeTable(klassId)).data; // Get the timetable
 
   subjectOptions.value = subjects.map((subject) => ({
     value: String(subject.id),
     label: subject.name,
   }));
 
-  timetable.value = ttData;
+  groupOptions.value = [
+    [0, "-"],
+    [1, "I"],
+    [2, "II"],
+    [3, "III"],
+  ].map(([group, label]) => ({
+    value: String(group),
+    label: String(label),
+  }));
+
   isLoading.value = false;
 
-  nextTick(setInitialValues);
-};
+  // Initial table data
+  timetable.value = [];
+  for (let i = 1; i <= 7; i++)
+    timetable.value.push({ weekday: i, lessons: [] });
 
-const getDayInfo = (lesson: number, day: number): [string, string] => {
-  const dayTable = timetable.value.find((d) => d.weekday === day);
-  if (!dayTable) return ["", ""];
-  const subject = dayTable.lessons.find((l) => l.n === lesson);
-  if (!subject) return ["", ""];
-  return [String(subject.subject.id), subject.classroom];
+  for (const lesson of res) {
+    timetable.value[lesson.day - 1].lessons.push({
+      n: lesson.n,
+      subject: lesson.subject ? String(lesson.subject.id) : undefined,
+      classroom: lesson.classroom ? lesson.classroom : "",
+      group: lesson.group ? lesson.group : 0,
+      day: lesson.day,
+    });
+  }
+
+  nextTick(refreshTableValues);
 };
 
 onMounted(refreshTimetable);
@@ -133,83 +138,196 @@ const changesInfo = computed(() => {
     true
   );
 });
+
+/**
+ * Add a new lesson to the table.
+ *
+ * @param day Day of the week
+ */
+const addLesson = (day: number) => {
+  timetable.value[day - 1].lessons.push({
+    n: timetable.value[day - 1].lessons.length + 1,
+    classroom: "",
+    group: 0,
+    subject: undefined,
+    day: day,
+  });
+  nextTick(refreshTableValues);
+};
+
+const editLesson = (e: Event) => {
+  const target = (e.target as HTMLInputElement).id;
+  const newValue = (e.target as HTMLInputElement).value;
+  const [field, day, lesson, group] = target.split("-");
+  const dayN = parseInt(day);
+  const curDay = timetable.value[dayN - 1];
+
+  let curLesson = curDay.lessons.findIndex(
+    (l) =>
+      l.n === parseInt(lesson) && l.day === dayN && l.group === parseInt(group)
+  );
+  const newLesson = JSON.parse(JSON.stringify(curLesson)); // Copy the lesson
+
+  console.log("Old lesson before the change", curLesson);
+
+  // Set a new value
+  switch (field) {
+    case "n":
+      newLesson!.n = parseInt(newValue);
+      break;
+    case "classroom":
+      newLesson!.classroom = newValue;
+      break;
+    case "group":
+      newLesson!.group = parseInt(newValue);
+      break;
+    case "subject":
+      newLesson!.subject = newValue;
+      break;
+  }
+
+  console.log("New lesson: ", newLesson);
+  console.log("Old lesson", curLesson);
+
+  // Check if the lesson is already in the timetable
+  const isLessonInTimetable = timetable.value[dayN - 1].lessons.find(
+    (l) =>
+      l.n === newLesson.n &&
+      l.day === newLesson.day &&
+      l.group === newLesson.group &&
+      l.subject === newLesson.subject &&
+      l.classroom === newLesson.classroom
+  );
+
+  console.log("Is lesson in timetable?", isLessonInTimetable);
+
+  // If lesson's already in the timetable, do not apply the change
+  if (isLessonInTimetable) {
+    alert("Урок уже есть в расписании");
+    nextTick(refreshTableValues);
+    return;
+  }
+
+  // Apply the change
+  curLesson = JSON.parse(JSON.stringify(newLesson));
+
+  // Sort lessons by number and group
+  curDay.lessons = timetable.value[dayN - 1].lessons.sort((a, b) =>
+    a.n !== b.n ? a.n - b.n : a.group - b.group
+  );
+
+  // Refresh the table
+  nextTick(refreshTableValues);
+};
+
+const deleteLesson = (lesson: TimetableLesson) => {
+  timetable.value[lesson.day - 1].lessons.splice(
+    timetable.value[lesson.day - 1].lessons.indexOf(lesson),
+    1
+  );
+};
 </script>
 
 <template>
   <loading :is-loading="isLoading">
-    <div class="mb-3 w-100 d-flex align-items-center">
-      <button class="btn btn-outline-success btn-sm me-auto">
-        <i class="bi bi-cloud-arrow-up me-2"></i> Сохранить
-      </button>
-      <div v-if="timetableChanges.size">{{ changesInfo }}</div>
-    </div>
-
-    <div class="table-responsive">
-      <table class="table table-bordered table-sm">
-        <thead>
-          <tr class="text-center table-dark">
-            <th></th>
-            <th v-for="day in timetable" colspan="2">
-              {{ getDayName(day.weekday) }}
-            </th>
-          </tr>
-          <tr>
-            <th>#</th>
-            <template v-for="_ in timetable">
+    <div class="row justify-content-center">
+      <div class="col-7 mb-5">
+        <button class="btn btn-outline-success me-auto">
+          <i class="bi bi-cloud-arrow-up me-2"></i> Сохранить
+        </button>
+        <div v-if="timetableChanges.size">{{ changesInfo }}</div>
+      </div>
+      <div v-for="day in timetable" class="col-7">
+        <table class="table table-bordered table-sm table">
+          <thead>
+            <tr class="text-center table-dark">
+              <th colspan="5">{{ getDayName(day.weekday) }}</th>
+            </tr>
+            <tr>
+              <th style="width: 10%">#</th>
               <th>Предмет</th>
               <th>Аудитория</th>
-            </template>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="lesson in lessons">
-            <th>{{ lesson }}</th>
-            <template v-for="day in timetable">
-              <td
-                class="input-wrapper"
-                :class="{
-                  'was-changed': timetableChanges.has(
-                    [day.weekday, lesson].join('-')
-                  ),
-                }"
-              >
+              <th>Группа</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="lesson in day.lessons">
+              <!-- Lesson number -->
+              <td>
+                <input
+                  :disabled="isLoading"
+                  class="n-field-input"
+                  :id="`n-${day.weekday}-${lesson.n}-${lesson.group}`"
+                  type="number"
+                  min="1"
+                  max="15"
+                  @change="editLesson"
+                />
+              </td>
+              <!-- Subject -->
+              <td>
                 <select
                   :disabled="isLoading"
-                  :id="`subject-${day.weekday}-${lesson}`"
+                  :id="`subject-${day.weekday}-${lesson.n}-${lesson.group}`"
                   class="field-input subject-select"
-                  @change="changeTimetable"
+                  @change="editLesson"
                 >
                   <option value="">---</option>
                   <option
                     v-for="subject in subjectOptions"
                     :value="subject.value"
-                    :selected="
-                      subject.value === getDayInfo(lesson, day.weekday)[0]
-                    "
+                    :selected="lesson.subject === subject.value"
                   >
                     {{ subject.label }}
                   </option>
                 </select>
               </td>
-              <td
-                class="input-wrapper"
-                :class="{
-                  'was-changed': timetableChanges.has(
-                    [day.weekday, lesson].join('-')
-                  ),
-                }"
-              >
+              <!-- Classroom -->
+              <td>
                 <input
                   :disabled="isLoading"
-                  :id="`classroom-${day.weekday}-${lesson}`"
+                  :id="`classroom-${day.weekday}-${lesson.n}-${lesson.group}`"
                   class="field-input"
-                  @change="changeTimetable"
+                  @change="editLesson"
                 />
               </td>
-            </template>
-          </tr>
-        </tbody>
-      </table>
+              <!-- Group -->
+              <td>
+                <select
+                  :disabled="isLoading"
+                  class="field-input group-select"
+                  :id="`group-${day.weekday}-${lesson.n}-${lesson.group}`"
+                  @change="editLesson"
+                >
+                  <option
+                    v-for="group in groupOptions"
+                    :value="group.value"
+                    :selected="String(lesson.group) === group.value"
+                  >
+                    {{ group.label }}
+                  </option>
+                </select>
+              </td>
+              <!-- Delete lesson button -->
+              <td
+                class="text-center delete-lesson"
+                @click="deleteLesson(lesson)"
+              >
+                <i class="bi-dash-circle text-danger"></i>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="mt-2 mb-4 text-center">
+          <div
+            class="btn btn-sm btn-outline-success"
+            @click="addLesson(day.weekday)"
+          >
+            <i class="bi bi-plus"></i>
+          </div>
+        </div>
+      </div>
     </div>
   </loading>
 </template>
@@ -219,6 +337,13 @@ const changesInfo = computed(() => {
   border: none;
   border-width: 0;
   box-sizing: border-box;
+}
+
+.n-field-input {
+  border: none;
+  border-width: 0;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .field-input:focus {
@@ -231,7 +356,12 @@ const changesInfo = computed(() => {
 
 .subject-select {
   background-color: white;
-  width: min-content;
+  width: 100%;
+}
+
+.group-select {
+  background-color: white;
+  width: 100%;
 }
 
 .was-changed {
@@ -243,6 +373,10 @@ const changesInfo = computed(() => {
 }
 
 .was-changed > .field-input {
+  background-color: #f0f0f0;
+}
+
+.delete-lesson:hover {
   background-color: #f0f0f0;
 }
 </style>
