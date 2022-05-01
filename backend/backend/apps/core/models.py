@@ -50,7 +50,7 @@ class Klass(models.Model):
     )
     description = models.TextField("Описание", blank=True)
     school = models.ForeignKey(School, on_delete=models.CASCADE)
-    subjects = models.ManyToManyField("Subject", related_name="classes")
+    subjects = models.ManyToManyField("Subject", related_name="klass")
 
     class Meta:
         verbose_name = "Класс"
@@ -62,7 +62,13 @@ class Klass(models.Model):
 
 
 class Subject(models.Model):
-    """Subject model."""
+    """Subject model.
+
+    Fields:
+        name (`CharField`): Subject name.
+        description (`TextField`): Subject description.
+        icon (`ImageField`): Subject icon.
+    """
 
     name = models.CharField("Название", max_length=100)
     icon = models.ImageField("Иконка", upload_to="subjects/", blank=True)

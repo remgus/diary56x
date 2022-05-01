@@ -20,7 +20,7 @@ class SubjectViewSet(viewsets.ModelViewSet):
 
         class Meta:
             model = Subject
-            fields = ["name"]
+            fields = ["name", "klass"]
 
     queryset = Subject.objects.all()
     serializer_class = SubjectSerializer

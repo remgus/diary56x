@@ -8,4 +8,4 @@ class SubjectSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Subject
-        fields = "__all__"
+        fields = ("id", "name", "description", "icon")

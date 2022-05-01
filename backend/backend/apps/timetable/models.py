@@ -52,6 +52,7 @@ class TimetableLesson(models.Model):
     )
 
     GROUPS = (
+        (0, "-"),
         (1, "I"),
         (2, "II"),
         (3, "III"),
@@ -66,14 +67,14 @@ class TimetableLesson(models.Model):
     number = models.ForeignKey(Bell, models.CASCADE, verbose_name="Номер урока")
     subject = models.ForeignKey(Subject, models.CASCADE, verbose_name="Предмет")
     day = models.IntegerField("День недели", choices=WEEKDAYS)
-    classroom = models.CharField("Кабинет", max_length=50)
+    classroom = models.CharField("Кабинет", max_length=50, blank=True)
     group = models.IntegerField("Группа", default=1, choices=GROUPS)
 
     class Meta:
         ordering = ["klass", "number"]
         verbose_name = "Урок"
         verbose_name_plural = "Уроки"
-        unique_together = ("number", "day", "klass", "group")
+        unique_together = ("number", "day", "klass", "group", "subject")
 
     def __str__(self):
         return "{} - {} - {} ({} группа)".format(

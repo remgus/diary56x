@@ -36,7 +36,7 @@ class TimetableTests(TestCase):
         TimetableLesson.objects.all().delete()
 
         response = self.client.post(
-            f"/api/timetable/{self.klass.id}",
+            "/api/timetable/bulk-create/",
             json.dumps(
                 [
                     {

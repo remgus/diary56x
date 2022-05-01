@@ -46,10 +46,10 @@
               </div>
               <div class="mb-3">
                 <form-input
-                  name="second_name"
+                  name="last_name"
                   label="Отчество"
-                  v-model="data.second_name.value"
-                  :error="data.second_name.errorMessage"
+                  v-model="data.last_name.value"
+                  :error="data.last_name.errorMessage"
                   :isBound="isBound"
                   :maxlength="100"
                 ></form-input>
@@ -141,7 +141,7 @@ export default defineComponent({
         value: "",
         validators: ["required"],
       },
-      second_name: {
+      last_name: {
         value: "",
         validators: [],
       },
@@ -195,7 +195,7 @@ export default defineComponent({
       const newStudent: CreateStudentData = {
         first_name: data.first_name.value,
         surname: data.surname.value,
-        second_name: data.second_name.value,
+        last_name: data.last_name.value,
         email: data.email.value,
         password: data.password1.value,
         school: Number(data.school.value),

@@ -9,7 +9,7 @@ export interface APITokens {
 }
 
 export enum AuthAPIURLS {
-  CREATE_STUDENT = "auth/users/create-student",
+  CREATE_STUDENT = "auth/users/create-student/",
   CURRENT_USER = "auth/users/me",
   GET_TOKEN = "auth/jwt/create/",
   REMOVE_TOKEN = "auth/jwt/blacklist/",

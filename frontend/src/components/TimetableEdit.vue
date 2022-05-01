@@ -1,24 +1,38 @@
 <script setup lang="ts">
-import { nextTick, onMounted, onUpdated, ref, watch, computed } from "vue";
+import { nextTick, onMounted, ref, watch } from "vue";
 import { Loading } from "@/components";
 import { SelectOption } from "@/components/forms/FormSelect.vue";
-import { getTimeTable } from "@/api/services/timetable";
+import {
+  APICreateLessons,
+  getTimetable,
+  APIDeleteLessons,
+  createTimetable,
+  deleteTimetable,
+} from "@/api/services/timetable";
 import { getDayName } from "@/utils/date";
 import { listSubjects } from "@/api/services/subjects";
 import { onBeforeRouteLeave } from "vue-router";
-import { plural } from "@/utils/translation";
 
 export interface TimetableLesson {
   n: number;
-  subject?: string;
+  subject: number;
   classroom: string;
   group: number;
   day: number;
+  status: "initial" | "new";
 }
 
 export interface TimetableDay {
   weekday: number;
   lessons: TimetableLesson[];
+}
+
+interface TimetableDeleteChange {
+  day: number;
+  n: number;
+  group: number;
+  klass: number;
+  subject: number;
 }
 
 const props = defineProps({
@@ -29,20 +43,17 @@ const props = defineProps({
 });
 
 const isLoading = ref(true);
-
-// Table data
 const timetable = ref<TimetableDay[]>([]);
-
 const subjectOptions = ref<SelectOption[]>([]);
 const groupOptions = ref<SelectOption[]>([]);
+const lessonsToDelete = ref<TimetableDeleteChange[]>([]);
 
-interface TimetableChange {
-  subject?: string;
-  classroom?: string;
-  group?: string;
-}
-
-const timetableChanges = ref(new Map<string, TimetableChange>());
+const getChangesNumber = () => {
+  const to_create = timetable.value.filter((day) =>
+    day.lessons.some((lesson) => lesson.status === "new")
+  );
+  return to_create.length + lessonsToDelete.value.length;
+};
 
 const refreshTableValues = () => {
   for (const day of timetable.value) {
@@ -54,13 +65,13 @@ const refreshTableValues = () => {
 
       // Lesson number
       const nEl = document.querySelector(
-        `#n-${day.weekday}-${n}-${lesson.group}`
+        `#n-${getLessonId(lesson)}`
       ) as HTMLInputElement;
       if (nEl) nEl.value = String(n);
 
       // Classroom
       const classroomEl = document.querySelector(
-        `#classroom-${day.weekday}-${n}-${lesson.group}`
+        `#classroom-${getLessonId(lesson)}`
       ) as HTMLInputElement;
       if (classroomEl) classroomEl.value = classroom;
     }
@@ -69,9 +80,12 @@ const refreshTableValues = () => {
 
 const refreshTimetable = async () => {
   const klassId = parseInt(props.klass); // Selected class
-  // TODO: Fetch subjects depending on selected class
-  const subjects = (await listSubjects()).data; // Fetch subjects
-  const res = (await getTimeTable(klassId)).data; // Get the timetable
+
+  const subjectGetParams = new URLSearchParams();
+  subjectGetParams.append("klass", props.klass);
+
+  const subjects = (await listSubjects(subjectGetParams)).data; // Fetch subjects
+  const res = (await getTimetable(klassId)).data; // Get the timetable
 
   subjectOptions.value = subjects.map((subject) => ({
     value: String(subject.id),
@@ -88,6 +102,8 @@ const refreshTimetable = async () => {
     label: String(label),
   }));
 
+  lessonsToDelete.value = [];
+
   isLoading.value = false;
 
   // Initial table data
@@ -98,10 +114,11 @@ const refreshTimetable = async () => {
   for (const lesson of res) {
     timetable.value[lesson.day - 1].lessons.push({
       n: lesson.n,
-      subject: lesson.subject ? String(lesson.subject.id) : undefined,
+      subject: lesson.subject ? lesson.subject.id : 0,
       classroom: lesson.classroom ? lesson.classroom : "",
       group: lesson.group ? lesson.group : 0,
       day: lesson.day,
+      status: "initial",
     });
   }
 
@@ -111,12 +128,14 @@ const refreshTimetable = async () => {
 onMounted(refreshTimetable);
 
 const askForSave = (): boolean => {
-  if (timetableChanges.value.size === 0) return true;
+  // No changes
+  if (getChangesNumber() === 0) return true;
+
+  // Ask for save
   const answer = window.confirm(
     "Вы действительно хотите выйти? Вы не сохранили изменения."
   );
   if (!answer) return false;
-  timetableChanges.value.clear();
   return true;
 };
 
@@ -124,107 +143,148 @@ watch(
   () => props.klass,
   (oldKlass, newKlass) => {
     if (oldKlass === newKlass) return;
-    if (timetableChanges.value.size !== 0) askForSave();
+    if (getChangesNumber() !== 0) askForSave();
     refreshTimetable();
   }
 );
 
 onBeforeRouteLeave(askForSave);
 
-const changesInfo = computed(() => {
-  return plural(
-    timetableChanges.value.size,
-    ["изменение", "изменения", "изменений"],
-    true
-  );
-});
-
-/**
- * Add a new lesson to the table.
- *
- * @param day Day of the week
- */
 const addLesson = (day: number) => {
+  const l = timetable.value[day - 1].lessons.length;
   timetable.value[day - 1].lessons.push({
-    n: timetable.value[day - 1].lessons.length + 1,
+    n: l > 0 ? timetable.value[day - 1].lessons[l - 1].n + 1 : 1,
     classroom: "",
     group: 0,
-    subject: undefined,
+    subject: parseInt(subjectOptions.value[0].value),
     day: day,
+    status: "new",
   });
   nextTick(refreshTableValues);
 };
 
-const editLesson = (e: Event) => {
-  const target = (e.target as HTMLInputElement).id;
+const editLesson = (e: Event, day: number, lessonIndex: number) => {
   const newValue = (e.target as HTMLInputElement).value;
-  const [field, day, lesson, group] = target.split("-");
-  const dayN = parseInt(day);
-  const curDay = timetable.value[dayN - 1];
+  const field = (e.target as HTMLInputElement).name;
 
-  let curLesson = curDay.lessons.findIndex(
-    (l) =>
-      l.n === parseInt(lesson) && l.day === dayN && l.group === parseInt(group)
-  );
-  const newLesson = JSON.parse(JSON.stringify(curLesson)); // Copy the lesson
+  const lesson = timetable.value[day - 1].lessons[lessonIndex];
+  const lessonCopy = JSON.parse(JSON.stringify(lesson));
 
-  console.log("Old lesson before the change", curLesson);
-
-  // Set a new value
   switch (field) {
     case "n":
-      newLesson!.n = parseInt(newValue);
+      lesson.n = Math.max(Math.min(parseInt(newValue), 15), 1);
       break;
     case "classroom":
-      newLesson!.classroom = newValue;
+      lesson.classroom = newValue;
       break;
     case "group":
-      newLesson!.group = parseInt(newValue);
+      lesson.group = parseInt(newValue);
       break;
     case "subject":
-      newLesson!.subject = newValue;
+      lesson.subject = parseInt(newValue);
       break;
   }
 
-  console.log("New lesson: ", newLesson);
-  console.log("Old lesson", curLesson);
+  const alreadyExists =
+    timetable.value[day - 1].lessons.filter(
+      (l) =>
+        l.n === lesson.n &&
+        l.group === lesson.group &&
+        l.subject === lesson.subject
+    ).length > 1;
 
-  // Check if the lesson is already in the timetable
-  const isLessonInTimetable = timetable.value[dayN - 1].lessons.find(
-    (l) =>
-      l.n === newLesson.n &&
-      l.day === newLesson.day &&
-      l.group === newLesson.group &&
-      l.subject === newLesson.subject &&
-      l.classroom === newLesson.classroom
-  );
-
-  console.log("Is lesson in timetable?", isLessonInTimetable);
-
-  // If lesson's already in the timetable, do not apply the change
-  if (isLessonInTimetable) {
-    alert("Урок уже есть в расписании");
-    nextTick(refreshTableValues);
-    return;
+  if (alreadyExists) {
+    alert("Такой урок уже добавлен");
+    timetable.value[day - 1].lessons.splice(lessonIndex, 1);
+  } else {
+    if (lesson.status === "initial") {
+      lessonsToDelete.value.push({
+        day: lessonCopy.day,
+        n: lessonCopy.n,
+        group: lessonCopy.group,
+        klass: parseInt(props.klass),
+        subject: lessonCopy.subject,
+      });
+      lesson.status = "new";
+    }
   }
 
-  // Apply the change
-  curLesson = JSON.parse(JSON.stringify(newLesson));
-
-  // Sort lessons by number and group
-  curDay.lessons = timetable.value[dayN - 1].lessons.sort((a, b) =>
-    a.n !== b.n ? a.n - b.n : a.group - b.group
+  const deleted = lessonsToDelete.value.findIndex(
+    (l) =>
+      l.day === lesson.day &&
+      l.n === lesson.n &&
+      l.group === lesson.group &&
+      l.subject === lesson.subject
   );
 
-  // Refresh the table
+  if (deleted !== -1) lessonsToDelete.value.splice(deleted, 1);
+
+  // Sort lessons in the day
+  timetable.value[day - 1].lessons.sort(
+    (a, b) => a.n - b.n || a.subject - b.subject || a.group - b.group
+  );
+
   nextTick(refreshTableValues);
 };
 
-const deleteLesson = (lesson: TimetableLesson) => {
-  timetable.value[lesson.day - 1].lessons.splice(
-    timetable.value[lesson.day - 1].lessons.indexOf(lesson),
-    1
-  );
+const deleteLesson = (day: number, index: number) => {
+  const lesson = timetable.value[day - 1].lessons[index];
+  if (lesson.status === "initial") {
+    lessonsToDelete.value.push({
+      day: day,
+      n: lesson.n,
+      group: lesson.group,
+      subject: lesson.subject,
+      klass: parseInt(props.klass),
+    });
+  }
+  timetable.value[day - 1].lessons.splice(index, 1);
+  nextTick(refreshTableValues);
+};
+
+const getLessonId = (lesson: TimetableLesson) => {
+  return `${lesson.day}-${lesson.n}-${lesson.group}-${lesson.subject}`;
+};
+
+const saveTimetable = async () => {
+  if (getChangesNumber() === 0) return;
+
+  const to_create: APICreateLessons[] = [];
+  const to_delete: APIDeleteLessons[] = [];
+
+  for (const day of timetable.value) {
+    for (const lesson of day.lessons) {
+      if (lesson.status === "new") {
+        to_create.push({
+          day: lesson.day,
+          n: lesson.n,
+          group: lesson.group,
+          subject: lesson.subject,
+          classroom: lesson.classroom,
+          klass: parseInt(props.klass),
+        });
+      }
+    }
+  }
+
+  for (const lesson of lessonsToDelete.value) {
+    to_delete.push({
+      day: lesson.day,
+      n: lesson.n,
+      group: lesson.group,
+      subject: lesson.subject,
+      klass: parseInt(props.klass),
+    });
+  }
+
+  isLoading.value = true;
+
+  console.log(to_create, to_delete);
+
+  if (to_delete.length !== 0) await deleteTimetable(to_delete);
+  if (to_create.length !== 0) await createTimetable(to_create);
+
+  refreshTimetable();
 };
 </script>
 
@@ -232,18 +292,17 @@ const deleteLesson = (lesson: TimetableLesson) => {
   <loading :is-loading="isLoading">
     <div class="row justify-content-center">
       <div class="col-7 mb-5">
-        <button class="btn btn-outline-success me-auto">
+        <button class="btn btn-outline-success me-auto" @click="saveTimetable">
           <i class="bi bi-cloud-arrow-up me-2"></i> Сохранить
         </button>
-        <div v-if="timetableChanges.size">{{ changesInfo }}</div>
       </div>
       <div v-for="day in timetable" class="col-7">
-        <table class="table table-bordered table-sm table">
+        <table class="table table-sm table">
           <thead>
             <tr class="text-center table-dark">
               <th colspan="5">{{ getDayName(day.weekday) }}</th>
             </tr>
-            <tr>
+            <tr v-if="day.lessons.length" class="text-center">
               <th style="width: 10%">#</th>
               <th>Предмет</th>
               <th>Аудитория</th>
@@ -252,32 +311,36 @@ const deleteLesson = (lesson: TimetableLesson) => {
             </tr>
           </thead>
           <tbody>
-            <tr v-for="lesson in day.lessons">
+            <tr
+              v-if="day.lessons.length"
+              v-for="(lesson, lessonIndex) in day.lessons"
+            >
               <!-- Lesson number -->
               <td>
                 <input
                   :disabled="isLoading"
                   class="n-field-input"
-                  :id="`n-${day.weekday}-${lesson.n}-${lesson.group}`"
+                  :id="`n-${getLessonId(lesson)}`"
                   type="number"
                   min="1"
                   max="15"
-                  @change="editLesson"
+                  @change="editLesson($event, lesson.day, lessonIndex)"
+                  name="n"
                 />
               </td>
               <!-- Subject -->
               <td>
                 <select
                   :disabled="isLoading"
-                  :id="`subject-${day.weekday}-${lesson.n}-${lesson.group}`"
+                  :id="`subject-${getLessonId(lesson)}`"
                   class="field-input subject-select"
-                  @change="editLesson"
+                  @change="editLesson($event, lesson.day, lessonIndex)"
+                  name="subject"
                 >
-                  <option value="">---</option>
                   <option
                     v-for="subject in subjectOptions"
                     :value="subject.value"
-                    :selected="lesson.subject === subject.value"
+                    :selected="String(lesson.subject) === subject.value"
                   >
                     {{ subject.label }}
                   </option>
@@ -287,9 +350,10 @@ const deleteLesson = (lesson: TimetableLesson) => {
               <td>
                 <input
                   :disabled="isLoading"
-                  :id="`classroom-${day.weekday}-${lesson.n}-${lesson.group}`"
+                  :id="`classroom-${getLessonId(lesson)}`"
                   class="field-input"
-                  @change="editLesson"
+                  @change="editLesson($event, lesson.day, lessonIndex)"
+                  name="classroom"
                 />
               </td>
               <!-- Group -->
@@ -297,8 +361,9 @@ const deleteLesson = (lesson: TimetableLesson) => {
                 <select
                   :disabled="isLoading"
                   class="field-input group-select"
-                  :id="`group-${day.weekday}-${lesson.n}-${lesson.group}`"
-                  @change="editLesson"
+                  :id="`group-${getLessonId(lesson)}`"
+                  @change="editLesson($event, lesson.day, lessonIndex)"
+                  name="group"
                 >
                   <option
                     v-for="group in groupOptions"
@@ -312,10 +377,13 @@ const deleteLesson = (lesson: TimetableLesson) => {
               <!-- Delete lesson button -->
               <td
                 class="text-center delete-lesson"
-                @click="deleteLesson(lesson)"
+                @click="deleteLesson(lesson.day, lessonIndex)"
               >
                 <i class="bi-dash-circle text-danger"></i>
               </td>
+            </tr>
+            <tr v-else>
+              <td colspan="5" class="text-center py-3">Нет уроков</td>
             </tr>
           </tbody>
         </table>

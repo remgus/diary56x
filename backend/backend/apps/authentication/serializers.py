@@ -81,7 +81,7 @@ class StudentCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.User
-        fields = ["email", "first_name", "second_name", "surname", "school", "password"]
+        fields = ["email", "first_name", "last_name", "surname", "school", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data: dict):
@@ -91,7 +91,7 @@ class StudentCreateSerializer(serializers.ModelSerializer):
             account_type=UserTypes.STUDENT.value,
             surname=validated_data["surname"],
             first_name=validated_data["first_name"],
-            second_name=validated_data["second_name"],
+            last_name=validated_data["last_name"],
             email=validated_data["email"],
             school=validated_data["school"],
         )

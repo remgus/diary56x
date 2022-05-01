@@ -52,9 +52,9 @@ class CreateLessonsSerializer(serializers.ModelSerializer):
                 group=validated_data["group"],
                 day=validated_data["day"],
                 klass=validated_data["klass"],
+                subject=validated_data["subject"],
             )
             lesson.classroom = validated_data["classroom"]
-            lesson.subject = validated_data["subject"]
             lesson.save()
         except TimetableLesson.DoesNotExist:
             lesson = TimetableLesson.objects.create(
@@ -75,4 +75,4 @@ class DeleteLessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimetableLesson
-        fields = ["n", "group", "day", "klass"]
+        fields = ["n", "group", "day", "klass", "subject"]
