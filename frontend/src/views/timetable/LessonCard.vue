@@ -11,7 +11,7 @@
         <h4>{{ getDayName(day.weekday) }}</h4>
       </div>
     </div>
-    <div v-for="(lesson, index) in day.lessons" :key="lesson.id">
+    <div v-for="(lesson, index) in timetable" :key="lesson.id">
       <div class="row mt-1">
         <div class="col-2 text-center">
           <div v-if="lesson.subject.icon" class="subject-icon-wrapper">
@@ -25,12 +25,33 @@
               {{ renderTime(lesson.start) }} - {{ renderTime(lesson.end) }}
             </div>
           </div>
-          <div>
-            <b>{{ lesson.subject.title }}</b>
+          <div class="subject-name">
+            <b>{{ lesson.subject.name }}</b>
           </div>
-          <div>{{ lesson.classroom }}</div>
+          <div
+            v-if="
+              lesson.classrooms.length === 1 && lesson.classrooms[0].group === 0
+            "
+          >
+            {{ lesson.classrooms[0].classroom }}
+          </div>
+          <div v-else>
+            <table
+              class="table table-sm table-borderless mb-0"
+              style="width: fit-content"
+            >
+              <tbody>
+                <tr v-for="classroom in lesson.classrooms">
+                  <td style="">Группа {{ groups[classroom.group] }}</td>
+                  <td>
+                    {{ classroom.classroom }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
-        <div v-if="index + 1 !== day.lessons.length">
+        <div v-if="index + 1 !== timetable.length">
           <hr />
         </div>
       </div>
@@ -39,13 +60,82 @@
 </template>
 
 <script lang="ts" setup>
-import { defineProps, PropType } from "vue";
-import { APITimetable } from "@/api/services/timetable";
+import { onMounted, PropType, ref } from "vue";
+import { APITimetableDay } from "@/api/services/timetable";
 import { getDayName, renderTime } from "@/utils/date";
+import { APISubject } from "@/api/services/subjects";
+
+interface TimetableData {
+  subject: APISubject;
+  classrooms: {
+    group: number;
+    classroom: string;
+  }[];
+  n: number;
+  start: string;
+  end: string;
+  id: number;
+}
+
+const groups = {
+  1: "I",
+  2: "II",
+  3: "III",
+};
+
+const timetable = ref<TimetableData[]>([]);
+
+const processTimetable = () => {
+  const day = props.day;
+
+  let ns = new Set(day.lessons.map((l) => l.n));
+  console.log(ns);
+  for (let n of ns) {
+    const lessons = day.lessons.filter((l) => l.n === n);
+    if (lessons.length > 1) {
+      const subjects = new Set(lessons.map((l) => l.subject.id));
+      for (const subject of subjects) {
+        timetable.value.push({
+          subject: lessons.find((l) => l.subject.id === subject)!.subject,
+          classrooms: lessons
+            .filter((l) => l.subject.id === subject)
+            .map((l) => {
+              return {
+                group: l.group,
+                classroom: l.classroom,
+              };
+            }),
+          n,
+          start: lessons[0].start,
+          end: lessons[0].end,
+          id: lessons[0].id,
+        });
+      }
+    } else {
+      timetable.value.push({
+        subject: lessons[0].subject,
+        classrooms: [
+          {
+            group: lessons[0].group,
+            classroom: lessons[0].classroom,
+          },
+        ],
+        n,
+        start: lessons[0].start,
+        end: lessons[0].end,
+        id: lessons[0].id,
+      });
+    }
+  }
+};
+
+onMounted(() => {
+  processTimetable();
+});
 
 const props = defineProps({
   day: {
-    type: Object as PropType<APITimetable>,
+    type: Object as PropType<APITimetableDay>,
     required: true,
   },
   isToday: {
@@ -76,5 +166,13 @@ div.alert:hover {
   justify-content: center;
   width: 100%;
   height: 100%;
+}
+
+h4 {
+  font-weight: bold;
+}
+
+.subject-name {
+  font-size: 1.1rem;
 }
 </style>

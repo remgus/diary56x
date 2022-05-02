@@ -279,8 +279,6 @@ const saveTimetable = async () => {
 
   isLoading.value = true;
 
-  console.log(to_create, to_delete);
-
   if (to_delete.length !== 0) await deleteTimetable(to_delete);
   if (to_create.length !== 0) await createTimetable(to_create);
 

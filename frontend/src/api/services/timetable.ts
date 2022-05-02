@@ -1,12 +1,6 @@
 import { AxiosResponse } from "axios";
 import API from "..";
-
-export interface APISubject {
-  id: number;
-  title: string;
-  description: string;
-  icon: string;
-}
+import { APISubject } from "./subjects";
 
 export interface APITimetableLesson {
   n: number;
@@ -34,6 +28,12 @@ export interface APICreateLessons {
   klass: number;
   subject: number;
   classroom: string;
+}
+
+
+export interface APITimetableDay {
+  weekday: number;
+  lessons: APITimetableLesson[];
 }
 
 export enum TimetableAPIURLS {

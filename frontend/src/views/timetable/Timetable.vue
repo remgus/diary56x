@@ -58,7 +58,7 @@ import { key } from "@/store";
 import { SelectOption } from "@/components/forms/FormSelect.vue";
 import LessonCard from "./LessonCard.vue";
 import { APIUser } from "@/api/services/auth";
-import { APITimetable, getTimeTable } from "@/api/services/timetable";
+import { APITimetableLesson, getTimetable } from "@/api/services/timetable";
 
 const store = useStore(key);
 const isLoading = ref(true);
@@ -66,7 +66,7 @@ const ttLoading = ref(true);
 const user = computed(() => store.state.user as APIUser);
 const klassOptions = ref<SelectOption[]>([]);
 const selectedKlass = ref<string>(String(user.value.school?.id));
-const timetable = ref<APITimetable[]>([]);
+const timetable = ref<{ weekday: number; lessons: APITimetableLesson[] }[]>([]);
 
 const getClassesList = async () => {
   const res = await listClassesCompact(parseInt(selectedKlass.value));
@@ -78,13 +78,19 @@ const getClassesList = async () => {
   isLoading.value = false;
 };
 
-const refreshTimetable = () => {
+const refreshTimetable = async () => {
   if (!selectedKlass.value) return;
 
-  getTimeTable(parseInt(selectedKlass.value)).then((res) => {
-    timetable.value = res.data;
-    ttLoading.value = false;
-  });
+  const res = (await getTimetable(parseInt(selectedKlass.value))).data;
+
+  timetable.value = [];
+  for (let i = 1; i <= 7; i++)
+    timetable.value.push({ weekday: i, lessons: [] });
+
+  for (const lesson of res)
+    timetable.value[lesson.day - 1].lessons.push(lesson);
+
+  ttLoading.value = false;
 };
 
 onMounted(() => {
