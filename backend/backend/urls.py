@@ -9,7 +9,7 @@ index_view = never_cache(TemplateView.as_view(template_name="index.html"))
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="index.html"), name="index"),
-    path("admin/", admin.site.urls),
+    path("admin-extended/", admin.site.urls),
     path("api/blog/", include("backend.apps.blog.urls")),
     path("api/notifications/", include("backend.apps.notifications.urls")),
     path("api/timetable/", include("backend.apps.timetable.urls")),

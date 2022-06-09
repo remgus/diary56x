@@ -1,0 +1,118 @@
+<script setup>
+import { useRoute } from "vue-router";
+
+const route = useRoute();
+</script>
+
+<template>
+  <nav class="navbar navbar-expand-md bg-dark navbar-dark py-3" id="mainNavbar">
+    <div class="container">
+      <router-link class="navbar-brand d-flex align-items-center py-0" to="/">
+        <img
+          src="@/assets/img/logo.png"
+          alt=""
+          width="40"
+          class="d-inline-block me-3"
+        />
+        <span>Панорама 56</span>
+      </router-link>
+      <button
+        class="navbar-toggler"
+        type="button"
+        id="mainNavbarToggler"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarContent"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarContent">
+        <ul class="navbar-nav me-auto mb-lg-0 d-flex">
+          <li class="nav-item">
+            <router-link
+              class="nav-link"
+              aria-current="page"
+              to="/"
+              :class="{ active: route.name === 'home' }"
+            >
+              Лента</router-link
+            >
+          </li>
+          <li class="nav-item">
+            <router-link
+              class="nav-link"
+              href="#"
+              to="/suggest"
+              :class="{ active: route.name === 'suggest' }"
+            >
+              Предложить&nbsp;новость
+            </router-link>
+          </li>
+          <li class="nav-item">
+            <router-link
+              class="nav-link"
+              to="/about"
+              :class="{ active: route.name === 'about' }"
+              >О нас</router-link
+            >
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto mb-lg-0 d-flex">
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="https://t.me/ia_panorama_56"
+            >
+              <i class="bi-telegram social d-none d-md-block"></i>
+              <span class="d-block d-md-none">Мы в Telegram</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="nav-link active"
+              aria-current="page"
+              href="https://vk.com/ia_panorama_56"
+            >
+              <span class="d-none d-md-block">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 176 176"
+                  style="
+                    enable-background: new 0 0 512 512;
+                    width: 20px;
+                    height: 30px;
+                    display: block;
+                  "
+                  xml:space="preserve"
+                >
+                  <g data-name="Layer 2">
+                    <path
+                      d="M88 0a88 88 0 1 0 88 88A88 88 0 0 0 88 0zm50.72 122.44c-2.56.36-15.08 0-15.73 0a12.29 12.29 0 0 1-8.69-3.44c-2.64-2.55-5-5.35-7.58-8a20.22 20.22 0 0 0-2.47-2.24c-2.06-1.58-4.1-1.23-5.07 1.21A47.37 47.37 0 0 0 97.6 118c-.17 2.46-1.73 4-4.49 4.17-1.71.09-3.42.13-5.11.08a38.85 38.85 0 0 1-17.69-4.37 48.15 48.15 0 0 1-15.13-13.22c-6.67-8.52-12-17.88-16.76-27.53-.25-.49-5.13-10.87-5.25-11.36-.44-1.63 0-3.2 1.35-3.75.86-.33 16.94 0 17.21 0a5.64 5.64 0 0 1 5.4 3.89 84 84 0 0 0 12.08 21.18 11.56 11.56 0 0 0 2.45 2.23c1.31.9 2.55.59 3.09-.93a26.28 26.28 0 0 0 1.12-6.45c.09-4.34 0-7.19-.24-11.53-.16-2.78-1.14-5.21-5.24-6-1.26-.23-1.37-1.27-.56-2.31 1.69-2.15 4-2.5 6.59-2.63 3.86-.22 7.72-.07 11.58 0h.84a23.91 23.91 0 0 1 5 .51 4.61 4.61 0 0 1 3.67 4.11 16 16 0 0 1 .25 3.32c-.1 4.73-.33 9.47-.38 14.2a24.3 24.3 0 0 0 .51 5.59c.55 2.52 2.28 3.15 4 1.33A62.34 62.34 0 0 0 108 81a75.78 75.78 0 0 0 8-15.55c1.12-2.81 2-3.43 5-3.43h17.06a10.12 10.12 0 0 1 3 .4 2.59 2.59 0 0 1 1.79 3.35c-.84 3.74-2.86 6.93-5 10-3.47 4.91-7.13 9.7-10.68 14.55a19.78 19.78 0 0 0-1.17 1.95c-1.34 2.42-1.24 3.77.7 5.77 3.1 3.19 6.41 6.17 9.4 9.45a55.77 55.77 0 0 1 5.92 7.69c2.13 3.44.78 6.68-3.3 7.26z"
+                      fill="#fff"
+                      data-original="#000000"
+                      data-name="11.vk"
+                      xmlns="http://www.w3.org/2000/svg"
+                    />
+                  </g>
+                </svg>
+              </span>
+              <span class="d-block d-md-none">Мы в ВК</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+</template>
+
+<style scoped>
+.navbar-brand {
+  font-size: 1.25rem;
+  font-weight: bold;
+  font-family: "VK Sans Display", sans-serif;
+}
+
+.social {
+  font-size: 20px;
+}
+</style>

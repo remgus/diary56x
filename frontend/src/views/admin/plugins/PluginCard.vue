@@ -1,7 +1,7 @@
 <template>
   <div class="card card-body mb-3">
     <div class="row align-items-center">
-      <div class="col-auto justify-content-center px-4">
+      <div class="col-auto justify-content-center px-2 px-sm-4">
         <img :src="getImage(plugin.icon)" alt="" height="70" />
       </div>
       <div class="col">
@@ -11,8 +11,7 @@
         </div>
       </div>
       <div class="col-auto justify-content-center">
-        <!-- <div>{{ plugin.month_price }}&#8381;/мес</div> -->
-        <div class="form-check form-switch d-flex justify-content-center">
+        <div class="form-check form-switch d-flex justify-content-center border-start ps-5">
           <input
             class="form-check-input"
             type="checkbox"
@@ -31,44 +30,31 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { APIPlugin, getPluginName } from "@/api/services/plugins";
 import { APISchool } from "@/api/services/schools";
-import { defineComponent, PropType, ref } from "vue";
+import { PropType, ref } from "vue";
 
-export default defineComponent({
-  emits: ["pluginStateChanged"],
-  props: {
-    plugin: {
-      type: Object as PropType<APIPlugin>,
-      required: true,
-    },
-    school: {
-      type: Object as PropType<APISchool>,
-      required: true,
-    },
+const props = defineProps({
+  plugin: {
+    type: Object as PropType<APIPlugin>,
+    required: true,
   },
-  setup(props) {
-    const pluginEnabled = ref(
-      props.school.plugins.findIndex((p) => p.id === props.plugin.id) !== -1
-    );
-
-    const getImage = (icon: string) => {
-      return icon;
-    };
-
-    const getPrice = (price: number) => {
-      return price.toFixed(2);
-    };
-
-    return {
-      pluginEnabled,
-      getImage,
-      getPluginName,
-      getPrice,
-    };
+  school: {
+    type: Object as PropType<APISchool>,
+    required: true,
   },
 });
+
+const emit = defineEmits(["pluginStateChanged"]);
+
+const pluginEnabled = ref(
+  props.school.plugins.findIndex((p) => p.id === props.plugin.id) !== -1
+);
+
+const getImage = (icon: string) => {
+  return icon;
+};
 </script>
 
 <style></style>

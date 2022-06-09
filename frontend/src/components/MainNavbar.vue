@@ -2,15 +2,15 @@
   <nav
     class="navbar navbar-expand-lg navbar-light w-100 fixed-top"
     id="main-navbar"
-    :class="{
-      scrolled: isScrolled || navbarToggled,
-    }"
+    :class="{ scrolled: isScrolled }"
   >
     <div class="container">
       <button
         class="navbar-toggler"
         type="button"
-        @click.prevent="toggleNavbar"
+        id="mainNavbarToggler"
+        data-bs-toggle="collapse"
+        data-bs-target="#mainNavbarContent"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -18,10 +18,7 @@
       <router-link
         to="/"
         class="navbar-brand d-lg-block"
-        :class="{
-          'd-block': !user,
-          'd-none': user,
-        }"
+        :class="{ 'd-block': !user, 'd-none': user }"
       >
         <img
           src="@/assets/icons/logo.svg"
@@ -29,7 +26,7 @@
           class="d-inline-block align-center me-2"
           alt=""
         />
-        <span id="brand-name">Diary56x</span>
+        <span id="brand-name">дневник56</span>
       </router-link>
 
       <div
@@ -39,10 +36,20 @@
       >
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <router-link to="/" class="nav-link">Главная</router-link>
+            <router-link
+              to="/"
+              class="nav-link"
+              :class="{ active: route.name === 'home' }"
+              >Главная</router-link
+            >
           </li>
           <li class="nav-item">
-            <router-link to="/blog" class="nav-link">Новости</router-link>
+            <router-link
+              to="/blog"
+              class="nav-link"
+              :class="{ active: route.name === 'blog' }"
+              >Новости</router-link
+            >
           </li>
           <li class="nav-item">
             <span class="nav-link">Помощь</span>
@@ -72,12 +79,11 @@
         </div>
       </div>
 
-      <div v-if="user" class="dropdown d-flex" @click="toggleDropdown">
+      <div v-if="user" class="dropdown d-flex">
         <div
           class="d-flex dropdown-toggle align-items-center position-relative"
           data-bs-toggle="dropdown"
           id="mainNavbarDropdown"
-          ref="dropdownEl"
         >
           <div class="navbar-text me-3 fw-bold">
             {{ user.surname }} {{ user.first_name }}
@@ -94,12 +100,12 @@
         <ul class="dropdown-menu dropdown-menu-end">
           <li>
             <router-link class="dropdown-item" to="/profile">
-              <i class="bi bi-person me-2"></i> <span>Аккаунт</span>
+              <i class="bi bi-person me-2"></i><span>Аккаунт</span>
             </router-link>
           </li>
           <li>
             <router-link class="dropdown-item" to="/notifications">
-              <i class="bi bi-bell me-2"> </i>
+              <i class="bi bi-bell me-2"></i>
               <span>Уведомления</span>
               <span
                 class="ms-2 badge bg-danger"
@@ -109,10 +115,22 @@
               </span>
             </router-link>
           </li>
+          <li v-if="isAdmin(user)">
+            <router-link class="dropdown-item" to="/admin">
+              <i class="bi-window me-2"></i>
+              <span>Панель администратора</span>
+            </router-link>
+          </li>
+          <li v-if="isStudent(user)">
+            <router-link class="dropdown-item" to="/timetable">
+              <i class="bi-calendar me-2"></i>
+              <span>Расписание</span>
+            </router-link>
+          </li>
           <li>
             <a class="dropdown-item" href="#" @click.prevent="logout">
               <i class="bi bi-box-arrow-right me-2"></i>
-              Выйти
+              <span>Выйти из аккаунта</span>
             </a>
           </li>
         </ul>
@@ -122,14 +140,16 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, onUnmounted, onUpdated, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import { toSvg } from "jdenticon";
 import { useStore } from "vuex";
 import { key } from "@/store";
-import { Collapse, Dropdown } from "bootstrap";
 import router from "@/router";
+import { isAdmin, isStudent } from "@/api/services/auth";
+import { useRoute } from "vue-router";
 
 const store = useStore(key);
+const route = useRoute();
 
 const user = computed(() => store.state.user);
 const jdenticon = computed(() => toSvg(user.value?.id, 45));
@@ -138,13 +158,6 @@ const unreadNotificationsCount = computed<number>(
 );
 
 const isScrolled = ref(false);
-
-const navbarContent = ref<null | HTMLElement>(null);
-const navbarToggled = ref(false);
-const navbarCollapse = ref<null | Collapse>(null);
-
-const dropdown = ref<null | Dropdown>(null);
-const dropdownEl = ref<null | HTMLElement>(null);
 
 const logout = () => {
   store.dispatch("logout");
@@ -155,30 +168,9 @@ const onScroll = () => {
   isScrolled.value = window.scrollY > 0;
 };
 
-const toggleNavbar = () => {
-  navbarCollapse.value?.toggle();
-  navbarToggled.value = !navbarToggled.value;
-};
-
-const toggleDropdown = () => {
-  dropdown.value?.toggle();
-};
-
-const enableElements = () => {
-  if (navbarContent.value)
-    navbarCollapse.value = Collapse.getOrCreateInstance(navbarContent.value, {
-      toggle: navbarToggled.value,
-    });
-  if (dropdownEl.value)
-    dropdown.value = Dropdown.getOrCreateInstance(dropdownEl.value);
-};
-
 onMounted(() => {
   window.addEventListener("scroll", onScroll);
-  enableElements();
 });
-
-onUpdated(enableElements);
 
 onUnmounted(() => {
   window.removeEventListener("scroll", onScroll);
@@ -187,17 +179,8 @@ onUnmounted(() => {
 
 <style scoped>
 #main-navbar {
-  transition: background-color 0.3s ease-in-out;
-}
-
-#main-navbar {
+  transition: background-color 0.2s ease-in-out;
   background-color: #ffffff;
-}
-
-.navbar-wrapper {
-  position: absolute;
-  top: 0;
-  width: 100%;
 }
 
 #logo {
@@ -207,11 +190,12 @@ onUnmounted(() => {
 
 #brand-name {
   font-weight: bold;
+  font-family: "VK Sans Display";
 }
 
 #main-navbar.scrolled {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  transition: box-shadow 0.5s ease-in-out;
+  transition: box-shadow 0.2s ease-in-out;
 }
 
 #main-navbar #avatar {
@@ -234,5 +218,18 @@ onUnmounted(() => {
   padding: 0.45em;
   top: calc(-0.45em + 2px);
   right: calc(-0.45em + 2px);
+  animation: notification-pulse 3s infinite;
+}
+
+@keyframes notification-pulse {
+  0% {
+    transform: scale(0.91);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(0.91);
+  }
 }
 </style>

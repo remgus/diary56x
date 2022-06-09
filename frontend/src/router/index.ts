@@ -1,4 +1,4 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../views/home/Home.vue";
 import { handleMetaViews } from "./utils";
 import adminRoutes from "./admin";
@@ -6,7 +6,7 @@ import adminRoutes from "./admin";
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "Home",
+    name: "home",
     component: Home,
     meta: {
       navbar: {
@@ -16,13 +16,13 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/about",
-    name: "About",
+    name: "about",
     component: () => import("../views/About.vue"),
     meta: {},
   },
   {
     path: "/login",
-    name: "Login",
+    name: "login",
     component: () => import("../views/auth/Login.vue"),
     meta: {
       requiresAuth: false,
@@ -46,7 +46,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/blog",
-    name: "Blog",
+    name: "blog",
     component: () => import("../views/blog/List.vue"),
   },
   {
@@ -78,7 +78,7 @@ const routes: Array<RouteRecordRaw> = [
 ];
 
 const router = createRouter({
-  history: createWebHashHistory(),
+  history: createWebHistory(),
   routes: [...routes, ...adminRoutes],
   scrollBehavior() {
     return { top: 0 };
@@ -86,6 +86,18 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  document.body.setAttribute("tabindex", "-1");
+  document.body.focus();
+  document.body.removeAttribute("tabindex");
+
+  const btn = document.getElementById("mainNavbarToggler");
+  if (btn && !btn.classList.contains("collapsed")) {
+    const content = document.getElementById("mainNavbarContent");
+    content!.classList.remove("show");
+    btn.classList.add("collapsed");
+    console.log("collapsed");
+  }
+
   const res = handleMetaViews(to, next);
   if (res) return;
   next();

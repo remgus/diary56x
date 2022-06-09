@@ -29,65 +29,59 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import {
   APINotification,
   markNotificationAsRead,
 } from "@/api/services/notifications";
-import { Toast } from "bootstrap";
-import { defineComponent, onMounted, PropType, ref } from "vue";
+import { onMounted, PropType, ref } from "vue";
+import Toast from "bootstrap/js/dist/toast";
 import { getMarked } from "@/utils/marked";
 import { useStore } from "vuex";
 import { key } from "@/store";
 
-export default defineComponent({
-  emits: ["toast-closed"],
-  setup(props, { emit }) {
-    const toast = ref<HTMLDivElement | null>(null);
-    const store = useStore(key);
+const toast = ref<HTMLDivElement | null>(null);
+const store = useStore(key);
 
-    onMounted(() => {
-      if (toast.value) {
-        const toastElement = toast.value;
-        const toastInstance = Toast.getOrCreateInstance(toastElement, {
-          autohide: true,
-          delay: 20000,
-        });
-        toastInstance?.show();
-        toastElement.addEventListener(
-          "hidden.bs.toast",
-          () => {
-            emit("toast-closed", toast.value);
-          },
-          { once: true }
-        );
-      }
-    });
-
-    const getTime = (date: string) => {
-      const d = new Date(date);
-      return d.toLocaleString(undefined, {
-        hour: "numeric",
-        minute: "2-digit",
-      });
-    };
-
-    const markAsRead = async () => {
-      if (props.notification.id) {
-        markNotificationAsRead(props.notification.id);
-        store.dispatch("fetchNotifications");
-      }
-    };
-
-    return { toast, getMarked, getTime, markAsRead };
-  },
-  props: {
-    notification: {
-      type: Object as PropType<APINotification>,
-      required: true,
-    },
+const props = defineProps({
+  notification: {
+    type: Object as PropType<APINotification>,
+    required: true,
   },
 });
-</script>
 
-<style></style>
+const emit = defineEmits(["toast-closed"]);
+
+onMounted(() => {
+  if (toast.value) {
+    const toastElement = toast.value;
+    const toastInstance = Toast.getOrCreateInstance(toastElement as Element, {
+      autohide: true,
+      delay: 20000,
+    });
+    toastInstance?.show();
+    toastElement.addEventListener(
+      "hidden.bs.toast",
+      () => {
+        emit("toast-closed", toast.value);
+      },
+      { once: true }
+    );
+  }
+});
+
+const getTime = (date: string) => {
+  const d = new Date(date);
+  return d.toLocaleString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+};
+
+const markAsRead = async () => {
+  if (props.notification.id) {
+    markNotificationAsRead(props.notification.id);
+    store.dispatch("fetchNotifications");
+  }
+};
+</script>

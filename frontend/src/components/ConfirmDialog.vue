@@ -6,7 +6,7 @@
     tabindex="-1"
     ref="modalEl"
   >
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">{{ title }}</h5>
@@ -14,7 +14,6 @@
             type="button"
             class="btn-close"
             data-bs-dismiss="modal"
-            aria-label="Close"
           ></button>
         </div>
         <div class="modal-body">
@@ -43,7 +42,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
-import { Modal } from "bootstrap";
+import Modal from "bootstrap/js/dist/modal";
 
 const props = defineProps({
   title: {
@@ -65,7 +64,7 @@ const bsModal = ref<Modal | null>(null);
 
 onMounted(() => {
   if (!modalEl.value) return;
-  bsModal.value = new Modal(modalEl.value);
+  bsModal.value = new Modal(modalEl.value as Element);
 });
 
 const open = () => {
@@ -92,6 +91,14 @@ const dispose = () => {
   if (!bsModal.value) return;
   bsModal.value.dispose();
 };
+
+defineExpose({
+  open,
+  close,
+  successCallback,
+  toggle,
+  dispose,
+});
 </script>
 
 <style></style>

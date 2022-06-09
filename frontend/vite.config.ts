@@ -22,6 +22,12 @@ export default defineConfig({
       "/media": {
         target: "http://localhost:8000",
       },
+      "/admin-extended": {
+        target: "http://localhost:8000",
+      },
+      "/static": {
+        target: "http://localhost:8000",
+      },
     },
   },
   define: {

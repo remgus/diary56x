@@ -1,7 +1,7 @@
 <template>
-  <navbar />
+  <main-navbar />
   <router-view />
-  <base-footer />
+  <main-footer />
   <div
     class="position-fixed bottom-0 end-0 p-3 toast-container"
     id="popup-notification-container"
@@ -13,6 +13,39 @@
     />
   </div>
 </template>
+
+<script lang="ts" setup>
+import MainNavbar from "@/components/MainNavbar.vue";
+import MainFooter from "@/components/MainFooter.vue";
+import PopupNotification from "@/components/PopupNotification.vue";
+import { onMounted, ref } from "vue";
+import { useStore } from "vuex";
+import { key } from "./store";
+import { APINotification } from "./api/services/notifications";
+
+const store = useStore(key);
+const notifications = ref<APINotification[]>([]);
+const lastTimeFetched = ref<number>(Date.now());
+
+const fetchNotifications = () => {
+  store.dispatch("fetchNotifications").then(() => {
+    lastTimeFetched.value = Date.now();
+  });
+};
+
+onMounted(() => {
+  fetchNotifications();
+  setInterval(fetchNotifications, 20 * 1000);
+});
+
+store.subscribe(() => {
+  for (const notification of store.state.unread_notifications) {
+    if (new Date(notification.created_at) > new Date(lastTimeFetched.value)) {
+      notifications.value.push(notification);
+    }
+  }
+});
+</script>
 
 <style>
 .card-shadow:hover {
@@ -29,51 +62,3 @@
   padding-top: 60px;
 }
 </style>
-
-<script lang="ts">
-import Navbar from "@/components/Navbar.vue";
-import BaseFooter from "@/components/BaseFooter.vue";
-import PopupNotification from "@/components/PopupNotification.vue";
-import { defineComponent, onMounted, ref } from "vue";
-import { useStore } from "vuex";
-import { key } from "./store";
-import { APINotification } from "./api/services/notifications";
-
-export default defineComponent({
-  name: "App",
-  components: {
-    Navbar,
-    BaseFooter,
-    PopupNotification,
-  },
-  setup() {
-    const store = useStore(key);
-    const notifications = ref<APINotification[]>([]);
-    const lastTimeFetched = ref<number>(Date.now());
-
-    onMounted(() => {
-      store.dispatch("fetchNotifications").then(() => {
-        lastTimeFetched.value = Date.now();
-      });
-
-      setInterval(() => {
-        store.dispatch("fetchNotifications").then(() => {
-          lastTimeFetched.value = Date.now();
-        });
-      }, 20 * 1000);
-    });
-
-    store.subscribe(() => {
-      for (const notification of store.state.unread_notifications) {
-        if (
-          new Date(notification.created_at) > new Date(lastTimeFetched.value)
-        ) {
-          notifications.value.push(notification);
-        }
-      }
-    });
-
-    return { notifications };
-  },
-});
-</script>

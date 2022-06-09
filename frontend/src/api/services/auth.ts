@@ -39,7 +39,7 @@ export interface APICompactUser {
   is_staff: boolean;
   is_active: boolean;
   last_login: string | null;
-  registration_date: string;
+  date_joined: string;
 }
 
 export interface APIUser extends APICompactUser {
@@ -93,6 +93,10 @@ export const isTeacher = (user: APIUser): boolean => {
 
 export const isStudent = (user: APIUser): boolean => {
   return user.account_type === AccountTypes.STUDENT;
+};
+
+export const isSuperuser = (user: APIUser): boolean => {
+  return user.account_type === AccountTypes.ROOT;
 };
 
 type CheckTypes = "admin" | "teacher" | "student" | "root";

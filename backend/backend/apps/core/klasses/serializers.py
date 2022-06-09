@@ -4,7 +4,12 @@ from ..models import Klass
 
 
 class KlassSerializer(ModelSerializer):
-    """Serializer for `Klass` model."""
+    """Serializer for `Klass` model.
+
+    Fields: `name`, `school`, `students`, `teachers`,
+    `head_teacher`, `description`, `subjects`
+
+    """
 
     class Meta:
         model = Klass
@@ -12,7 +17,10 @@ class KlassSerializer(ModelSerializer):
 
 
 class KlassCompactSerializer(ModelSerializer):
-    """Serializer for `Klass` model."""
+    """Serializer for `Klass` model.
+
+    Fields: `id`, `name`, `school`, `head_teacher`, `description`
+    """
 
     class Meta:
         model = Klass

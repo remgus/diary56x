@@ -45,17 +45,9 @@
   </footer>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-
-export default defineComponent({
-  name: "BaseFooter",
-  setup() {
-    const version = __APP_VERSION__;
-    const year = new Date().getFullYear();
-    return { version, year };
-  },
-});
+<script lang="ts" setup>
+const version = __APP_VERSION__;
+const year = new Date().getFullYear();
 </script>
 
 <style scoped>

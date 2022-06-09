@@ -13,7 +13,7 @@
     </nav>
 
     <div v-if="plugins">
-      <div class="btn btn-outline-primary mb-3" @click="saveChanges">
+      <div class="btn btn-outline-primary mb-4" @click="saveChanges">
         <i class="bi-cloud-upload me-2"></i>Сохранить
       </div>
 

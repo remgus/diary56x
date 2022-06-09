@@ -1,5 +1,6 @@
-from backend.apps.authentication.models import Student, Teacher
+from __future__ import annotations
 
+from backend.apps.authentication.models import Student, Teacher
 from django.db import models
 
 
@@ -106,3 +107,100 @@ class Plugin(models.Model):
 
     def __str__(self):
         return self.name
+
+
+# class HomeworkAttachment(models.Model):
+#     """Files that are attached to homework.
+
+#     Fields:
+#         file (`FileField`): File.
+#         homework (`ForeignKey`): Homework.
+#     """
+
+#     def homework_upload(instance: HomeworkAttachment, filename: str):
+#         """Return a path for a new homework attachment."""
+#         return "homework/{}_{}".format(instance.id, filename)
+
+#     file = models.FileField("Файл", upload_to=homework_upload)
+#     homework = models.ForeignKey(
+#           "Homework", on_delete=models.CASCADE, related_name="attachments")
+
+#     class Meta:
+#         verbose_name = "Файл к заданию"
+#         verbose_name_plural = "Файлы к заданиям"
+
+
+# class Homework:
+#     ...
+
+
+# class Group(models.Model):
+#     """Group of students.
+
+#     Fields:
+#         klass (`ForeignKey`): Klass.
+
+#     """
+
+#     klass = models.ForeignKey(Klass, on_delete=models.CASCADE, verbose_name="Класс")
+#     subject = models.ForeignKey(Subject, on_delete=models.PROTECT, verbose_name="Предмет")
+#     students = models.ManyToManyField(Student, verbose_name="Отображаемые ученики")
+
+
+# class Lesson(models.Model):
+#     date = models.DateField(verbose_name="Дата")
+#     quarter = models.ForeignKey("Quarters", on_delete=models.PROTECT, verbose_name="Четверть")
+#     theme = models.CharField(max_length=120, verbose_name="Тема", blank=True)
+#     group = models.ForeignKey(
+#         "Groups",
+#         on_delete=models.PROTECT,
+#         verbose_name="Группа",
+#         null=True,
+#         default=None,
+#     )
+#     control = models.ForeignKey("Control", on_delete=models.PROTECT, verbose_name="Вид работы")
+#     is_planned = models.BooleanField(verbose_name="Запланирован", default=False)
+
+#     class Meta:
+#         verbose_name = "Урок"
+#         verbose_name_plural = "Уроки"
+#         ordering = ["date"]
+
+#     def __str__(self):
+#         return "{} {}".format(str(self.group), self.date)
+
+
+# class Control(models.Model):
+#     name = models.CharField("Вид работы", max_length=150)
+#     weight = models.FloatField("Коэффицент", default=1)
+#     notify = models.BooleanField("Оповещать учеников", default=False)
+#     default = models.BooleanField("Вид работы по умолчанию", default=False)
+
+#     class Meta:
+#         verbose_name = "Вид работы"
+#         verbose_name_plural = "Виды работ"
+
+#     def __str__(self):
+#         return "{} ({})".format(self.name, self.weight)
+
+#     @classmethod
+#     def get_default(cls) -> Controls | None:
+#         try:
+#             return cls.objects.get(default=True)
+#         except cls.DoesNotExist:
+#             return None
+
+#     def save(self, *args, **kwargs):
+#         """
+#         Save the current instance. This method also performs additional check that
+#         there's only one model with ``default`` field set to ``True``.
+#         """
+#         if self.default:
+#             try:
+#                 temp = Controls.objects.get(default=True)
+#                 if self != temp:
+#                     temp.default = False
+#                     temp.save()
+#             except Controls.DoesNotExist:
+#                 pass
+#         super(Controls, self).save(*args, **kwargs)

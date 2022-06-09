@@ -23,7 +23,7 @@
         </div>
         <div class="mb-1">
           <i class="bi bi-calendar-plus me-2"></i><b>Дата регистрации: </b
-          >{{ toShortDate(user.registration_date) }}
+          >{{ toShortDate(user.date_joined) }}
         </div>
 
         <div v-if="isStudent(user)">
