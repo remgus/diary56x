@@ -15,7 +15,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimetableLesson
-        fields = ["n", "start", "end", "subject", "classroom", "id", "group", "day"]
+        fields = ["n", "start", "end", "subject", "classroom", "id",  "day"]
 
 
 class BellSerializer(serializers.ModelSerializer):
@@ -33,7 +33,7 @@ class CreateLessonsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimetableLesson
-        fields = ["n", "classroom", "group", "day", "klass", "subject"]
+        fields = ["n", "classroom",  "day", "klass", "subject"]
 
     def create(self, validated_data):
         """Create lessons."""
@@ -49,7 +49,6 @@ class CreateLessonsSerializer(serializers.ModelSerializer):
         try:
             lesson = TimetableLesson.objects.get(
                 number=bell,
-                group=validated_data["group"],
                 day=validated_data["day"],
                 klass=validated_data["klass"],
                 subject=validated_data["subject"],
@@ -59,7 +58,6 @@ class CreateLessonsSerializer(serializers.ModelSerializer):
         except TimetableLesson.DoesNotExist:
             lesson = TimetableLesson.objects.create(
                 number=bell,
-                group=validated_data["group"],
                 day=validated_data["day"],
                 klass=validated_data["klass"],
                 subject=validated_data["subject"],
@@ -75,4 +73,4 @@ class DeleteLessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimetableLesson
-        fields = ["n", "group", "day", "klass", "subject"]
+        fields = ["n", "day", "klass", "subject"]

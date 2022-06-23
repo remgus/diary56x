@@ -17,7 +17,6 @@ export interface TimetableLesson {
   n: number;
   subject: number;
   classroom: string;
-  group: number;
   day: number;
   status: "initial" | "new";
 }
@@ -30,7 +29,6 @@ export interface TimetableDay {
 interface TimetableDeleteChange {
   day: number;
   n: number;
-  group: number;
   klass: number;
   subject: number;
 }
@@ -116,7 +114,6 @@ const refreshTimetable = async () => {
       n: lesson.n,
       subject: lesson.subject ? lesson.subject.id : 0,
       classroom: lesson.classroom ? lesson.classroom : "",
-      group: lesson.group ? lesson.group : 0,
       day: lesson.day,
       status: "initial",
     });
@@ -155,7 +152,6 @@ const addLesson = (day: number) => {
   timetable.value[day - 1].lessons.push({
     n: l > 0 ? timetable.value[day - 1].lessons[l - 1].n + 1 : 1,
     classroom: "",
-    group: 0,
     subject: parseInt(subjectOptions.value[0].value),
     day: day,
     status: "new",
@@ -177,9 +173,7 @@ const editLesson = (e: Event, day: number, lessonIndex: number) => {
     case "classroom":
       lesson.classroom = newValue;
       break;
-    case "group":
-      lesson.group = parseInt(newValue);
-      break;
+
     case "subject":
       lesson.subject = parseInt(newValue);
       break;
@@ -189,7 +183,6 @@ const editLesson = (e: Event, day: number, lessonIndex: number) => {
     timetable.value[day - 1].lessons.filter(
       (l) =>
         l.n === lesson.n &&
-        l.group === lesson.group &&
         l.subject === lesson.subject
     ).length > 1;
 
@@ -201,7 +194,6 @@ const editLesson = (e: Event, day: number, lessonIndex: number) => {
       lessonsToDelete.value.push({
         day: lessonCopy.day,
         n: lessonCopy.n,
-        group: lessonCopy.group,
         klass: parseInt(props.klass),
         subject: lessonCopy.subject,
       });
@@ -213,7 +205,6 @@ const editLesson = (e: Event, day: number, lessonIndex: number) => {
     (l) =>
       l.day === lesson.day &&
       l.n === lesson.n &&
-      l.group === lesson.group &&
       l.subject === lesson.subject
   );
 
@@ -221,7 +212,7 @@ const editLesson = (e: Event, day: number, lessonIndex: number) => {
 
   // Sort lessons in the day
   timetable.value[day - 1].lessons.sort(
-    (a, b) => a.n - b.n || a.subject - b.subject || a.group - b.group
+    (a, b) => a.n - b.n || a.subject - b.subject
   );
 
   nextTick(refreshTableValues);
@@ -233,7 +224,6 @@ const deleteLesson = (day: number, index: number) => {
     lessonsToDelete.value.push({
       day: day,
       n: lesson.n,
-      group: lesson.group,
       subject: lesson.subject,
       klass: parseInt(props.klass),
     });
@@ -243,7 +233,7 @@ const deleteLesson = (day: number, index: number) => {
 };
 
 const getLessonId = (lesson: TimetableLesson) => {
-  return `${lesson.day}-${lesson.n}-${lesson.group}-${lesson.subject}`;
+  return `${lesson.day}-${lesson.n}-${lesson.subject}`;
 };
 
 const saveTimetable = async () => {
@@ -258,7 +248,6 @@ const saveTimetable = async () => {
         to_create.push({
           day: lesson.day,
           n: lesson.n,
-          group: lesson.group,
           subject: lesson.subject,
           classroom: lesson.classroom,
           klass: parseInt(props.klass),
@@ -271,7 +260,6 @@ const saveTimetable = async () => {
     to_delete.push({
       day: lesson.day,
       n: lesson.n,
-      group: lesson.group,
       subject: lesson.subject,
       klass: parseInt(props.klass),
     });
@@ -304,7 +292,6 @@ const saveTimetable = async () => {
               <th style="width: 10%">#</th>
               <th>Предмет</th>
               <th>Аудитория</th>
-              <th>Группа</th>
               <th></th>
             </tr>
           </thead>
@@ -353,24 +340,6 @@ const saveTimetable = async () => {
                   @change="editLesson($event, lesson.day, lessonIndex)"
                   name="classroom"
                 />
-              </td>
-              <!-- Group -->
-              <td>
-                <select
-                  :disabled="isLoading"
-                  class="field-input group-select"
-                  :id="`group-${getLessonId(lesson)}`"
-                  @change="editLesson($event, lesson.day, lessonIndex)"
-                  name="group"
-                >
-                  <option
-                    v-for="group in groupOptions"
-                    :value="group.value"
-                    :selected="String(lesson.group) === group.value"
-                  >
-                    {{ group.label }}
-                  </option>
-                </select>
               </td>
               <!-- Delete lesson button -->
               <td

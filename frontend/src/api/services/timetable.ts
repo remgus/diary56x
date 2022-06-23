@@ -9,13 +9,11 @@ export interface APITimetableLesson {
   classroom: string;
   subject: APISubject;
   id: number;
-  group: number;
   day: number;
 }
 
 export interface APIDeleteLessons {
   n: number;
-  group: number;
   day: number;
   klass: number;
   subject: number;
@@ -23,7 +21,6 @@ export interface APIDeleteLessons {
 
 export interface APICreateLessons {
   n: number;
-  group: number;
   day: number;
   klass: number;
   subject: number;

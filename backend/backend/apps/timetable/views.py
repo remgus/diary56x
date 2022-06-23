@@ -25,7 +25,7 @@ class BulkCreateLessonsAPIView(CreateAPIView):
 
     serializer_class = CreateLessonsSerializer
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request):
         """Create multiple timetable records."""
         serializer = self.get_serializer(data=request.data, many=True)
         serializer.is_valid(raise_exception=True)
@@ -60,7 +60,6 @@ class BulkDeleteLessonsAPIView(DestroyAPIView):
             try:
                 lsn = TimetableLesson.objects.get(
                     number__n=lesson["n"],
-                    group=lesson["group"],
                     day=lesson["day"],
                     klass=lesson["klass"],
                     subject=lesson["subject"],

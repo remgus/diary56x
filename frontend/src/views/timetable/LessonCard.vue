@@ -28,27 +28,25 @@
           <div class="subject-name">
             <b>{{ lesson.subject.name }}</b>
           </div>
-          <div
-            v-if="
-              lesson.classrooms.length === 1 && lesson.classrooms[0].group === 0
-            "
-          >
-            {{ lesson.classrooms[0].classroom }}
-          </div>
-          <div v-else>
+          <div v-if="lesson.classrooms instanceof Array">
             <table
-              class="table table-sm table-borderless mb-0"
+              class="table table-sm mb-0 mt-1 classrooms-table"
               style="width: fit-content"
+              v-if="lesson.classrooms.length !== 0"
             >
               <tbody>
                 <tr v-for="classroom in lesson.classrooms">
-                  <td style="">Группа {{ groups[classroom.group] }}</td>
-                  <td>
-                    {{ classroom.classroom }}
-                  </td>
+                  <template v-if="classroom.includes('-')">
+                    <td>{{ classroom.split("-").map((l) => l.trim())[0] }}</td>
+                    <td>{{ classroom.split("-").map((l) => l.trim())[1] }}</td>
+                  </template>
+                  <td v-else>{{ classroom }}</td>
                 </tr>
               </tbody>
             </table>
+          </div>
+          <div v-else>
+            {{ lesson.classrooms }}
           </div>
         </div>
         <div v-if="index + 1 !== timetable.length">
@@ -67,66 +65,24 @@ import { APISubject } from "@/api/services/subjects";
 
 interface TimetableData {
   subject: APISubject;
-  classrooms: {
-    group: number;
-    classroom: string;
-  }[];
+  classrooms: string[] | string;
   n: number;
   start: string;
   end: string;
   id: number;
 }
 
-const groups = {
-  1: "I",
-  2: "II",
-  3: "III",
-};
-
 const timetable = ref<TimetableData[]>([]);
 
 const processTimetable = () => {
   const day = props.day;
 
-  let ns = new Set(day.lessons.map((l) => l.n));
-  console.log(ns);
-  for (let n of ns) {
-    const lessons = day.lessons.filter((l) => l.n === n);
-    if (lessons.length > 1) {
-      const subjects = new Set(lessons.map((l) => l.subject.id));
-      for (const subject of subjects) {
-        timetable.value.push({
-          subject: lessons.find((l) => l.subject.id === subject)!.subject,
-          classrooms: lessons
-            .filter((l) => l.subject.id === subject)
-            .map((l) => {
-              return {
-                group: l.group,
-                classroom: l.classroom,
-              };
-            }),
-          n,
-          start: lessons[0].start,
-          end: lessons[0].end,
-          id: lessons[0].id,
-        });
-      }
-    } else {
-      timetable.value.push({
-        subject: lessons[0].subject,
-        classrooms: [
-          {
-            group: lessons[0].group,
-            classroom: lessons[0].classroom,
-          },
-        ],
-        n,
-        start: lessons[0].start,
-        end: lessons[0].end,
-        id: lessons[0].id,
-      });
-    }
-  }
+  timetable.value = day.lessons.map((l) => ({
+    classrooms: l.classroom.match(/((.+-.+)(\||,))*(.+-.+)/)
+      ? l.classroom.split(/,|\|/).map((l) => l.trim())
+      : l.classroom,
+    ...l,
+  }));
 };
 
 onMounted(() => {
@@ -174,5 +130,9 @@ h4 {
 
 .subject-name {
   font-size: 1.1rem;
+}
+
+.classrooms-table > tbody > tr:last-child td {
+  border-bottom: none !important;
 }
 </style>

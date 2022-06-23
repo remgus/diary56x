@@ -38,7 +38,6 @@ class TimetableLesson(models.Model):
         day (`CharField`): Day of the week.
         klass (`ForeignKey`): `Klass` model.
         subject (`ForeignKey`): `Subject` model.
-        group (`CharField`): Group number.
     """
 
     WEEKDAYS = (
@@ -51,13 +50,6 @@ class TimetableLesson(models.Model):
         (7, "Sunday"),
     )
 
-    GROUPS = (
-        (0, "-"),
-        (1, "I"),
-        (2, "II"),
-        (3, "III"),
-    )
-
     klass = models.ForeignKey(
         Klass,
         models.CASCADE,
@@ -68,15 +60,12 @@ class TimetableLesson(models.Model):
     subject = models.ForeignKey(Subject, models.CASCADE, verbose_name="Предмет")
     day = models.IntegerField("День недели", choices=WEEKDAYS)
     classroom = models.CharField("Кабинет", max_length=50, blank=True)
-    group = models.IntegerField("Группа", default=1, choices=GROUPS)
 
     class Meta:
         ordering = ["klass", "number"]
         verbose_name = "Урок"
         verbose_name_plural = "Уроки"
-        unique_together = ("number", "day", "klass", "group", "subject")
+        unique_together = ("number", "day", "klass", "subject")
 
     def __str__(self):
-        return "{} - {} - {} ({} группа)".format(
-            self.klass, self.number.n, self.subject, self.group
-        )
+        return "{} - {} - {}".format(self.klass, self.number.n, self.subject)

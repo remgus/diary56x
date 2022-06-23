@@ -58,36 +58,3 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
-  margin-bottom: 320px;
-  font-family: Roboto, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-weight: 400;
-}
-
-.font-heavy {
-  font-family: "Gilroy-Heavy", sans-serif;
-}
-
-.font-black {
-  font-family: "Gilroy-Black", sans-serif;
-}
-
-h1 {
-  font-size: 30px;
-  font-weight: bold;
-}
-
-h2 {
-  font-size: 25px;
-  font-weight: bold;
-}
-
-h3 {
-  font-size: 23px;
-}
-
-h4 {
-  font-size: 20px;
-}

@@ -1,7 +1,7 @@
 <template>
   <div class="rt-wp container">
     <div id="hero">
-      <h1 class="font-heavy display-2" id="slogan">
+      <h1 class="display-2" id="slogan">
         Электронный Дневник<br /><span class="parallax"
           >Следующего Поколения</span
         >
@@ -54,6 +54,15 @@
   -moz-text-fill-color: transparent;
   -o-background-clip: text;
   -o-text-fill-color: transparent;
+  background-size: 300%;
+  animation: animated_text 10s ease-in-out infinite;
+  -moz-animation: animated_text 10s ease-in-out infinite;
+}
+
+@keyframes animated_text {
+	0% { background-position: 0px 50%; }
+	50% { background-position: 100% 50%; }
+	100% { background-position: 0px 50%; }
 }
 
 #hero {
@@ -65,10 +74,16 @@
   font-size: 1.4rem;
   line-height: 1.5;
   margin-bottom: 40px;
+  font-weight: 300;
 }
 
 .text-larger {
   font-size: 1.3rem;
   font-weight: 700;
+}
+
+#slogan {
+  font-family: Gilroy, sans-serif;
+  font-weight: 900;
 }
 </style>

@@ -1,8 +1,8 @@
 import django_filters
 
-from rest_framework.generics import (ListCreateAPIView,
-                                     RetrieveUpdateDestroyAPIView,
-                                     UpdateAPIView)
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.views import APIView
+from rest_framework.response import Response
 
 from .models import Notification
 from .serializers import NotificationSerializer
@@ -33,12 +33,11 @@ class NotificationDetails(RetrieveUpdateDestroyAPIView):
     serializer_class = NotificationSerializer
 
 
-class MarkAsRead(UpdateAPIView):
-    """Mark a message as read."""
+class MarkAllNotificationsAsRead(APIView):
+    """Mark all user's notifications as read."""
 
-    queryset = Notification.objects.all()
-    serializer_class = NotificationSerializer
-
-    def perform_update(self, serializer):
-        """Mark the message as read."""
-        serializer.save(read=True)
+    def get(self, request):
+        """Mark all notifications as read."""
+        user = request.user
+        Notification.objects.filter(user=user).update(read=True)
+        return Response(status=200)

@@ -42,7 +42,6 @@ class TimetableTests(TestCase):
                     {
                         "n": 1,
                         "classroom": "206",
-                        "group": 1,
                         "day": 1,
                         "klass": self.klass.id,
                         "subject": self.subjects[0].id,
@@ -50,7 +49,6 @@ class TimetableTests(TestCase):
                     {
                         "n": 2,
                         "classroom": "203",
-                        "group": 1,
                         "day": 1,
                         "klass": self.klass.id,
                         "subject": self.subjects[1].id,
@@ -58,7 +56,6 @@ class TimetableTests(TestCase):
                     {
                         "n": 3,
                         "classroom": "410",
-                        "group": 1,
                         "day": 1,
                         "klass": self.klass.id,
                         "subject": self.subjects[2].id,
@@ -66,7 +63,6 @@ class TimetableTests(TestCase):
                     {
                         "n": 4,
                         "classroom": "505",
-                        "group": 1,
                         "day": 1,
                         "klass": self.klass.id,
                         "subject": self.subjects[3].id,

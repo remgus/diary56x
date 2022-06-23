@@ -18,22 +18,22 @@
         </div>
         <div class="modal-body">
           {{ content }}
-        </div>
-        <div class="modal-footer">
-          <button
-            type="button"
-            class="btn btn-outline-secondary"
-            data-bs-dismiss="modal"
-          >
-            Отмена
-          </button>
-          <button
-            type="button"
-            class="btn btn-outline-danger"
-            @click="successCallback"
-          >
-            ОК
-          </button>
+          <div class="mt-3">
+            <button
+              type="button"
+              class="btn btn-secondary me-2"
+              data-bs-dismiss="modal"
+            >
+              Отмена
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              @click="successCallback"
+            >
+              ОК
+            </button>
+          </div>
         </div>
       </div>
     </div>

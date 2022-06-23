@@ -10,6 +10,7 @@ export enum NotificationAPIURLS {
   LIST = "notifications/",
   DETAIL = "notifications/",
   CREATE = "notifications/",
+  MARK_ALL_AS_READ = "notifications/mark-all-as-read/",
 }
 
 export type NotificationCatergory = "system" | "headteacher" | "event";
@@ -67,8 +68,10 @@ export const markNotificationAsRead = (
 ): Promise<AxiosResponse<APINotification>> => {
   return API.axios.patch<APINotification>(
     NotificationAPIURLS.DETAIL + id + "/",
-    {
-      read: true,
-    }
+    { read: true }
   );
+};
+
+export const markAllNotificationsAsRead = (): Promise<AxiosResponse> => {
+  return API.axios.get(NotificationAPIURLS.MARK_ALL_AS_READ);
 };

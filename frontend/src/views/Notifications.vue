@@ -12,6 +12,17 @@
 
     <loading :is-loading="is_loading">
       <div v-if="notifications.length">
+        <div class="mb-3">
+          <tooltip title="Отметить всё как прочитанное" placement="right">
+            <button
+              class="btn btn-outline-dark btn-sm"
+              type="button"
+              @click="markAllAsRead"
+            >
+              <i class="bi-list-check"></i>
+            </button>
+          </tooltip>
+        </div>
         <div
           class="row"
           v-for="(msg, index) in notifications"
@@ -21,25 +32,18 @@
           }"
         >
           <div class="col-12">
-            <div
-              class="card msg-card"
-              :class="{
-                'text-secondary': msg.read,
-              }"
-              @click="selectCard(msg.id)"
-            >
+            <div class="card msg-card" :class="{ 'text-secondary': msg.read }">
               <div class="card-body position-relative">
-                <i
-                  class="bi-x-lg text-danger position-absolute delete-notification"
-                  @click="showDeleteDialog(msg.id)"
-                ></i>
-                <div v-if="!msg.read && selectedCard === msg.id" class="mb-2">
-                  <div
-                    class="btn btn-sm btn-outline-primary me-2"
+                <div class="position-absolute notification-actions">
+                  <i
+                    v-if="!msg.read"
+                    class="bi-eye text-secondary me-2"
                     @click="markAsRead(msg.id)"
-                  >
-                    <i class="bi-eye"></i>
-                  </div>
+                  ></i>
+                  <i
+                    class="bi-x-lg text-danger"
+                    @click="showDeleteDialog(msg.id)"
+                  ></i>
                 </div>
                 <div class="mb-1 text-muted">
                   <span v-if="!msg.read" class="badge bg-success me-2"
@@ -87,6 +91,7 @@ import {
   listNotifications,
   markNotificationAsRead,
   deleteNotification,
+  markAllNotificationsAsRead,
 } from "@/api/services/notifications";
 import { key } from "@/store";
 import { onMounted, ref } from "vue";
@@ -94,6 +99,7 @@ import { useStore } from "vuex";
 import { toShortDateTime } from "@/utils/date";
 import { useConfirmDialog } from "@/utils/dialog";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
+import Tooltip from "@/components/Tooltip.vue";
 import { Loading } from "@/components";
 import cactus from "@/assets/icons/cactus.svg";
 
@@ -102,7 +108,6 @@ const store = useStore(key);
 const lastPage = ref(1);
 const is_loading = ref(true);
 const hasMore = ref(true);
-const selectedCard = ref<number | null>(null);
 const notificationToDelete = ref<number | null>(null);
 
 const retrieveNotifications = async () => {
@@ -134,8 +139,14 @@ const deleteN = () => {
   });
 };
 
-const selectCard = (id: number) => {
-  selectedCard.value = id;
+const markAllAsRead = () => {
+  markAllNotificationsAsRead().then(() => {
+    notifications.value = notifications.value.map((msg) => {
+      msg.read = true;
+      return msg;
+    });
+    store.dispatch("fetchNotifications");
+  });
 };
 
 const markAsRead = (id: number) => {
@@ -147,7 +158,6 @@ const markAsRead = (id: number) => {
     store.dispatch("fetchNotifications");
   });
 };
-
 
 const { showConfirmDialog, confirmDialog } = useConfirmDialog();
 
@@ -166,7 +176,7 @@ const showDeleteDialog = (id: number) => {
   font-size: 1.1rem;
 }
 
-.delete-notification {
+.notification-actions {
   top: 1rem;
   right: 1rem;
   cursor: pointer;
