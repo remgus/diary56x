@@ -1,21 +1,8 @@
 <template>
-  <div class="container rt-wp mt-4">
-    <nav aria-label="breadcrumb" class="mb-4">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item">
-          <router-link to="/">Главная</router-link>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">Расписание</li>
-      </ol>
-    </nav>
-
+  <div>
     <loading :isLoading="isLoading">
-      <div class="text-center mb-4">
-        <h1 class="heading">Расписание</h1>
-      </div>
-
       <div class="row justify-content-center mb-4">
-        <div class="col col-md-9 col-lg-6">
+        <div class="col-9">
           <form-select
             v-model="selectedKlass"
             :options="klassOptions"
@@ -27,7 +14,7 @@
 
       <loading :isLoading="ttLoading">
         <div class="row justify-content-center">
-          <div class="col col-md-9 col-lg-6">
+          <div class="col-9">
             <lesson-card
               v-if="today && today.lessons.length != 0"
               :day="today"

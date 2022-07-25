@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Home from "../views/home/Home.vue";
+import Home from "../components/Home.vue";
 import { handleMetaViews } from "./utils";
 import adminRoutes from "./admin";
 
@@ -26,14 +26,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("../views/auth/Login.vue"),
     meta: {
       requiresAuth: false,
-    },
-  },
-  {
-    path: "/profile",
-    name: "Profile",
-    component: () => import("../views/auth/Profile.vue"),
-    meta: {
-      requiresAuth: true,
     },
   },
   {

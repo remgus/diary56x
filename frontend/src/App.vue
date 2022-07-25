@@ -1,7 +1,7 @@
 <template>
   <main-navbar />
   <router-view />
-  <main-footer />
+  <profile />
   <div
     class="position-fixed bottom-0 end-0 p-3 toast-container"
     id="popup-notification-container"
@@ -16,12 +16,12 @@
 
 <script lang="ts" setup>
 import MainNavbar from "@/components/MainNavbar.vue";
-import MainFooter from "@/components/MainFooter.vue";
 import PopupNotification from "@/components/PopupNotification.vue";
 import { onMounted, ref } from "vue";
 import { useStore } from "vuex";
 import { key } from "./store";
 import { APINotification } from "./api/services/notifications";
+import Profile from "./views/auth/Profile.vue";
 
 const store = useStore(key);
 const notifications = ref<APINotification[]>([]);

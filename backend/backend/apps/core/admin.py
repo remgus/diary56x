@@ -1,10 +1,14 @@
 from django.contrib import admin
 
-from .models import Klass, Plugin, School, Subject
+from .models import Klass, Plugin, School, Subject, Lesson, Group, Control, Quarter
 
 admin.site.register(School)
 admin.site.register(Subject)
 admin.site.register(Plugin)
+admin.site.register(Lesson)
+admin.site.register(Group)
+admin.site.register(Control)
+admin.site.register(Quarter)
 
 
 class ClassAdmin(admin.ModelAdmin):

@@ -1,56 +1,75 @@
 <template>
-  <div class="container rt-wp mt-4">
-    <div class="text-center">
-      <div class="avatar d-flex justify-content-center w-100">
-        <svg v-html="jdenticon" id="avatar"></svg>
-      </div>
-
-      <div class="mt-2">
-        {{ user.surname }} {{ user.first_name }}
-        <br />
-        {{ user.last_name }}
-      </div>
-    </div>
-
-    <!-- Tab bar content -->
-    <div id="sectionsWrapper">
-      <div class="mb-4" id="account">
-        <h4 class="mb-3">
-          <i class="bi bi-person-bounding-box me-2"></i>Данные аккаунта
-        </h4>
-        <div class="mb-1">
-          <i class="bi bi-envelope me-2"></i><b>Email: </b>{{ user.email }}
+  <div
+    class="modal fade"
+    id="accountProfileModal"
+    data-bs-backdrop="static"
+    tabindex="-1"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Аккаунт</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-label="Close"
+          ></button>
         </div>
-        <div class="mb-1">
-          <i class="bi bi-calendar-plus me-2"></i><b>Дата регистрации: </b
-          >{{ toShortDate(user.date_joined) }}
-        </div>
+        <div class="modal-body">
+          <div class="text-center">
+            <div class="avatar d-flex justify-content-center w-100">
+              <svg v-html="jdenticon" id="avatar"></svg>
+            </div>
 
-        <div v-if="isStudent(user)">
-          <!-- TODO: Add info about student's class. -->
-          <div>
-            <div class="text-muted mb-1">
-              Ученикам, не добавленным в класс, недоступна большая часть
-              функционала
+            <div class="mt-2 mb-3">
+              {{ user.surname }} {{ user.first_name }}
+              <br />
+              {{ user.last_name }}
+            </div>
+          </div>
+
+          <!-- Tab bar content -->
+          <div id="sectionsWrapper">
+            <div class="mb-4" id="account">
+              <h4 class="mb-3">
+                <i class="bi bi-person-bounding-box me-2"></i>Данные аккаунта
+              </h4>
+              <div class="mb-1"><b>Email: </b>{{ user.email }}</div>
+              <div class="mb-1">
+                <b>Дата регистрации: </b>{{ toShortDate(user.date_joined) }}
+              </div>
+
+              <div v-if="isStudent(user)">
+                <!-- TODO: Add info about student's class. -->
+                <div>
+                  <div class="text-muted mb-1">
+                    Ученикам, не добавленным в класс, недоступна большая часть
+                    функционала
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="" id="settings">
+              <h4 class="mb-3"><i class="bi bi-gear me-2"></i>Настройки</h4>
+              <div class="mb-1">
+                <!-- <a href="{% url 'reset_password' %}"
+            ><i class="bi bi-key me-2"></i>Сбросить пароль</a
+          > -->
+              </div>
+              <div class="mb-1">
+                <!-- <a href="{% url 'message_to_admin' %}"
+            ><i class="bi bi-pencil me-2"></i>Изменить данные аккаунта</a
+          > -->
+              </div>
             </div>
           </div>
         </div>
       </div>
-      <div class="" id="settings">
-        <h4 class="mb-3"><i class="bi bi-gear me-2"></i>Настройки</h4>
-        <div class="mb-1">
-          <!-- <a href="{% url 'reset_password' %}"
-            ><i class="bi bi-key me-2"></i>Сбросить пароль</a
-          > -->
-        </div>
-        <div class="mb-1">
-          <!-- <a href="{% url 'message_to_admin' %}"
-            ><i class="bi bi-pencil me-2"></i>Изменить данные аккаунта</a
-          > -->
-        </div>
-      </div>
     </div>
   </div>
+
+  <div class="container rt-wp mt-4"></div>
 </template>
 
 <script lang="ts">

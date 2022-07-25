@@ -44,14 +44,6 @@
             >
           </li>
           <li class="nav-item">
-            <router-link
-              to="/blog"
-              class="nav-link"
-              :class="{ active: route.name === 'blog' }"
-              >Новости</router-link
-            >
-          </li>
-          <li class="nav-item">
             <span class="nav-link">Помощь</span>
           </li>
         </ul>
@@ -99,9 +91,13 @@
         </div>
         <ul class="dropdown-menu dropdown-menu-end">
           <li>
-            <router-link class="dropdown-item" to="/profile">
+            <button
+              class="dropdown-item"
+              data-bs-toggle="modal"
+              data-bs-target="#accountProfileModal"
+            >
               <i class="bi bi-person me-2"></i><span>Аккаунт</span>
-            </router-link>
+            </button>
           </li>
           <li>
             <router-link class="dropdown-item" to="/notifications">
@@ -119,12 +115,6 @@
             <router-link class="dropdown-item" to="/admin">
               <i class="bi-window me-2"></i>
               <span>Панель администратора</span>
-            </router-link>
-          </li>
-          <li v-if="isStudent(user)">
-            <router-link class="dropdown-item" to="/timetable">
-              <i class="bi-calendar me-2"></i>
-              <span>Расписание</span>
             </router-link>
           </li>
           <li>
