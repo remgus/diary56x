@@ -6,7 +6,7 @@ from ..models import Klass
 class KlassSerializer(ModelSerializer):
     """Serializer for `Klass` model.
 
-    Fields: `name`, `school`, `students`, `teachers`,
+    Fields: `name`, `students`, `teachers`,
     `head_teacher`, `description`, `subjects`
 
     """
@@ -19,9 +19,9 @@ class KlassSerializer(ModelSerializer):
 class KlassCompactSerializer(ModelSerializer):
     """Serializer for `Klass` model.
 
-    Fields: `id`, `name`, `school`, `head_teacher`, `description`
+    Fields: `id`, `name`, `head_teacher`, `description`
     """
 
     class Meta:
         model = Klass
-        fields = ["id", "name", "school", "head_teacher", "description"]
+        fields = ["id", "name", "head_teacher", "description"]

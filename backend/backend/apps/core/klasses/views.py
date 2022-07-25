@@ -13,12 +13,12 @@ class KlassListAPIView(ListAPIView):
 
         class Meta:
             model = Klass
-            fields = ["school"]
+            fields = []
 
     serializer_class = KlassSerializer
     queryset = Klass.objects.all()
     ordering = ["name"]
-    filter_class = KlassFilter
+    # filter_class = KlassFilter
     pagination_class = None
 
     def get_serializer(self, *args, **kwargs):

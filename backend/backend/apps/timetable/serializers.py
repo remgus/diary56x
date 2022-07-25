@@ -2,7 +2,6 @@ from backend.apps.core.subjects.serializers import SubjectSerializer
 from rest_framework import serializers
 
 from .models import Bell, TimetableLesson
-from .utils import generate_bell
 
 
 class LessonSerializer(serializers.ModelSerializer):
@@ -15,7 +14,7 @@ class LessonSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimetableLesson
-        fields = ["n", "start", "end", "subject", "classroom", "id",  "day"]
+        fields = ["n", "start", "end", "subject", "classroom", "id", "day"]
 
 
 class BellSerializer(serializers.ModelSerializer):
@@ -23,7 +22,7 @@ class BellSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Bell
-        fields = ["id", "school", "n", "start", "end"]
+        fields = ["id", "n", "start", "end"]
 
 
 class CreateLessonsSerializer(serializers.ModelSerializer):
@@ -33,18 +32,14 @@ class CreateLessonsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TimetableLesson
-        fields = ["n", "classroom",  "day", "klass", "subject"]
+        fields = ["n", "classroom", "day", "klass", "subject"]
 
     def create(self, validated_data):
         """Create lessons."""
-        school = validated_data["klass"].school
         n = validated_data["n"]
 
         # Get or create a bell for the lesson
-        try:
-            bell = Bell.objects.get(n=n, school=school)
-        except Bell.DoesNotExist:
-            bell = generate_bell(n, school)
+        bell = Bell.get_or_generate(n=n)
 
         try:
             lesson = TimetableLesson.objects.get(

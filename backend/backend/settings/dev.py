@@ -191,3 +191,10 @@ DJOSER = {
 
 PROTOCOL = "http"
 DOMAIN = "localhost:8000"
+
+
+# ------------ Diary56x ------------
+
+SCHOOL_NAME = config["Diary56x"]["SCHOOL_NAME"]
+SCHOOL_FULL_NAME = config["Diary56x"]["SCHOOL_FULL_NAME"]
+DIARY56X_PLUGINS = config["Diary56x"]["PLUGINS"]

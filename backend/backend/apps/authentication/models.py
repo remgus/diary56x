@@ -23,14 +23,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     surname = models.CharField("Фамилия", max_length=100)
     date_joined = models.DateTimeField("Дата регистрации", default=timezone.now)
 
-    school = models.ForeignKey(
-        "core.School",
-        models.SET_NULL,
-        verbose_name="Образовательное учреждение",
-        null=True,
-        blank=True,
-    )
-
     objects = UserManager()
 
     EMAIL_FIELD = "email"

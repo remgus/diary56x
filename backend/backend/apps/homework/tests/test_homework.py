@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from backend.apps.core.models import Control, Group, Klass, Quarter, School, Subject
+from backend.apps.core.models import Control, Group, Klass, Quarter, Subject
 from django.test import TestCase
 from django.utils.timezone import datetime, timedelta
 
@@ -16,9 +16,8 @@ class TestHomework(TestCase):
 
     def setUp(self) -> None:
         """Populate database with some data that is needed to add homework."""
-        school = School.objects.create(name="Гимназия №56")
         subject = Subject.objects.create(name="ИКТ")
-        klass = Klass.objects.create(name="11з", school=school)
+        klass = Klass.objects.create(name="11з")
         klass.subjects.add(subject)
 
         Control.objects.create(name="Классная работа", weight=1)

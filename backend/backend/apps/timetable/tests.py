@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from backend.apps.timetable.models import Bell, TimetableLesson
-from ..core.models import Klass, Plugin, School, Subject
+from ..core.models import Klass, Plugin, Subject
 import json
 from rest_framework import status
 
@@ -18,17 +18,13 @@ class TimetableTests(TestCase):
     """Timetable tests."""
 
     def setUp(self):
-        """Create a school, a klass, and some subjects."""
-        self.school = School.objects.create(name="Гимназия №56")
+        """Create a klass, and some subjects."""
         self.subjects = []
         for subject in TEST_SUBJECTS:
             self.subjects.append(Subject.objects.create(name=subject))
-        self.klass = Klass.objects.create(name="10З", school=self.school)
+        self.klass = Klass.objects.create(name="10З")
         self.klass.subjects.set(self.subjects)
-
-        # Add a timetable plugin to the school.
-        tt_plugin = Plugin.objects.create(name="timetable")
-        self.school.plugins.add(tt_plugin)
+        Plugin.objects.create(name="timetable")
 
     def test_timetable_edit(self):
         """Test editing a timetable."""

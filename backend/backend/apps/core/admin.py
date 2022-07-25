@@ -1,8 +1,7 @@
 from django.contrib import admin
 
-from .models import Klass, Plugin, School, Subject, Lesson, Group, Control, Quarter
+from .models import Control, Group, Klass, Lesson, Plugin, Quarter, Subject
 
-admin.site.register(School)
 admin.site.register(Subject)
 admin.site.register(Plugin)
 admin.site.register(Lesson)
@@ -14,8 +13,7 @@ admin.site.register(Quarter)
 class ClassAdmin(admin.ModelAdmin):
     """Admin configuration for `Klass` model."""
 
-    list_display = ["name", "school", "head_teacher", "description"]
-    list_filter = ["school"]
+    list_display = ["name", "head_teacher", "description"]
     search_fields = ["name"]
     ordering = ["name"]
 

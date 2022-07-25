@@ -1,4 +1,3 @@
-from backend.apps.core.schools.serializers import SchoolSerializer
 from rest_framework import serializers
 
 from . import models
@@ -26,7 +25,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     options_student = StudentSerializer()
     options_teacher = TeacherSerializer()
-    school = SchoolSerializer()
 
     class Meta:
         model = models.User
@@ -44,7 +42,6 @@ class UserSerializer(serializers.ModelSerializer):
             "is_superuser",
             "is_staff",
             "is_active",
-            "school",
         ]
         read_only_fields = [
             "id",
@@ -81,19 +78,17 @@ class StudentCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.User
-        fields = ["email", "first_name", "last_name", "surname", "school", "password"]
+        fields = ["email", "first_name", "last_name", "surname", "password"]
         extra_kwargs = {"password": {"write_only": True}}
 
     def create(self, validated_data: dict):
         """Create a new student."""
-        validated_data.setdefault("school", None)
         user = models.User.objects.create(
             account_type=UserTypes.STUDENT.value,
             surname=validated_data["surname"],
             first_name=validated_data["first_name"],
             last_name=validated_data["last_name"],
             email=validated_data["email"],
-            school=validated_data["school"],
         )
         user.set_password(validated_data["password"])
         user.save()

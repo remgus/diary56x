@@ -1,4 +1,3 @@
-import django_filters
 from backend.apps.core.models import Klass
 from django.shortcuts import get_object_or_404
 from rest_framework import status
@@ -76,13 +75,6 @@ class ListBellsAPIView(ListAPIView):
 
     serializer_class = BellSerializer
     queryset = Bell.objects.all()
-
-    class BellsFilter(django_filters.FilterSet):
-        """Filter bells."""
-
-        class Meta:
-            model = Bell
-            fields = ["school"]
 
 
 class BellAPIView(RetrieveUpdateDestroyAPIView):

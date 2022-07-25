@@ -1,4 +1,8 @@
-from backend.apps.core.models import Klass, School, Subject
+from __future__ import annotations
+
+from datetime import date, datetime, time, timedelta
+
+from backend.apps.core.models import Klass, Subject
 from django.db import models
 
 
@@ -11,10 +15,8 @@ class Bell(models.Model):
         n (`IntegerField`): lesson number.
         start (`TimeField`): lesson start time.
         end (`TimeField`): lesson end time.
-        school (`ForeignKey`): school.
     """
 
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
     n = models.IntegerField(verbose_name="Номер урока")
     start = models.TimeField(verbose_name="Начало урока")
     end = models.TimeField(verbose_name="Конец урока")
@@ -25,7 +27,30 @@ class Bell(models.Model):
         verbose_name_plural = "Звонки"
 
     def __str__(self):
-        return "{} - Урок №{}".format(self.school.name, self.n)
+        return "Урок №{}".format(self.n)
+
+    @classmethod
+    def generate_bell(n: int) -> Bell:
+        """Generate a new `Bell` object.
+
+        This function should be used to generate a bell
+        in case it's missing.
+        """
+        SCHOOL_DAY_START = datetime.combine(date.today(), time(9, 0, 0))
+        BREAK = timedelta(minutes=15)
+        LESSON_DURATION = timedelta(minutes=40)
+
+        start = SCHOOL_DAY_START + n * LESSON_DURATION + n * BREAK
+        end = start + LESSON_DURATION
+        return Bell.objects.create(n=n, start=start, end=end)
+
+    @classmethod
+    def get_or_generate(cls, n: int) -> Bell:
+        try:
+            bell = cls.objects.get(n=n)
+        except cls.DoesNotExist:
+            bell = cls.generate_bell(n)
+        return bell
 
 
 class TimetableLesson(models.Model):

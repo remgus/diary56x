@@ -5,38 +5,11 @@ from django.db import models
 from django.utils.timezone import datetime
 
 
-class School(models.Model):
-    """School model.
-
-    Fields:
-        name (`CharField`): School name.
-        full_name (`CharField`): School full (official) name.
-        description (`TextField`): School description.
-        plugins (`ManyToManyField`): Plugins enabled for school.
-    """
-
-    name = models.CharField("Название", max_length=100)
-    plugins = models.ManyToManyField(
-        "Plugin", blank=True, verbose_name="Плагины", related_name="schools"
-    )
-    description = models.TextField("Описание", blank=True)
-    full_name = models.CharField("Официальное название", max_length=100, blank=True)
-
-    class Meta:
-        verbose_name = "Образовательное учреждение"
-        verbose_name_plural = "Образовательные учреждения"
-        ordering = ["name"]
-
-    def __str__(self):
-        return self.full_name if self.full_name else self.name
-
-
 class Klass(models.Model):
     """Class model.
 
     Fields:
         name (`CharField`): Class name.
-        school (`ForeignKey`): School.
         students (`ManyToManyField`): Students in class.
         teachers (`ManyToManyField`): Teachers in class.
         head_teacher (`ForeignKey`): Head teacher.
@@ -51,7 +24,6 @@ class Klass(models.Model):
         Teacher, models.SET_NULL, null=True, blank=True, related_name="managed_classes"
     )
     description = models.TextField("Описание", blank=True)
-    school = models.ForeignKey(School, on_delete=models.CASCADE)
     subjects = models.ManyToManyField("Subject", related_name="klass")
 
     class Meta:
@@ -60,7 +32,7 @@ class Klass(models.Model):
         ordering = ["name"]
 
     def __str__(self):
-        return f"{self.name} ({self.school})"
+        return f"{self.name}"
 
 
 class Subject(models.Model):
