@@ -51,12 +51,13 @@
 
 <script lang="ts" setup>
 import { FormBuilder, validateForm, Validator } from "@/utils/forms";
-import { defineComponent, ref } from "@vue/runtime-core";
+import { ref } from "vue";
 import { AxiosError } from "axios";
 import router from "@/router";
 import { FormInput } from "@/components";
 import { useStore } from "@/store";
 import { AuthActionTypes } from "@/store/modules/auth/types";
+import { DiaryActionTypes } from "@/store/modules/diary/types";
 
 interface Credentials {
   email: string;
@@ -105,7 +106,7 @@ const processLogin = (): void => {
     .dispatch(AuthActionTypes.LOGIN, data)
     .then(() => {
       store.dispatch(AuthActionTypes.CURRENT_USER).then(() => {
-        store.dispatch(AuthActionTypes.FETCH_NOTIFICATIONS);
+        store.dispatch(DiaryActionTypes.FETCH_NOTIFICATIONS);
         router.push("/");
       });
     })

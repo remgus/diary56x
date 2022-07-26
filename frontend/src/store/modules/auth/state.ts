@@ -14,6 +14,4 @@ export const authState: AuthState = {
   accessToken: getLocalData(LocalData.ACCESS_TOKEN),
   refreshToken: getLocalData(LocalData.REFRESH_TOKEN),
   user: getUser(),
-  messages: [],
-  unread_notifications: [],
 };

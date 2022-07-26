@@ -19,12 +19,4 @@ export const mutations: MutationTree<AuthState> & Mutations = {
   [AuthMutationTypes.CLEAR_USER](state) {
     state.user = null;
   },
-
-  [AuthMutationTypes.ADD_MESSAGE](state, message) {
-    state.messages.push(message);
-  },
-
-  [AuthMutationTypes.SET_NOTIFICATIONS](state, notifications) {
-    state.unread_notifications = notifications;
-  },
 };

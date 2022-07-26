@@ -1,7 +1,7 @@
 <template>
   <main-navbar />
   <router-view />
-  <profile />
+  <profile v-if="store.getters.isAuthenticated" />
   <div
     class="position-fixed bottom-0 end-0 p-3 toast-container"
     id="popup-notification-container"
@@ -21,25 +21,26 @@ import { onMounted, ref } from "vue";
 import { useStore } from "@/store";
 import { APINotification } from "./api/services/notifications";
 import Profile from "./views/auth/Profile.vue";
-import { AuthActionTypes } from "./store/modules/auth/types";
+import { DiaryActionTypes } from "./store/modules/diary/types";
 
 const store = useStore();
 const notifications = ref<APINotification[]>([]);
 const lastTimeFetched = ref<number>(Date.now());
 
 const fetchNotifications = () => {
-  store.dispatch(AuthActionTypes.FETCH_NOTIFICATIONS).then(() => {
+  store.dispatch(DiaryActionTypes.FETCH_NOTIFICATIONS).then(() => {
     lastTimeFetched.value = Date.now();
   });
 };
 
 onMounted(() => {
+  store.dispatch(DiaryActionTypes.FETCH_CONFIG);
   fetchNotifications();
   setInterval(fetchNotifications, 20 * 1000);
 });
 
 store.subscribe(() => {
-  for (const notification of store.state.auth.unread_notifications) {
+  for (const notification of store.state.diary.unread_notifications) {
     if (new Date(notification.created_at) > new Date(lastTimeFetched.value)) {
       notifications.value.push(notification);
     }

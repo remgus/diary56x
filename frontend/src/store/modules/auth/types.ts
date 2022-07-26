@@ -1,4 +1,3 @@
-import { APINotification } from "@/api/services/notifications";
 import { APIUser } from "@/api/services/auth";
 import {
   ActionContext,
@@ -12,8 +11,6 @@ export interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
   user: APIUser | null;
-  messages: Message[];
-  unread_notifications: APINotification[];
 }
 
 export interface UserCredentials {
@@ -21,26 +18,17 @@ export interface UserCredentials {
   password: string;
 }
 
-export interface Message {
-  text: string;
-  tag?: string;
-}
-
 export enum AuthActionTypes {
-  LOGIN = "LOGIN",
-  CURRENT_USER = "ME",
-  ADD_MESSAGE = "ADD_MESSAGE",
-  LOGOUT = "LOGOUT",
-  FETCH_NOTIFICATIONS = "FETCH_NOTIFICATIONS",
+  LOGIN = "AUTH/LOGIN",
+  CURRENT_USER = "AUTH/CURRENT_USER",
+  LOGOUT = "AUTH/LOGOUT",
 }
 
 export enum AuthMutationTypes {
-  SET_TOKENS = "SET_TOKENS",
-  SET_USER = "SET_USER",
-  CLEAR_TOKENS = "CLEAR_TOKENS",
-  CLEAR_USER = "CLEAR_USER",
-  ADD_MESSAGE = "ADD_MESSAGE",
-  SET_NOTIFICATIONS = "SET_NOTIFICATIONS",
+  SET_TOKENS = "AUTH/SET_TOKENS",
+  SET_USER = "AUTH/SET_USER",
+  CLEAR_TOKENS = "AUTH/CLEAR_TOKENS",
+  CLEAR_USER = "AUTH/CLEAR_USER",
 }
 
 export type Mutations<S = AuthState> = {
@@ -49,13 +37,8 @@ export type Mutations<S = AuthState> = {
     state: S,
     tokens: { accessToken: string; refreshToken: string }
   ): void;
-  [AuthMutationTypes.SET_NOTIFICATIONS](
-    state: S,
-    notifications: APINotification[]
-  ): void;
   [AuthMutationTypes.CLEAR_USER](state: S): void;
   [AuthMutationTypes.CLEAR_TOKENS](state: S): void;
-  [AuthMutationTypes.ADD_MESSAGE](state: S, message: Message): void;
 };
 
 type AugmentedActionContext = {
@@ -66,15 +49,6 @@ type AugmentedActionContext = {
 } & Omit<ActionContext<AuthState, RootState>, "commit">;
 
 export interface Actions {
-  [AuthActionTypes.ADD_MESSAGE](
-    { commit }: AugmentedActionContext,
-    message: Message
-  ): Promise<void>;
-
-  [AuthActionTypes.FETCH_NOTIFICATIONS]({
-    commit,
-  }: AugmentedActionContext): Promise<void>;
-
   [AuthActionTypes.LOGIN](
     { commit }: AugmentedActionContext,
     credentials: UserCredentials
@@ -89,8 +63,6 @@ export interface Actions {
 
 export type Getters = {
   isAuthenticated: (state: AuthState) => boolean;
-  messagesLength: (state: AuthState) => number;
-  unreadNotificationsCount: (state: AuthState) => number;
 };
 
 export type AuthStore<S = AuthState> = Omit<

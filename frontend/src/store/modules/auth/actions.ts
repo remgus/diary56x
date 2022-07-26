@@ -1,7 +1,6 @@
 import { ActionTree } from "vuex";
 import { RootState } from "@/store";
 import { clearLocalData, LocalData, setLocalData } from "@/api/local";
-import { listNotifications } from "@/api/services/notifications";
 import { getCurrentUser, login, logout } from "@/api/services/auth";
 import {
   Actions,
@@ -43,12 +42,6 @@ export const actions: ActionTree<AuthState, RootState> & Actions = {
         });
     });
   },
-
-  [AuthActionTypes.ADD_MESSAGE]({ commit }, message) {
-    commit(AuthMutationTypes.ADD_MESSAGE, message);
-    return Promise.resolve();
-  },
-
   [AuthActionTypes.LOGOUT]({ commit, state }) {
     return new Promise(() => {
       if (!state.refreshToken) {
@@ -59,21 +52,6 @@ export const actions: ActionTree<AuthState, RootState> & Actions = {
         commit(AuthMutationTypes.CLEAR_TOKENS, undefined);
         clearLocalData();
       });
-    });
-  },
-
-  [AuthActionTypes.FETCH_NOTIFICATIONS]({ commit, state }) {
-    return new Promise((resolve, reject) => {
-      if (state.user == null) return;
-
-      listNotifications({ read: false, user: state.user.id })
-        .then((response) => {
-          commit(AuthMutationTypes.SET_NOTIFICATIONS, response.data.results);
-          resolve();
-        })
-        .catch((error) => {
-          reject(error);
-        });
     });
   },
 };
