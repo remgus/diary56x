@@ -1,6 +1,11 @@
 import django_filters
+from django.db.models import Count, Q, QuerySet
+from django.db.models.functions import Length
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
+
+from backend.apps.core.models import Klass
 
 from .models import Homework, HomeworkAttachment
 from .serializers import (
@@ -15,11 +20,33 @@ from .serializers import (
 class HomeworkListCreateAPIView(generics.ListCreateAPIView):
     """List posts."""
 
+    class HomeworkPagination(PageNumberPagination):
+        page_size = 50
+        max_page_size = 100
+        page_size_query_param = "page_size"
+
     class HomeworkFilter(django_filters.FilterSet):
-        ...
+        has_content = django_filters.BooleanFilter(method="has_content_check")
+        date = django_filters.DateFromToRangeFilter(field_name="lesson__date")
+        klass = django_filters.ModelChoiceFilter(
+            queryset=Klass.objects.all(), field_name="lesson__group__klass"
+        )
+
+        class Meta:
+            model = Homework
+            fields = ["date", "has_content"]
+
+        def has_content_check(self, queryset: QuerySet[Homework], name, value):
+            """Select homework that has attached files or content."""
+            qs = queryset.annotate(content_len=Length("content"), files_cnt=Count("attachments"))
+            filter_expr = Q(content_len__gt=0) | Q(files_cnt__gt=0)
+            if value:
+                return qs.filter(filter_expr)
+            return qs.filter(~filter_expr)
 
     queryset = Homework.objects.all()
     ordering_fields = ["date"]
+    pagination_class = HomeworkPagination
     filter_class = HomeworkFilter
 
     def get_serializer_class(self):
@@ -46,7 +73,7 @@ class HomeworkDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in ("PUT", "PATCH"):
             return UpdateHomeworkSerializer
         return HomeworkSerializer
-    
+
     def update(self, request, *args, **kwargs):
         return super().update(request, *args, **kwargs)
 

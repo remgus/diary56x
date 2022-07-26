@@ -1,9 +1,8 @@
 from django.contrib import admin
 
-from .models import Control, Group, Klass, Lesson, Plugin, Quarter, Subject
+from .models import Control, Group, Klass, Lesson, Quarter, Subject
 
 admin.site.register(Subject)
-admin.site.register(Plugin)
 admin.site.register(Lesson)
 admin.site.register(Group)
 admin.site.register(Control)

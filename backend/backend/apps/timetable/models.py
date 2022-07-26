@@ -30,7 +30,7 @@ class Bell(models.Model):
         return "Урок №{}".format(self.n)
 
     @classmethod
-    def generate_bell(n: int) -> Bell:
+    def generate_bell(cls, n: int) -> Bell:
         """Generate a new `Bell` object.
 
         This function should be used to generate a bell
@@ -42,7 +42,7 @@ class Bell(models.Model):
 
         start = SCHOOL_DAY_START + n * LESSON_DURATION + n * BREAK
         end = start + LESSON_DURATION
-        return Bell.objects.create(n=n, start=start, end=end)
+        return cls.objects.create(n=n, start=start, end=end)
 
     @classmethod
     def get_or_generate(cls, n: int) -> Bell:

@@ -193,8 +193,9 @@ PROTOCOL = "http"
 DOMAIN = "localhost:8000"
 
 
-# ------------ Diary56x ------------
+# ------------ DiaryX ------------
 
-SCHOOL_NAME = config["Diary56x"]["SCHOOL_NAME"]
-SCHOOL_FULL_NAME = config["Diary56x"]["SCHOOL_FULL_NAME"]
-DIARY56X_PLUGINS = config["Diary56x"]["PLUGINS"]
+DIARYX_SCHOOL_NAME = config["Diaryx"]["SCHOOL_NAME"]
+DIARYX_SCHOOL_FULL_NAME = config["Diaryx"]["SCHOOL_FULL_NAME"]
+DIARYX_PLUGINS = config["Diaryx"]["PLUGINS"]
+DIARYX_SCHOOL_N = config["Diaryx"]["SCHOOL_N"]

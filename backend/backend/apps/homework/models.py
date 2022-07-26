@@ -53,7 +53,7 @@ class Homework(models.Model):
     @property
     def date(self) -> datetime.date:
         return self.lesson.date
-    
+
     @property
     def group(self) -> Group:
         return self.lesson.group

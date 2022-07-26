@@ -57,31 +57,6 @@ class Subject(models.Model):
         return self.name
 
 
-class Plugin(models.Model):
-    """Plugin model.
-
-    Plugins can be attached to schools. Each plugin unlocks
-    functionality specific to a school it's attached to.
-
-    Fields:
-        name (`CharField`): Plugin name.
-        description (`TextField`): Plugin description.
-        icon (`ImageField`): Plugin icon.
-    """
-
-    name = models.CharField("Название", max_length=100, unique=True)
-    description = models.TextField("Описание", blank=True)
-    icon = models.ImageField("Иконка", upload_to="plugins/", blank=True)
-
-    class Meta:
-        verbose_name = "Плагин"
-        verbose_name_plural = "Плагины"
-        ordering = ["name"]
-
-    def __str__(self):
-        return self.name
-
-
 class Group(models.Model):
     """Group of students.
 
