@@ -1,4 +1,4 @@
-import store from "@/store";
+import { store } from "@/store";
 import { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
 
 export const handleMetaViews = (

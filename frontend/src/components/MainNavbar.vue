@@ -132,16 +132,16 @@
 <script lang="ts" setup>
 import { computed, onMounted, onUnmounted, ref } from "vue";
 import { toSvg } from "jdenticon";
-import { useStore } from "vuex";
-import { key } from "@/store";
+import { useStore } from "@/store";
 import router from "@/router";
-import { isAdmin, isStudent } from "@/api/services/auth";
+import { isAdmin } from "@/api/services/auth";
 import { useRoute } from "vue-router";
+import { AuthActionTypes } from "@/store/modules/auth/types";
 
-const store = useStore(key);
+const store = useStore();
 const route = useRoute();
 
-const user = computed(() => store.state.user);
+const user = computed(() => store.state.auth.user);
 const jdenticon = computed(() => toSvg(user.value?.id, 45));
 const unreadNotificationsCount = computed<number>(
   () => store.getters["unreadNotificationsCount"]
@@ -150,7 +150,7 @@ const unreadNotificationsCount = computed<number>(
 const isScrolled = ref(false);
 
 const logout = () => {
-  store.dispatch("logout");
+  store.dispatch(AuthActionTypes.LOGOUT);
   router.push("/");
 };
 

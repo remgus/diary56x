@@ -42,9 +42,7 @@
             <i class="bi-table me-3"></i>Оценки</router-link
           >
 
-          <a href="#" class="nav-link">
-            <i class="bi-people me-3"></i>Класс
-          </a>
+          <a href="#" class="nav-link"> <i class="bi-people me-3"></i>Класс </a>
 
           <a href="#" class="nav-link">
             <i class="bi-bar-chart me-3"></i>Успеваемость
@@ -53,7 +51,6 @@
           <a href="#" class="nav-link">
             <i class="bi-person me-3"></i>Аккаунт и портфолио
           </a>
-          
         </ul>
       </div>
       <div class="col-9 tab-content">
@@ -79,15 +76,9 @@ import { defineComponent, computed } from "vue";
 import Landing from "./Landing.vue";
 import Timetable from "../views/timetable/Timetable.vue";
 
-import { key } from "@/store";
-import { useStore } from "vuex";
+import { useStore } from "@/store";
 
-import {
-  APIUser,
-  isStudent,
-  pluginEnabled,
-  isAdmin,
-} from "@/api/services/auth";
+import { APIUser, isStudent, isAdmin } from "@/api/services/auth";
 
 export default defineComponent({
   name: "Home",
@@ -96,12 +87,12 @@ export default defineComponent({
     Timetable,
   },
   setup() {
-    const store = useStore(key);
+    const store = useStore();
 
-    const isAuthenticated = computed(() => store.getters["isAuthenticated"]);
-    const user = computed(() => store.state.user as APIUser);
+    const isAuthenticated = computed(() => store.getters.isAuthenticated);
+    const user = computed(() => store.state.auth.user as APIUser);
 
-    return { isAuthenticated, pluginEnabled, user, isStudent, isAdmin };
+    return { isAuthenticated, user, isStudent, isAdmin };
   },
 });
 </script>

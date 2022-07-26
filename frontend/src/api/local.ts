@@ -19,7 +19,7 @@ export function getLocalData(key: LocalData): string | null {
   return value;
 }
 
-export function clearLocalDataAfterLogout(): void {
+export function clearLocalData(): void {
   localStorage.removeItem(LocalData.USER);
   localStorage.removeItem(LocalData.ACCESS_TOKEN);
   localStorage.removeItem(LocalData.REFRESH_TOKEN);

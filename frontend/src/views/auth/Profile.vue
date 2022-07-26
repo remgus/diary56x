@@ -76,14 +76,14 @@
 import { computed, defineComponent } from "@vue/runtime-core";
 import { toSvg } from "jdenticon";
 import { toShortDate } from "@/utils/date";
-import { useStore } from "vuex";
-import { key } from "@/store";
+import { useStore } from "@/store";
+
 import { APIUser, isStudent } from "@/api/services/auth";
 
 export default defineComponent({
   setup() {
-    const store = useStore(key);
-    const user = computed(() => store.state.user as APIUser);
+    const store = useStore();
+    const user = computed(() => store.state.auth.user as APIUser);
     const jdenticon = computed(() => toSvg(user.value?.id, 100));
 
     return {

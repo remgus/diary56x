@@ -53,7 +53,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, defineComponent, reactive, ref } from "vue";
+import { computed, reactive, ref } from "vue";
 
 import { FormInput, MarkdownEditor } from "@/components";
 import { APICreatePost, createPost } from "@/api/services/blog";
@@ -67,8 +67,8 @@ import {
   handleFilesEvent,
   validateForm,
 } from "@/utils/forms";
-import { useStore } from "vuex";
-import { key } from "@/store";
+import { useStore } from "@/store";
+
 import { useRouter } from "vue-router";
 import { AxiosError } from "axios";
 
@@ -76,8 +76,8 @@ const mdeRef = ref<typeof MarkdownEditor | undefined>(undefined);
 const isBound = ref(false);
 const image = ref<FormFile | null>(null);
 
-const store = useStore(key);
-const user = computed(() => store.state.user);
+const store = useStore();
+const user = computed(() => store.state.auth.user);
 
 const router = useRouter();
 

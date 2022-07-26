@@ -14,7 +14,7 @@
     <div class="text-center mb-4">
       <h1 class="heading">Панель администратора</h1>
     </div>
-    <div v-if="school">
+    <div>
       <div class="card card-body mb-3">
         <div
           class="d-flex flex-column align-items-center justify-content-center"
@@ -25,7 +25,7 @@
             height="70"
             class="mb-2"
           />
-          <div class="fw-bold">{{ school.name }}</div>
+          <!-- <div class="fw-bold">{{ school.name }}</div> -->
         </div>
       </div>
 
@@ -54,31 +54,11 @@
         <card icon="box" title="Плагины" link="/admin/plugins" />
       </div>
     </div>
-    <div v-else>
-      <div class="alert alert-warning">
-        <i class="bi-exclamation-circle me-2"></i>
-        Пока вы не добавлены как администратор ни в одной из школ,
-        функционал панели администратора ограничен
-      </div>
-    </div>
   </div>
 </template>
 
-<script lang="ts">
-import { key } from "@/store";
-import { computed, defineComponent } from "vue";
-import { useStore } from "vuex";
+<script lang="ts" setup>
 import Card from "./Card.vue";
-
-export default defineComponent({
-  components: { Card },
-  setup() {
-    const store = useStore(key);
-    return {
-      school: computed(() => store.state.user?.school),
-    };
-  },
-});
 </script>
 
 <style></style>

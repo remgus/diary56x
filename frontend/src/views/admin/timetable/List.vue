@@ -35,14 +35,14 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from "vue";
 import { FormSelect, Loading } from "@/components";
-import { listClassesCompact } from "@/api/services/klasses";
-import { useStore } from "vuex";
-import { key } from "@/store";
+import { listClasses } from "@/api/services/klasses";
+import { useStore } from "@/store";
+
 import { SelectOption } from "@/components/forms/FormSelect.vue";
 import TimetableEdit from "@/components/TimetableEdit.vue";
 
-const store = useStore(key);
-const user = computed(() => store.state.user);
+const store = useStore();
+const user = computed(() => store.state.auth.user);
 
 // Class that is currently selected
 const selectedKlass = ref<null | string>(null);
@@ -51,8 +51,8 @@ const selectedKlass = ref<null | string>(null);
 const klassOptions = ref<SelectOption[]>([]);
 
 onMounted(() => {
-  if (user.value && user.value.school) {
-    listClassesCompact(user.value.school.id).then((res) => {
+  if (user.value) {
+    listClasses({ compact: true }).then((res) => {
       klassOptions.value = res.data.map((klass) => ({
         value: String(klass.id),
         label: klass.name,

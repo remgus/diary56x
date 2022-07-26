@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import { getLocalData, LocalData, setLocalData } from "./local";
 import router from "../router";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
-import store from "../store";
+import { store } from "@/store";
 
 const BASE_URL = "/api/";
 

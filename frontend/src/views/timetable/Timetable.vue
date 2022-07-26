@@ -39,28 +39,31 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from "vue";
 import { FormSelect, Loading } from "@/components";
-import { listClassesCompact } from "@/api/services/klasses";
-import { useStore } from "vuex";
-import { key } from "@/store";
+import { listClasses } from "@/api/services/klasses";
+import { useStore } from "@/store";
+
 import { SelectOption } from "@/components/forms/FormSelect.vue";
 import LessonCard from "./LessonCard.vue";
 import { APIUser } from "@/api/services/auth";
 import { APITimetableLesson, getTimetable } from "@/api/services/timetable";
 
-const store = useStore(key);
+const store = useStore();
 const isLoading = ref(true);
 const ttLoading = ref(true);
 const user = computed(() => store.state.user as APIUser);
 const klassOptions = ref<SelectOption[]>([]);
-const selectedKlass = ref<string>(String(user.value.school?.id));
+
+// TODO: Select student's current class
+const selectedKlass = ref<number | null>(null);
 const timetable = ref<{ weekday: number; lessons: APITimetableLesson[] }[]>([]);
 
 const getClassesList = async () => {
-  const res = await listClassesCompact(parseInt(selectedKlass.value));
+  const res = await listClasses({ compact: true });
+  if (selectedKlass.value === null) selectedKlass.value = res.data[0].id;
   klassOptions.value = res.data.map((klass) => ({
     value: String(klass.id),
     label: klass.name,
-    selected: klass.id === parseInt(selectedKlass.value),
+    selected: klass.id === selectedKlass.value,
   }));
   isLoading.value = false;
 };
@@ -68,7 +71,7 @@ const getClassesList = async () => {
 const refreshTimetable = async () => {
   if (!selectedKlass.value) return;
 
-  const res = (await getTimetable(parseInt(selectedKlass.value))).data;
+  const res = (await getTimetable(selectedKlass.value)).data;
 
   timetable.value = [];
   for (let i = 1; i <= 7; i++)

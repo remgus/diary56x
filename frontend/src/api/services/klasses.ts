@@ -6,7 +6,6 @@ export interface APIKlassCompact {
   name: string;
   description: string;
   head_teacher: number | null;
-  school: number;
 }
 
 export interface APIKlass extends APIKlassCompact {
@@ -15,24 +14,20 @@ export interface APIKlass extends APIKlassCompact {
   subjects: number[];
 }
 
-export const KlassAPIEndpoint = "klasses/";
+interface ListClassesParams {
+  compact?: boolean;
+}
 
-export const listClassesCompact = (
-  school: number
-): Promise<AxiosResponse<APIKlassCompact[]>> => {
-  const params = {
-    school,
-    compact: true,
-  };
-  return API.axios.get(KlassAPIEndpoint, { params });
+const defaultListClassesParams: ListClassesParams = {
+  compact: false,
 };
 
 export const listClasses = (
-  school: number
+  params = defaultListClassesParams
 ): Promise<AxiosResponse<APIKlass[]>> => {
-  return API.axios.get(KlassAPIEndpoint, { params: { school } });
+  return API.axios.get("klasses/", { params });
 };
 
 export const getClass = (id: number): Promise<AxiosResponse<APIKlass>> => {
-  return API.axios.get(KlassAPIEndpoint + id);
+  return API.axios.get(`klasses/${id}`);
 };

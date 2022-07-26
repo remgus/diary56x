@@ -1,29 +1,24 @@
-import {
-  clearLocalDataAfterLogout,
-  LocalData,
-  setLocalData,
-} from "@/api/local";
+import { ActionTree } from "vuex";
+import { RootState } from "@/store";
+import { clearLocalData, LocalData, setLocalData } from "@/api/local";
 import { listNotifications } from "@/api/services/notifications";
-import { Actions } from "vuex-smart-module";
-import { RootMutations } from "./mutations";
-import { RootGetters } from "./getters";
-import { Message, RootState, UserCredentials } from "./types";
 import { getCurrentUser, login, logout } from "@/api/services/auth";
+import {
+  Actions,
+  AuthActionTypes,
+  AuthMutationTypes,
+  AuthState,
+} from "./types";
 
-export class RootActions extends Actions<
-  RootState,
-  RootGetters,
-  RootMutations,
-  RootActions
-> {
-  login(credentials: UserCredentials): Promise<void> {
+export const actions: ActionTree<AuthState, RootState> & Actions = {
+  [AuthActionTypes.LOGIN]({ commit }, credentials) {
     return new Promise((resolve, reject) => {
       login(credentials)
         .then((response) => {
           const { access, refresh } = response.data;
           setLocalData(LocalData.ACCESS_TOKEN, access);
           setLocalData(LocalData.REFRESH_TOKEN, refresh);
-          this.commit("setTokens", {
+          commit(AuthMutationTypes.SET_TOKENS, {
             accessToken: access,
             refreshToken: refresh,
           });
@@ -33,13 +28,13 @@ export class RootActions extends Actions<
           reject(error);
         });
     });
-  }
+  },
 
-  me(): Promise<void> {
+  [AuthActionTypes.CURRENT_USER]({ commit }) {
     return new Promise((resolve, reject) => {
       getCurrentUser()
         .then((response) => {
-          this.commit("setUser", response.data);
+          commit(AuthMutationTypes.SET_USER, response.data);
           setLocalData(LocalData.USER, JSON.stringify(response.data));
           resolve();
         })
@@ -47,38 +42,38 @@ export class RootActions extends Actions<
           reject(error);
         });
     });
-  }
+  },
 
-  addMessage(payload: Message): Promise<void> {
-    this.dispatch("addMessage", payload);
+  [AuthActionTypes.ADD_MESSAGE]({ commit }, message) {
+    commit(AuthMutationTypes.ADD_MESSAGE, message);
     return Promise.resolve();
-  }
+  },
 
-  logout(): Promise<void> {
+  [AuthActionTypes.LOGOUT]({ commit, state }) {
     return new Promise(() => {
-      if (!this.state.refreshToken) {
+      if (!state.refreshToken) {
         return Promise.reject("Refresh token is null.");
       }
-      logout(this.state.refreshToken).finally(() => {
-        this.commit("clearUser");
-        this.commit("clearTokens");
-        clearLocalDataAfterLogout();
+      logout(state.refreshToken).finally(() => {
+        commit(AuthMutationTypes.CLEAR_USER, undefined);
+        commit(AuthMutationTypes.CLEAR_TOKENS, undefined);
+        clearLocalData();
       });
     });
-  }
+  },
 
-  fetchNotifications(): Promise<void> {
+  [AuthActionTypes.FETCH_NOTIFICATIONS]({ commit, state }) {
     return new Promise((resolve, reject) => {
-      if (this.state.user == null) return;
+      if (state.user == null) return;
 
-      listNotifications({ read: false, user: this.state.user.id })
+      listNotifications({ read: false, user: state.user.id })
         .then((response) => {
-          this.commit("setNotifications", response.data.results);
+          commit(AuthMutationTypes.SET_NOTIFICATIONS, response.data.results);
           resolve();
         })
         .catch((error) => {
           reject(error);
         });
     });
-  }
-}
+  },
+};

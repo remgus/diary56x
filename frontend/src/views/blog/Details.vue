@@ -54,8 +54,8 @@ import { getMarked } from "@/utils/marked";
 import { useConfirmDialog } from "@/utils/dialog";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { getImage } from "@/utils/blog";
-import { useStore } from "vuex";
-import { key } from "@/store";
+import { useStore } from "@/store";
+
 import { isAdmin } from "@/api/services/auth";
 import not_found from "@/assets/icons/not-found.svg";
 
@@ -63,7 +63,7 @@ const route = useRoute();
 const router = useRouter();
 const post = ref<APIPost | null>(null);
 const postDoesNotExist = ref(false);
-const store = useStore(key);
+const store = useStore();
 
 const { showConfirmDialog, confirmDialog } = useConfirmDialog();
 

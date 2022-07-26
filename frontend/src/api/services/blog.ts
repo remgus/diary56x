@@ -72,5 +72,5 @@ export const deletePost = (slug: string): Promise<AxiosResponse> => {
  */
 export const postAuthor = (post: APIPost): string => {
   if (post.author.is_staff) return "ATK Dev Studio";
-  return `${post.author.surname} ${post.author.first_name} ${post.author.second_name}`;
+  return `${post.author.surname} ${post.author.first_name} ${post.author.last_name}`;
 };

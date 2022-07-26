@@ -1,11 +1,23 @@
-import { InjectionKey } from "vue";
-import { Store } from "vuex";
-import { createStore } from "vuex-smart-module";
-import root from "./modules/auth";
-import { RootState } from "./modules/auth/types";
+import { createLogger, createStore } from "vuex";
+import { auth } from "./modules/auth";
+import { AuthState, AuthStore } from "./modules/auth/types";
 
-export const key: InjectionKey<Store<RootState>> = Symbol();
+export type Store = AuthStore<Pick<RootState, "auth">>;
 
-export const store = createStore(root);
+export type RootState = {
+  auth: AuthState;
+};
 
-export default store;
+const debug = process.env.NODE_ENV !== "production";
+const plugins = debug ? [createLogger({})] : [];
+
+export const store = createStore({
+  plugins,
+  modules: {
+    auth,
+  },
+});
+
+export function useStore(): Store {
+  return store as Store;
+}

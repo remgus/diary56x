@@ -1,7 +1,6 @@
 import API from "@/api";
 import { UserCredentials } from "@/store/modules/auth/types";
 import { AxiosResponse } from "axios";
-import { APISchool } from "./schools";
 
 export interface APITokens {
   access: string;
@@ -42,9 +41,7 @@ export interface APICompactUser {
   date_joined: string;
 }
 
-export interface APIUser extends APICompactUser {
-  school: APISchool | null;
-}
+export interface APIUser extends APICompactUser {}
 
 export interface CreateStudentData {
   first_name: string;
@@ -52,7 +49,6 @@ export interface CreateStudentData {
   last_name?: string;
   email: string;
   password: string;
-  school: number;
 }
 
 export const createStudent = (
@@ -123,7 +119,7 @@ export const is = (user: APIUser, types: CheckTypes[]): boolean => {
   return false;
 };
 
-export const pluginEnabled = (user: APIUser, name: string): boolean => {
-  if (!user.school) return false;
-  return user.school.plugins.findIndex((plugin) => plugin.name === name) !== -1;
-};
+// export const pluginEnabled = (user: APIUser, name: string): boolean => {
+//   if (!user.school) return false;
+//   return user.school.plugins.findIndex((plugin) => plugin.name === name) !== -1;
+// };

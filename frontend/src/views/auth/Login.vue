@@ -49,89 +49,79 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { FormBuilder, validateForm, Validator } from "@/utils/forms";
 import { defineComponent, ref } from "@vue/runtime-core";
 import { AxiosError } from "axios";
 import router from "@/router";
-import store from "@/store";
 import { FormInput } from "@/components";
+import { useStore } from "@/store";
+import { AuthActionTypes } from "@/store/modules/auth/types";
 
 interface Credentials {
   email: string;
   password: string;
 }
 
-export default defineComponent({
-  components: {
-    FormInput,
+const authError = ref<AxiosError | null>(null);
+const store = useStore();
+
+const authChecker: Validator = {
+  check: () => {
+    return authError.value === null;
   },
-  setup() {
-    const authError = ref<AxiosError | null>(null);
+  errorMessage: "Неверный логин или пароль",
+};
 
-    const authChecker: Validator = {
-      check: () => {
-        return authError.value === null;
-      },
-      errorMessage: "Неверный логин или пароль",
-    };
-
-    const credentials = ref<FormBuilder>({
-      email: {
-        value: "",
-        validators: ["required", "email"],
-        checkers: {
-          authChecker,
-        },
-        isBound: false,
-      },
-      password: {
-        value: "",
-        validators: ["required"],
-      },
-    });
-
-    const processLogin = (): void => {
-      authError.value = null;
-      const verdict = validateForm(credentials.value);
-
-      if (!verdict) {
-        return;
-      }
-
-      const data: Credentials = {
-        email: credentials.value.email.value,
-        password: credentials.value.password.value,
-      };
-
-      store
-        .dispatch("login", data)
-        .then(() => {
-          store.dispatch("me").then(() => {
-            store.dispatch("fetchNotifications");
-            router.push("/");
-          });
-        })
-        .catch((error: AxiosError) => {
-          if (error.response?.status === 401) {
-            authError.value = error;
-            validateForm(credentials.value);
-            if (
-              authError.value !== null &&
-              !credentials.value.password.errorMessage
-            ) {
-              credentials.value.password.isBound = false;
-            }
-          }
-        });
-    };
-
-    return {
-      credentials,
-      processLogin,
-    };
+const credentials = ref<FormBuilder>({
+  email: {
+    value: "",
+    validators: ["required", "email"],
+    checkers: {
+      authChecker,
+    },
+    isBound: false,
+  },
+  password: {
+    value: "",
+    validators: ["required"],
   },
 });
+
+const processLogin = (): void => {
+  authError.value = null;
+  const verdict = validateForm(credentials.value);
+
+  if (!verdict) {
+    return;
+  }
+
+  const data: Credentials = {
+    email: credentials.value.email.value,
+    password: credentials.value.password.value,
+  };
+
+  store
+    .dispatch(AuthActionTypes.LOGIN, data)
+    .then(() => {
+      store.dispatch(AuthActionTypes.CURRENT_USER).then(() => {
+        store.dispatch(AuthActionTypes.FETCH_NOTIFICATIONS);
+        router.push("/");
+      });
+    })
+    .catch((error: AxiosError) => {
+      if (error.response?.status === 401) {
+        authError.value = error;
+        validateForm(credentials.value);
+        if (
+          authError.value !== null &&
+          !credentials.value.password.errorMessage
+        ) {
+          credentials.value.password.isBound = false;
+        }
+      }
+    });
+};
 </script>
 
 <style></style>

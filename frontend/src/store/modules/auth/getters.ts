@@ -1,18 +1,10 @@
-import { Getters } from "vuex-smart-module";
-import { RootState } from "./types";
+import { RootState } from "@/store";
+import { GetterTree } from "vuex";
+import { AuthState, Getters } from "./types";
 
-export class RootGetters extends Getters<RootState> {
-  get isAuthenticated(): boolean {
-    return Boolean(
-      this.state.accessToken && this.state.refreshToken && this.state.user
-    );
-  }
-
-  get messagesLength(): number {
-    return this.state.messages.length;
-  }
-
-  get unreadNotificationsCount(): number {
-    return this.state.unread_notifications.length;
-  }
-}
+export const getters: GetterTree<AuthState, RootState> & Getters = {
+  isAuthenticated: (state) =>
+    Boolean(state.accessToken && state.refreshToken && state.user),
+  messagesLength: (state) => state.messages.length,
+  unreadNotificationsCount: (state) => state.unread_notifications.length,
+};

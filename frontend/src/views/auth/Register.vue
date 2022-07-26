@@ -111,123 +111,90 @@
   </div>
 </template>
 
-<script lang="ts">
+<script lang="ts" setup>
 import { FormBuilder, handleBackendError, validateForm } from "@/utils/forms";
-import { defineComponent, onMounted, reactive, ref } from "vue";
+import { reactive, ref } from "vue";
 import { FormInput, Loading, FormSelect } from "@/components";
-import { listSchools } from "@/api/services/schools";
 import { SelectOption } from "@/components/forms/FormSelect.vue";
 import { CreateStudentData, createStudent } from "@/api/services/auth";
 import { useRouter } from "vue-router";
 import { AxiosError } from "axios";
 
-export default defineComponent({
-  components: {
-    FormInput,
-    Loading,
-    FormSelect,
+const loading = ref(true);
+const schools = ref<SelectOption[]>([]);
+const router = useRouter();
+
+const data = reactive<FormBuilder>({
+  first_name: {
+    value: "",
+    validators: ["required"],
   },
-  setup() {
-    const loading = ref(true);
-    const schools = ref<SelectOption[]>([]);
-    const router = useRouter();
-
-    const data = reactive<FormBuilder>({
-      first_name: {
-        value: "",
-        validators: ["required"],
+  surname: {
+    value: "",
+    validators: ["required"],
+  },
+  last_name: {
+    value: "",
+    validators: [],
+  },
+  email: {
+    value: "",
+    validators: ["required", "email"],
+  },
+  password1: {
+    value: "",
+    validators: ["password1"],
+  },
+  password2: {
+    value: "",
+    validators: [],
+    checkers: {
+      password_match: {
+        check: (value: string, state?: FormBuilder) =>
+          Boolean(state && value === state.password1.value),
+        errorMessage: "Пароли не совпадают",
       },
-      surname: {
-        value: "",
-        validators: ["required"],
-      },
-      last_name: {
-        value: "",
-        validators: [],
-      },
-      email: {
-        value: "",
-        validators: ["required", "email"],
-      },
-      password1: {
-        value: "",
-        validators: ["password1"],
-      },
-      password2: {
-        value: "",
-        validators: [],
-        checkers: {
-          password_match: {
-            check: (value: string, state?: FormBuilder) =>
-              Boolean(state && value === state.password1.value),
-            errorMessage: "Пароли не совпадают",
-          },
-        },
-      },
-      school: {
-        value: "",
-        validators: ["required"],
-      },
-    });
-    const isBound = ref(false);
-
-    onMounted(() => {
-      listSchools(true).then((res) => {
-        schools.value = res.data.map((school) => {
-          return {
-            value: String(school.id),
-            label: school.name,
-          };
-        });
-        loading.value = false;
-      });
-    });
-
-    const register = () => {
-      console.log(data);
-
-      const verdict = validateForm(data);
-      if (!isBound.value) isBound.value = true;
-      if (!verdict) return;
-
-      console.log(data);
-
-      const newStudent: CreateStudentData = {
-        first_name: data.first_name.value,
-        surname: data.surname.value,
-        last_name: data.last_name.value,
-        email: data.email.value,
-        password: data.password1.value,
-        school: Number(data.school.value),
-      };
-
-      console.log(newStudent);
-
-      createStudent(newStudent)
-        .then(() => {
-          router.push("/login");
-        })
-        .catch((e: AxiosError) => {
-          handleBackendError(e, {
-            "400": {
-              email: () => {
-                data.email.errorMessage =
-                  "Пользователь с таким email уже существует";
-              },
-            },
-          });
-        });
-    };
-
-    return {
-      data,
-      isBound,
-      loading,
-      schools,
-      register,
-    };
+    },
+  },
+  school: {
+    value: "",
+    validators: ["required"],
   },
 });
+const isBound = ref(false);
+
+const register = () => {
+  console.log(data);
+
+  const verdict = validateForm(data);
+  if (!isBound.value) isBound.value = true;
+  if (!verdict) return;
+
+  console.log(data);
+
+  const newStudent: CreateStudentData = {
+    first_name: data.first_name.value,
+    surname: data.surname.value,
+    last_name: data.last_name.value,
+    email: data.email.value,
+    password: data.password1.value,
+  };
+
+  createStudent(newStudent)
+    .then(() => {
+      router.push("/login");
+    })
+    .catch((e: AxiosError) => {
+      handleBackendError(e, {
+        "400": {
+          email: () => {
+            data.email.errorMessage =
+              "Пользователь с таким email уже существует";
+          },
+        },
+      });
+    });
+};
 </script>
 
 <style scoped>

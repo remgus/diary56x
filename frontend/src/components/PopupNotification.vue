@@ -37,11 +37,11 @@ import {
 import { onMounted, PropType, ref } from "vue";
 import Toast from "bootstrap/js/dist/toast";
 import { getMarked } from "@/utils/marked";
-import { useStore } from "vuex";
-import { key } from "@/store";
+import { useStore } from "@/store";
+import { AuthActionTypes } from "@/store/modules/auth/types";
 
 const toast = ref<HTMLDivElement | null>(null);
-const store = useStore(key);
+const store = useStore();
 
 const props = defineProps({
   notification: {
@@ -81,7 +81,7 @@ const getTime = (date: string) => {
 const markAsRead = async () => {
   if (props.notification.id) {
     markNotificationAsRead(props.notification.id);
-    store.dispatch("fetchNotifications");
+    store.dispatch(AuthActionTypes.FETCH_NOTIFICATIONS);
   }
 };
 </script>

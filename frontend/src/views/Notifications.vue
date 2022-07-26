@@ -93,9 +93,9 @@ import {
   deleteNotification,
   markAllNotificationsAsRead,
 } from "@/api/services/notifications";
-import { key } from "@/store";
+
 import { onMounted, ref } from "vue";
-import { useStore } from "vuex";
+import { useStore } from "@/store";
 import { toShortDateTime } from "@/utils/date";
 import { useConfirmDialog } from "@/utils/dialog";
 import ConfirmDialog from "@/components/ConfirmDialog.vue";
@@ -104,7 +104,7 @@ import { Loading } from "@/components";
 import cactus from "@/assets/icons/cactus.svg";
 
 const notifications = ref<APINotification[]>([]);
-const store = useStore(key);
+const store = useStore();
 const lastPage = ref(1);
 const is_loading = ref(true);
 const hasMore = ref(true);

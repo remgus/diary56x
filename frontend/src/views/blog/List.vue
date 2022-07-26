@@ -70,8 +70,8 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from "vue";
 import { LocationQueryValue, useRoute } from "vue-router";
-import { useStore } from "vuex";
-import { key } from "@/store";
+import { useStore } from "@/store";
+
 import { Paginator } from "@/api/types";
 import Pagination from "@/components/Pagination.vue";
 import { isAdmin } from "@/api/services/auth";
@@ -79,7 +79,7 @@ import { APIPost, listPosts } from "@/api/services/blog";
 import Card from "./Card.vue";
 import cactus from "@/assets/icons/cactus.svg";
 
-const store = useStore(key);
+const store = useStore();
 const route = useRoute();
 const search = ref<string | null>(null);
 const searchDone = ref(false);
@@ -123,7 +123,7 @@ const prevPage = () => {
   refresh();
 };
 
-const user = computed(() => store.state.user);
+const user = computed(() => store.state.auth.user);
 </script>
 
 <style scoped>

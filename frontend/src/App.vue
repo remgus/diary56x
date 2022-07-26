@@ -18,17 +18,17 @@
 import MainNavbar from "@/components/MainNavbar.vue";
 import PopupNotification from "@/components/PopupNotification.vue";
 import { onMounted, ref } from "vue";
-import { useStore } from "vuex";
-import { key } from "./store";
+import { useStore } from "@/store";
 import { APINotification } from "./api/services/notifications";
 import Profile from "./views/auth/Profile.vue";
+import { AuthActionTypes } from "./store/modules/auth/types";
 
-const store = useStore(key);
+const store = useStore();
 const notifications = ref<APINotification[]>([]);
 const lastTimeFetched = ref<number>(Date.now());
 
 const fetchNotifications = () => {
-  store.dispatch("fetchNotifications").then(() => {
+  store.dispatch(AuthActionTypes.FETCH_NOTIFICATIONS).then(() => {
     lastTimeFetched.value = Date.now();
   });
 };
@@ -39,7 +39,7 @@ onMounted(() => {
 });
 
 store.subscribe(() => {
-  for (const notification of store.state.unread_notifications) {
+  for (const notification of store.state.auth.unread_notifications) {
     if (new Date(notification.created_at) > new Date(lastTimeFetched.value)) {
       notifications.value.push(notification);
     }

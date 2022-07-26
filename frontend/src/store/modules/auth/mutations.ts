@@ -1,32 +1,30 @@
-import { APINotification } from "@/api/services/notifications";
-import { APIUser } from "@/api/services/auth";
-import { Mutations } from "vuex-smart-module";
-import { Message, RootState } from "./types";
+import { MutationTree } from "vuex";
+import { AuthMutationTypes, AuthState, Mutations } from "./types";
 
-export class RootMutations extends Mutations<RootState> {
-  setTokens(tokens: { accessToken: string; refreshToken: string }): void {
-    this.state.accessToken = tokens.accessToken;
-    this.state.refreshToken = tokens.refreshToken;
-  }
+export const mutations: MutationTree<AuthState> & Mutations = {
+  [AuthMutationTypes.SET_TOKENS](state, tokens) {
+    state.accessToken = tokens.accessToken;
+    state.refreshToken = tokens.refreshToken;
+  },
 
-  setUser(user: APIUser): void {
-    this.state.user = user;
-  }
+  [AuthMutationTypes.SET_USER](state, user) {
+    state.user = user;
+  },
 
-  clearTokens(): void {
-    this.state.accessToken = null;
-    this.state.refreshToken = null;
-  }
+  [AuthMutationTypes.CLEAR_TOKENS](state) {
+    state.accessToken = null;
+    state.refreshToken = null;
+  },
 
-  clearUser(): void {
-    this.state.user = null;
-  }
+  [AuthMutationTypes.CLEAR_USER](state) {
+    state.user = null;
+  },
 
-  addMessage(payload: Message): void {
-    this.state.messages.push(payload);
-  }
+  [AuthMutationTypes.ADD_MESSAGE](state, message) {
+    state.messages.push(message);
+  },
 
-  setNotifications(notifications: APINotification[]): void {
-    this.state.unread_notifications = notifications;
-  }
-}
+  [AuthMutationTypes.SET_NOTIFICATIONS](state, notifications) {
+    state.unread_notifications = notifications;
+  },
+};
