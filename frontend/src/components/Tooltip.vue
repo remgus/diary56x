@@ -34,6 +34,6 @@ onMounted(() => {
 
 <style scoped>
 .vue-tooltip {
-    width: fit-content;
+  width: fit-content;
 }
 </style>

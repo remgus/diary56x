@@ -5,9 +5,7 @@
         <li class="breadcrumb-item">
           <router-link to="/">Главная</router-link>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">
-          Панель администратора
-        </li>
+        <li class="breadcrumb-item active">Панель администратора</li>
       </ol>
     </nav>
 

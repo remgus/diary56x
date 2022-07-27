@@ -27,7 +27,6 @@ export interface APICreateLessons {
   classroom: string;
 }
 
-
 export interface APITimetableDay {
   weekday: number;
   lessons: APITimetableLesson[];

@@ -10,7 +10,7 @@ const adminRoutes: RouteRecordRaw[] = [
     path: "/admin/timetable",
     name: "Admin timetable",
     component: () => import("../views/admin/timetable/List.vue"),
-  },  
+  },
 ];
 
 export default adminRoutes;

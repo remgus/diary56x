@@ -22,6 +22,10 @@ class HomeworkAttachment(models.Model):
     file = models.FileField("Файл", upload_to=homework_upload)
     homework = models.ForeignKey("Homework", on_delete=models.CASCADE, related_name="attachments")
 
+    @property
+    def size(self):
+        return self.file.size
+
     class Meta:
         verbose_name = "Файл к заданию"
         verbose_name_plural = "Файлы к заданиям"

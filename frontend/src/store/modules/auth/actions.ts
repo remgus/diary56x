@@ -29,7 +29,7 @@ export const actions: ActionTree<AuthState, RootState> & Actions = {
     });
   },
 
-  [AuthActionTypes.CURRENT_USER]({ commit }) {
+  [AuthActionTypes.FETCH_CURRENT_USER]({ commit }) {
     return new Promise((resolve, reject) => {
       getCurrentUser()
         .then((response) => {

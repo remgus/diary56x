@@ -14,6 +14,7 @@ export interface APIHomework {
 export interface APIHomeworkAttachment {
   id: number;
   file: string;
+  size: number;
 }
 
 interface ListHomeworkParams {

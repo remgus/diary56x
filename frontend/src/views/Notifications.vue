@@ -6,7 +6,7 @@
         <li class="breadcrumb-item">
           <router-link to="/">Главная</router-link>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">Уведомления</li>
+        <li class="breadcrumb-item active">Уведомления</li>
       </ol>
     </nav>
 

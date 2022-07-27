@@ -105,7 +105,7 @@ const processLogin = (): void => {
   store
     .dispatch(AuthActionTypes.LOGIN, data)
     .then(() => {
-      store.dispatch(AuthActionTypes.CURRENT_USER).then(() => {
+      store.dispatch(AuthActionTypes.FETCH_CURRENT_USER).then(() => {
         store.dispatch(DiaryActionTypes.FETCH_NOTIFICATIONS);
         router.push("/");
       });

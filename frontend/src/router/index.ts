@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import Home from "../components/Home.vue";
+import Home from "../components/homepage/Home.vue";
 import { handleMetaViews } from "./utils";
 import adminRoutes from "./admin";
 
@@ -65,7 +65,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/timetable",
     name: "Timetable",
-    component: () => import("../views/timetable/Timetable.vue"),
+    component: () => import("../components/timetable/Timetable.vue"),
   },
 ];
 

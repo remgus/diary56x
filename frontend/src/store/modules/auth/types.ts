@@ -20,7 +20,7 @@ export interface UserCredentials {
 
 export enum AuthActionTypes {
   LOGIN = "AUTH/LOGIN",
-  CURRENT_USER = "AUTH/CURRENT_USER",
+  FETCH_CURRENT_USER = "AUTH/FETCH_CURRENT_USER",
   LOGOUT = "AUTH/LOGOUT",
 }
 
@@ -56,13 +56,16 @@ export interface Actions {
 
   [AuthActionTypes.LOGOUT]({ commit }: AugmentedActionContext): Promise<void>;
 
-  [AuthActionTypes.CURRENT_USER]({
+  [AuthActionTypes.FETCH_CURRENT_USER]({
     commit,
   }: AugmentedActionContext): Promise<void>;
 }
 
 export type Getters = {
   isAuthenticated: (state: AuthState) => boolean;
+  isStudent: (state: AuthState) => boolean;
+  inKlass: (state: AuthState) => boolean;
+  klass: (state: AuthState) => number | null;
 };
 
 export type AuthStore<S = AuthState> = Omit<

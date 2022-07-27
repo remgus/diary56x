@@ -62,7 +62,7 @@
 import { defineComponent, ref, computed } from "vue";
 
 export default defineComponent({
-  emits: ["update:modelValue"],
+  emits: ["change"],
   setup(props, { emit }) {
     const inputRef = ref<HTMLInputElement | null>(null);
     const droppedFiles = ref<Array<File>>([]);

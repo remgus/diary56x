@@ -8,7 +8,7 @@
         <li class="breadcrumb-item">
           <router-link to="/admin">Панель администратора</router-link>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">Расписание</li>
+        <li class="breadcrumb-item active">Расписание</li>
       </ol>
     </nav>
 

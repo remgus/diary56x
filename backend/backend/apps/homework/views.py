@@ -45,7 +45,7 @@ class HomeworkListCreateAPIView(generics.ListCreateAPIView):
             return qs.filter(~filter_expr)
 
     queryset = Homework.objects.all()
-    ordering_fields = ["date"]
+    ordering = "lesson__date"
     pagination_class = HomeworkPagination
     filter_class = HomeworkFilter
 

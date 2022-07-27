@@ -78,11 +78,7 @@ const refreshTableValues = () => {
 
 const refreshTimetable = async () => {
   const klassId = parseInt(props.klass); // Selected class
-
-  const subjectGetParams = new URLSearchParams();
-  subjectGetParams.append("klass", props.klass);
-
-  const subjects = (await listSubjects(subjectGetParams)).data; // Fetch subjects
+  const subjects = (await listSubjects({ klass: klassId })).data; // Fetch subjects
   const res = (await getTimetable(klassId)).data; // Get the timetable
 
   subjectOptions.value = subjects.map((subject) => ({
@@ -181,9 +177,7 @@ const editLesson = (e: Event, day: number, lessonIndex: number) => {
 
   const alreadyExists =
     timetable.value[day - 1].lessons.filter(
-      (l) =>
-        l.n === lesson.n &&
-        l.subject === lesson.subject
+      (l) => l.n === lesson.n && l.subject === lesson.subject
     ).length > 1;
 
   if (alreadyExists) {
@@ -203,9 +197,7 @@ const editLesson = (e: Event, day: number, lessonIndex: number) => {
 
   const deleted = lessonsToDelete.value.findIndex(
     (l) =>
-      l.day === lesson.day &&
-      l.n === lesson.n &&
-      l.subject === lesson.subject
+      l.day === lesson.day && l.n === lesson.n && l.subject === lesson.subject
   );
 
   if (deleted !== -1) lessonsToDelete.value.splice(deleted, 1);

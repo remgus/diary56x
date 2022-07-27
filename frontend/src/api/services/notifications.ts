@@ -13,7 +13,11 @@ export enum NotificationAPIURLS {
   MARK_ALL_AS_READ = "notifications/mark-all-as-read/",
 }
 
-export type NotificationCatergory = "system" | "headteacher" | "event";
+export type NotificationCatergory =
+  | "system"
+  | "headteacher"
+  | "event"
+  | "CLASS_ADD_REQUEST";
 
 export interface APINotification {
   id: number;

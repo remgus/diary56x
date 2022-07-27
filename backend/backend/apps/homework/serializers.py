@@ -10,7 +10,7 @@ from .models import Homework, HomeworkAttachment
 class AttachmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = HomeworkAttachment
-        fields = ["id", "file"]
+        fields = ["id", "file", "size"]
 
 
 class AttachmentCreateSerializer(serializers.ModelSerializer):

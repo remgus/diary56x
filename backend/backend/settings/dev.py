@@ -140,6 +140,8 @@ MEDIA_ROOT = "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 AUTH_USER_MODEL = "authentication.User"
 
+DATE_INPUT_FORMATS = ["%Y-%m-%d", "%d-%m-%Y"]
+
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": [
@@ -154,6 +156,7 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": [
         "rest_framework.renderers.JSONRenderer",
     ],
+    "DATE_INPUT_FORMATS": ["%d-%m-%Y"],
 }
 
 JWT_AUTH = {

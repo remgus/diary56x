@@ -10,12 +10,14 @@ export interface APISubject {
   icon: string;
 }
 
+interface ListSubjectsParams {
+  klass?: number;
+}
+
 export const listSubjects = (
-  params?: URLSearchParams
+  params?: ListSubjectsParams
 ): Promise<AxiosResponse<APISubject[]>> => {
-  return API.axios.get(SubjectsAPIEndpoint, {
-    params,
-  });
+  return API.axios.get(SubjectsAPIEndpoint, { params });
 };
 
 export const getSubject = (id: number): Promise<AxiosResponse<APISubject>> => {

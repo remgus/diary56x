@@ -5,9 +5,7 @@
         <li class="breadcrumb-item">
           <router-link to="/blog">Блог</router-link>
         </li>
-        <li class="breadcrumb-item active" aria-current="page">
-          Добавление записи
-        </li>
+        <li class="breadcrumb-item active">Добавление записи</li>
       </ol>
     </nav>
     <h1 class="mb-4">Добавление записи</h1>

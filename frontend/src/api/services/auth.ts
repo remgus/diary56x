@@ -41,7 +41,14 @@ export interface APICompactUser {
   date_joined: string;
 }
 
-export interface APIUser extends APICompactUser {}
+export interface APIUserStudentOptions {
+  is_monitor: boolean;
+  klass: number | null;
+}
+
+export interface APIUser extends APICompactUser {
+  options_student: APIUserStudentOptions | null;
+}
 
 export interface CreateStudentData {
   first_name: string;
@@ -118,8 +125,3 @@ export const is = (user: APIUser, types: CheckTypes[]): boolean => {
   }
   return false;
 };
-
-// export const pluginEnabled = (user: APIUser, name: string): boolean => {
-//   if (!user.school) return false;
-//   return user.school.plugins.findIndex((plugin) => plugin.name === name) !== -1;
-// };

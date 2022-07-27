@@ -106,12 +106,6 @@ const props = defineProps({
 </script>
 
 <style scoped>
-.card:hover,
-div.alert:hover {
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  transition-duration: 0.5s;
-}
-
 .subject-icon {
   width: 40px;
 }

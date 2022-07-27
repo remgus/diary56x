@@ -41,11 +41,11 @@ class Subject(models.Model):
     Fields:
         name (`CharField`): Subject name.
         description (`TextField`): Subject description.
-        icon (`ImageField`): Subject icon.
+        icon (`FileField`): Subject icon.
     """
 
     name = models.CharField("Название", max_length=100)
-    icon = models.ImageField("Иконка", upload_to="subjects/", blank=True)
+    icon = models.FileField("Иконка", upload_to="subjects/", blank=True)
     description = models.TextField("Описание", blank=True)
 
     class Meta:

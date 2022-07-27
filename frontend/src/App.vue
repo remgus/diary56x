@@ -22,6 +22,7 @@ import { useStore } from "@/store";
 import { APINotification } from "./api/services/notifications";
 import Profile from "./views/auth/Profile.vue";
 import { DiaryActionTypes } from "./store/modules/diary/types";
+import { AuthActionTypes } from "./store/modules/auth/types";
 
 const store = useStore();
 const notifications = ref<APINotification[]>([]);
@@ -35,6 +36,7 @@ const fetchNotifications = () => {
 
 onMounted(() => {
   store.dispatch(DiaryActionTypes.FETCH_CONFIG);
+  store.dispatch(AuthActionTypes.FETCH_CURRENT_USER);
   fetchNotifications();
   setInterval(fetchNotifications, 20 * 1000);
 });

@@ -40,17 +40,17 @@ yarn dev
 
 ### VSCode configuration
 
-Recommended VSCode ``.vscode/settings.json``:
+Recommended VSCode `.vscode/settings.json`:
 
 ```json
 {
   "files.watcherExclude": {
     "**/.git/objects/**": true,
     "**/.git/subtree-cache/**": true,
-    "**/node_modules/*/**": true,
+    "**/node_modules/*/**": true
   },
   "files.exclude": {
-    "**/.git": true,
-  },
+    "**/.git": true
+  }
 }
 ```

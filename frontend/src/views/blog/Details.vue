@@ -11,7 +11,7 @@
           <li class="breadcrumb-item">
             <router-link to="/blog">Блог</router-link>
           </li>
-          <li class="breadcrumb-item active" aria-current="page">
+          <li class="breadcrumb-item active">
             {{ $route.params.slug }}
           </li>
         </ol>
