@@ -1,7 +1,6 @@
 <template>
   <main-navbar />
   <router-view />
-  <profile v-if="store.getters.isAuthenticated" />
   <div
     class="position-fixed bottom-0 end-0 p-3 toast-container"
     id="popup-notification-container"
@@ -20,7 +19,7 @@ import PopupNotification from "@/components/PopupNotification.vue";
 import { onMounted, ref } from "vue";
 import { useStore } from "@/store";
 import { APINotification } from "./api/services/notifications";
-import Profile from "./views/auth/Profile.vue";
+import Profile from "./components/auth/Profile.vue";
 import { DiaryActionTypes } from "./store/modules/diary/types";
 import { AuthActionTypes } from "./store/modules/auth/types";
 
@@ -36,7 +35,7 @@ const fetchNotifications = () => {
 
 onMounted(() => {
   store.dispatch(DiaryActionTypes.FETCH_CONFIG);
-  store.dispatch(AuthActionTypes.FETCH_CURRENT_USER);
+  if (store.state.auth.user) store.dispatch(AuthActionTypes.FETCH_CURRENT_USER);
   fetchNotifications();
   setInterval(fetchNotifications, 20 * 1000);
 });
@@ -89,5 +88,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
+}
+
+.vk-sans-display-bold {
+  font-family: "VK Sans Display", Roboto, sans-serif;
+  font-weight: bold;
 }
 </style>

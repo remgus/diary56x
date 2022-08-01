@@ -1,11 +1,11 @@
 import django_filters
+from backend.apps.core.models import Klass
 from django.db.models import Count, Q, QuerySet
 from django.db.models.functions import Length
 from rest_framework import generics, status
-from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
-
-from backend.apps.core.models import Klass
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from .models import Homework, HomeworkAttachment
 from .serializers import (
@@ -17,32 +17,33 @@ from .serializers import (
 )
 
 
+class HomeworkFilter(django_filters.FilterSet):
+    has_content = django_filters.BooleanFilter(method="has_content_check")
+    date = django_filters.DateFromToRangeFilter(field_name="lesson__date")
+    klass = django_filters.ModelChoiceFilter(
+        queryset=Klass.objects.all(), field_name="lesson__group__klass"
+    )
+
+    class Meta:
+        model = Homework
+        fields = ["date", "has_content"]
+
+    def has_content_check(self, queryset: QuerySet[Homework], name, value):
+        """Select homework that has attached files or content."""
+        qs = queryset.annotate(content_len=Length("content"), files_cnt=Count("attachments"))
+        filter_expr = Q(content_len__gt=0) | Q(files_cnt__gt=0)
+        if value:
+            return qs.filter(filter_expr)
+        return qs.filter(~filter_expr)
+
+
 class HomeworkListCreateAPIView(generics.ListCreateAPIView):
-    """List posts."""
+    """List homework API View."""
 
     class HomeworkPagination(PageNumberPagination):
         page_size = 50
         max_page_size = 100
         page_size_query_param = "page_size"
-
-    class HomeworkFilter(django_filters.FilterSet):
-        has_content = django_filters.BooleanFilter(method="has_content_check")
-        date = django_filters.DateFromToRangeFilter(field_name="lesson__date")
-        klass = django_filters.ModelChoiceFilter(
-            queryset=Klass.objects.all(), field_name="lesson__group__klass"
-        )
-
-        class Meta:
-            model = Homework
-            fields = ["date", "has_content"]
-
-        def has_content_check(self, queryset: QuerySet[Homework], name, value):
-            """Select homework that has attached files or content."""
-            qs = queryset.annotate(content_len=Length("content"), files_cnt=Count("attachments"))
-            filter_expr = Q(content_len__gt=0) | Q(files_cnt__gt=0)
-            if value:
-                return qs.filter(filter_expr)
-            return qs.filter(~filter_expr)
 
     queryset = Homework.objects.all()
     ordering = "lesson__date"
@@ -117,3 +118,11 @@ class AttachmentsDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
             hw_obj.delete()
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ListHomeworkDatesAPIView(APIView):
+    def get(self, request):
+        qs = Homework.objects.all()
+        filtered_data = HomeworkFilter(request.GET, qs).qs
+        data = list(filtered_data.values_list("lesson__date", flat=True).distinct())
+        return Response(data, status=status.HTTP_200_OK)

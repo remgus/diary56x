@@ -1,56 +1,53 @@
 <template>
-  <div class="pb-0">
-    <div class="row h-100">
-      <div class="col-12">
-        <div class="row align-items-center">
-          <div class="col-12 col-sm-auto mb-3">
-            <span
-              v-if="task.date"
-              class="date-badge badge fs-6 fw-bold bg-primary me-2"
+  <div class="mb-3">
+    <!-- Date, if the task is first in a group -->
+    <h2 v-if="showDate" class="mb-3 date" :class="{ 'mt-4': index !== 0 }">
+      {{ getDateBadge(task.date) }}
+    </h2>
+    <div class="py-2 task ps-md-3">
+      <!-- Subject -->
+      <div class="d-flex flex-row align-items-center mb-3">
+        <img class="subject-icon me-2" :src="subject.icon" alt="" />
+        <h3 class="mb-0">
+          {{ subject.name }}
+        </h3>
+      </div>
+
+      <!-- Markdown content -->
+      <div
+        ref="contentEl"
+        class="content"
+        v-if="task.content"
+        v-html="getMarked(task.content)"
+      ></div>
+
+      <!-- Attachments list -->
+      <div v-if="task.attachments.length">
+        <div class="fw-bold mt-3 mb-1">Прикрепленные файлы:</div>
+
+        <table class="table table-sm mb-0">
+          <tbody>
+            <tr
+              class="file-link"
+              style="width: 1%"
+              v-for="(file, index) in task.attachments"
+              :key="file.id"
+              @click="openFile(file.file)"
             >
-              {{ getDateBadge(task.date) }}
-            </span>
-          </div>
-          <div class="col-12 col-sm-auto mb-3">
-            <div class="d-flex flex-row align-items-center">
-              <img class="subject-icon me-2" :src="subject.icon" alt="" />
-              <h5 class="mb-0">
-                {{ subject.name }}
-              </h5>
-            </div>
-          </div>
-        </div>
-
-        <div
-          ref="contentEl"
-          v-if="task.content"
-          v-html="getMarked(task.content)"
-        ></div>
-        <div v-if="task.attachments.length">
-          <div class="fw-bold mb-1">Прикрепленные файлы:</div>
-
-          <table class="table table-sm">
-            <tbody>
-              <tr
-                class="file-link"
-                style="width: 1%"
-                v-for="(file, index) in task.attachments"
-                :key="file.id"
-                @click="openFile(file.file)"
-              >
-                <td>
-                  <i class="text-dark ms-2 bi-file-earmark-arrow-down-fill"></i>
-                </td>
-                <td class="link-dark file-name">
-                  {{ getFileName(file.file) }}
-                </td>
-                <td class="file-size text-muted">
-                  {{ getFileSize(file.size) }}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+              <td>
+                <i
+                  class="text-primary ms-2 bi-file-earmark-arrow-down-fill"
+                ></i>
+              </td>
+              <td class="link-primary file-name">
+                {{ getFileName(file.file) }}
+              </td>
+              <td class="file-size text-muted">
+                {{ getFileSize(file.size) }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
@@ -69,6 +66,8 @@ import ClipboardJS from "clipboard";
 interface Props {
   task: APIHomework;
   subject: APISubject;
+  showDate?: boolean;
+  index: number;
 }
 
 const contentEl = ref<null | HTMLElement>(null);
@@ -78,7 +77,7 @@ const getDateBadge = (date: string) => {
   let d = new Date(date);
   return capitalize(
     d.toLocaleDateString("ru", {
-      weekday: "short",
+      weekday: "long",
       day: "numeric",
       month: "long",
     })
@@ -137,7 +136,7 @@ onUnmounted(() => {
   for (const c of clipboards.value) c.destroy();
 });
 
-const props = defineProps<Props>();
+const { subject, task, showDate = false } = defineProps<Props>();
 </script>
 
 <style scoped>
@@ -166,6 +165,12 @@ const props = defineProps<Props>();
 table tbody tr:last-child td {
   border-bottom: none !important;
 }
+
+@media (min-width: 768px) {
+  div.task {
+    border-left: 4px solid var(--bs-primary);
+  }
+}
 </style>
 
 <style>
@@ -178,5 +183,9 @@ pre code.hljs {
   position: absolute;
   top: 0.8rem;
   right: 0.8rem;
+}
+
+.content :last-child {
+  margin-bottom: 0 !important;
 }
 </style>

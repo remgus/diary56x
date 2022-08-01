@@ -32,7 +32,6 @@ renderer.paragraph = (text) => {
 };
 
 function renderMathsExpression(expr: string) {
-  console.log("RENDER MATH", expr);
   if (expr.startsWith("$") && expr.endsWith("$")) {
     let displayStyle = false;
     expr = expr.slice(1, expr.length - 1);

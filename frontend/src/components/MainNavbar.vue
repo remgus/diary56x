@@ -16,22 +16,13 @@
       </router-link>
 
       <div v-if="!user">
-        <li class="d-flex">
-          <ul class="navbar-nav">
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <router-link to="/login" class="me-2 nav-link"
-                  >Войти</router-link
-                >
-              </li>
-            </ul>
-            <li class="nav-item">
-              <router-link to="/register" class="me-2 btn btn-outline-primary">
-                Создать аккаунт</router-link
-              >
-            </li>
-          </ul>
-        </li>
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <router-link to="/login" class="me-2 btn btn-outline-dark"
+              >Войти в аккаунт</router-link
+            >
+          </li>
+        </ul>
       </div>
 
       <div v-if="user" class="dropdown d-flex">
@@ -98,16 +89,14 @@ import { toSvg } from "jdenticon";
 import { useStore } from "@/store";
 import router from "@/router";
 import { isAdmin } from "@/api/services/auth";
-import { useRoute } from "vue-router";
 import { AuthActionTypes } from "@/store/modules/auth/types";
 
 const store = useStore();
-const route = useRoute();
 
 const user = computed(() => store.state.auth.user);
 const jdenticon = computed(() => toSvg(user.value?.id, 45));
 const unreadNotificationsCount = computed<number>(
-  () => store.getters["unreadNotificationsCount"]
+  () => store.getters.unreadNotificationsCount
 );
 
 const isScrolled = ref(false);

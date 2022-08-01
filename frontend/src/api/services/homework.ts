@@ -21,6 +21,9 @@ interface ListHomeworkParams {
   date_before?: string;
   date_after?: string;
   has_content?: boolean;
+  page?: number;
+  page_size?: number;
+  klass?: number;
 }
 
 interface CreateHomeworkData {
@@ -47,4 +50,10 @@ export const addHomework = (
     for (const f of data.attachments) fd.append("attachments", f);
   }
   return API.axios.post("homework", fd);
+};
+
+export const listHomeworkDates = (
+  params: ListHomeworkParams
+): Promise<AxiosResponse<string[]>> => {
+  return API.axios.get("homework/dates", { params });
 };

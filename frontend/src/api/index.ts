@@ -3,6 +3,7 @@ import { getLocalData, LocalData, setLocalData } from "./local";
 import router from "../router";
 import createAuthRefreshInterceptor from "axios-auth-refresh";
 import { store } from "@/store";
+import { AuthActionTypes } from "@/store/modules/auth/types";
 
 const BASE_URL = "/api/";
 
@@ -63,7 +64,7 @@ const refreshAuthLogic = (failedRequest: AxiosError) =>
       return Promise.resolve();
     })
     .catch((error) => {
-      store.dispatch("logout").finally(() => {
+      store.dispatch(AuthActionTypes.LOGOUT).finally(() => {
         router.push("/login");
         return Promise.reject(error);
       });

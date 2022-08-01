@@ -102,6 +102,7 @@ import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import Tooltip from "@/components/Tooltip.vue";
 import { Loading } from "@/components";
 import cactus from "@/assets/icons/cactus.svg";
+import { DiaryActionTypes } from "@/store/modules/diary/types";
 
 const notifications = ref<APINotification[]>([]);
 const store = useStore();
@@ -111,11 +112,11 @@ const hasMore = ref(true);
 const notificationToDelete = ref<number | null>(null);
 
 const retrieveNotifications = async () => {
-  if (!store.state.user) return;
+  if (!store.state.auth.user) return;
 
   const { data } = await listNotifications({
     page: lastPage.value,
-    user: store.state.user.id,
+    user: store.state.auth.user.id,
   });
   notifications.value = [...notifications.value, ...data.results];
   lastPage.value++;
@@ -145,7 +146,7 @@ const markAllAsRead = () => {
       msg.read = true;
       return msg;
     });
-    store.dispatch("fetchNotifications");
+    store.dispatch(DiaryActionTypes.FETCH_NOTIFICATIONS);
   });
 };
 
@@ -155,7 +156,7 @@ const markAsRead = (id: number) => {
     if (index !== -1) {
       notifications.value[index].read = true;
     }
-    store.dispatch("fetchNotifications");
+    store.dispatch(DiaryActionTypes.FETCH_NOTIFICATIONS);
   });
 };
 

@@ -14,29 +14,63 @@
   <div v-else>
     <div class="row justify-content-center">
       <div class="col-12">
-        <datepicker
-          v-model="(date as Date[])"
-          range
-          :enableTimePicker="false"
-          :partial-range="true"
-          :position="'left'"
-          locale="ru"
-          class="mb-4"
-          :select-text="'Выбрать'"
-          :cancel-text="'Отмена'"
-        />
-
-        <div
-          v-if="homework?.results && homework.results.length"
-          v-for="(task, index) in homework?.results"
-          :key="task.id"
-          class="mb-0"
-        >
-          <TaskCard :subject="subjects[task.subject]" :task="task" />
-          <hr v-if="index !== homework?.results.length - 1" class="mt-0" />
+        <div class="d-flex flex-row mb-4">
+          
+          <datepicker
+            v-model="(date as Date[])"
+            range
+            :enableTimePicker="false"
+            :partial-range="true"
+            :position="'left'"
+            locale="ru"
+            class="w-100"
+            :select-text="'Выбрать'"
+            :cancel-text="'Отмена'"
+            :clearable="false"
+            :markers="markers"
+            title="Выбор даты"
+          />
+          <button
+            title="Режим редактирования"
+            v-if="store.getters.isMonitor"
+            class="btn btn-outline-primary ms-2"
+          >
+            <i class="bi-pencil"></i>
+          </button>
         </div>
+
+        <div v-if="homework?.results && homework.results.length">
+          <div
+            v-for="(task, index) in homework?.results"
+            :key="task.id"
+            class="mb-0"
+          >
+            <TaskCard
+              :subject="subjects[task.subject]"
+              :task="task"
+              :show-date="
+                index === 0 ||
+                (index > 0 && homework.results[index - 1].date !== task.date)
+              "
+              :index="index"
+            />
+          </div>
+          <div
+            v-if="homework.next"
+            class="text-center"
+            @click="
+              () => {
+                page++;
+                fetchHomework();
+              }
+            "
+          >
+            <button class="btn btn-outline-primary">Загрузить ещё</button>
+          </div>
+        </div>
+
         <div v-else class="text-center">
-          <img :src="cactus_icon" alt="" width="60" height="60" class="mb-2" />
+          <img :src="cactus_icon" alt="" width="80" class="mb-2" />
           <div>Домашнее задание не найдено</div>
         </div>
       </div>
@@ -45,7 +79,11 @@
 </template>
 
 <script lang="ts" setup>
-import { APIHomework, listHomework } from "@/api/services/homework";
+import {
+  APIHomework,
+  listHomework,
+  listHomeworkDates,
+} from "@/api/services/homework";
 import { APISubject, listSubjects } from "@/api/services/subjects";
 import { useStore } from "@/store";
 import { onMounted, ref, watch } from "vue";
@@ -61,21 +99,49 @@ const store = useStore();
 
 type DatePickerRef = [Date, Date] | [Date, null];
 
+type Marker = {
+  date: Date | string;
+  type?: "dot" | "line";
+  tooltip?: { text: string; color?: string }[];
+  color?: string;
+};
+
 const date = ref<DatePickerRef>([
   moment().toDate(),
   moment().add(7, "days").toDate(),
 ]);
 const homework = ref<null | Paginator<APIHomework>>(null);
 const subjects = ref<{ [n: number]: APISubject }>({});
+const page = ref(1);
+const markers = ref<Marker[]>([]);
 
+// Get list of markers for datepicker component
+const getHomeworkDates = async () => {
+  const hwDates = (
+    await listHomeworkDates({
+      klass: store.getters.klass as number,
+      has_content: true,
+    })
+  ).data;
+
+  markers.value = hwDates.map(
+    (val): Marker => ({
+      date: val,
+      color: "blue",
+    })
+  );
+};
+
+// When the component is mounted, get a list of subjects and fetch homework.
 onMounted(async () => {
   const data = (await listSubjects({ klass: store.getters.klass as number }))
     .data;
   for (const s of data) subjects.value[s.id] = s;
   fetchHomework();
+  getHomeworkDates();
 });
 
-const fetchHomework = async () => {
+const fetchHomework = async (reset = false) => {
   if (!date.value.length) return;
 
   const dates = date.value
@@ -87,16 +153,31 @@ const fetchHomework = async () => {
   let date_after = dates[0],
     date_before = dates[1] === null ? dates[0] : dates[1];
 
-  homework.value = (
+  const data = (
     await listHomework({
       date_after: date_after,
       date_before: date_before,
       has_content: true,
+      page: page.value,
+      klass: store.getters.klass as number,
     })
   ).data;
+
+  homework.value = {
+    count: data.count,
+    next: data.next,
+    previous: data.previous,
+    results: homework.value?.results.length ? homework.value.results : [],
+  };
+
+  if (!reset) homework.value.results.push(...data.results);
+  else homework.value.results = data.results;
 };
 
-watch(date, fetchHomework);
+// Refresh homework list every time user changes the date
+watch(date, () => fetchHomework(true));
+
+const editingMode = ref(false);
 </script>
 
 <style lang="scss">

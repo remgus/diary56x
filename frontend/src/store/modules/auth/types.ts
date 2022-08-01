@@ -65,6 +65,7 @@ export type Getters = {
   isAuthenticated: (state: AuthState) => boolean;
   isStudent: (state: AuthState) => boolean;
   inKlass: (state: AuthState) => boolean;
+  isMonitor: (state: AuthState) => boolean;
   klass: (state: AuthState) => number | null;
 };
 

@@ -23,7 +23,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/login",
     name: "login",
-    component: () => import("../views/auth/Login.vue"),
+    component: () => import("../components/auth/Login.vue"),
     meta: {
       requiresAuth: false,
     },
@@ -31,7 +31,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/register",
     name: "Register",
-    component: () => import("../views/auth/Register.vue"),
+    component: () => import("../components/auth/Register.vue"),
     meta: {
       requiresAuth: false,
     },
@@ -57,7 +57,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/notifications",
     name: "Notifications",
-    component: () => import("../views/Notifications.vue"),
+    component: () => import("../components/Notifications.vue"),
     meta: {
       requiresAuth: true,
     },
