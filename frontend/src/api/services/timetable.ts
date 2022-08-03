@@ -27,9 +27,19 @@ export interface APICreateLessons {
   classroom: string;
 }
 
+export interface TimetableData {
+  subject: APISubject;
+  classrooms: string[] | string;
+  n: number;
+  start: string;
+  end: string;
+  id: number;
+  day: number;
+}
+
 export interface APITimetableDay {
   weekday: number;
-  lessons: APITimetableLesson[];
+  lessons: TimetableData[][];
 }
 
 export enum TimetableAPIURLS {

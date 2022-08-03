@@ -11,46 +11,47 @@
         <h4>{{ getDayName(day.weekday) }}</h4>
       </div>
     </div>
-    <div v-for="(lesson, index) in timetable" :key="lesson.id">
+    <div v-for="(lesson, index) in day.lessons" :key="lesson[0].id">
       <div class="row mt-1">
-        <div class="col-2 text-center">
-          <div v-if="lesson.subject.icon" class="subject-icon-wrapper">
-            <img class="subject-icon" :src="lesson.subject.icon" alt="" />
+        <div
+          v-if="!compactMode"
+          class="col-2 text-center"
+        >
+          <div v-if="lesson[0].subject.icon" class="subject-icon-wrapper">
+            <img class="subject-icon" :src="lesson[0].subject.icon" alt="" />
           </div>
         </div>
-        <div class="col" style="position: relative">
-          <div style="position: absolute; top: 0; right: 1rem; text-align: end">
-            <div>#{{ lesson.n }}</div>
-            <div>
-              {{ renderTime(lesson.start) }} - {{ renderTime(lesson.end) }}
+        <div class="col">
+          <div class="subject-name">
+            <b>{{ lesson[0].subject.name }}</b
+            ><i v-if="lesson.length > 1"> x{{ lesson.length }}</i>
+          </div>
+          <div v-if="lesson[0].classrooms instanceof Array">
+            <div v-for="classroom in lesson[0].classrooms">
+              <td>{{ classroom.replace("-", "－") }}</td>
             </div>
           </div>
-          <div class="subject-name">
-            <b>{{ lesson.subject.name }}</b>
-          </div>
-          <div v-if="lesson.classrooms instanceof Array">
-            <table
-              class="table table-sm mb-0 mt-1 classrooms-table"
-              style="width: fit-content"
-              v-if="lesson.classrooms.length !== 0"
-            >
-              <tbody>
-                <tr v-for="classroom in lesson.classrooms">
-                  <template v-if="classroom.includes('-')">
-                    <td>{{ classroom.split("-").map((l) => l.trim())[0] }}</td>
-                    <td>{{ classroom.split("-").map((l) => l.trim())[1] }}</td>
-                  </template>
-                  <td v-else>{{ classroom }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
           <div v-else>
-            {{ lesson.classrooms }}
+            {{ lesson[0].classrooms }}
           </div>
         </div>
-        <div v-if="index + 1 !== timetable.length">
-          <hr />
+        <div class="col-auto text-end">
+          <div v-if="lesson.length === 1">#{{ lesson[0].n }}</div>
+          <div v-else>
+            #{{ lesson[0].n }} - {{ lesson[lesson.length - 1].n }}
+          </div>
+          <div>
+            {{ renderTime(lesson[0].start) }} -
+            {{ renderTime(lesson[lesson.length - 1].end) }}
+          </div>
+        </div>
+        <div v-if="index + 1 !== day.lessons.length">
+          <hr
+            :class="{
+              'mt-1 mb-0': compactMode,
+              'mt-2 mb-1': !compactMode,
+            }"
+          />
         </div>
       </div>
     </div>
@@ -58,38 +59,16 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, PropType, ref } from "vue";
+import { computed, PropType } from "vue";
 import { APITimetableDay } from "@/api/services/timetable";
 import { getDayName, renderTime } from "@/utils/date";
-import { APISubject } from "@/api/services/subjects";
+import { useStore } from "@/store";
 
-interface TimetableData {
-  subject: APISubject;
-  classrooms: string[] | string;
-  n: number;
-  start: string;
-  end: string;
-  id: number;
-}
+const store = useStore();
 
-const timetable = ref<TimetableData[]>([]);
+const compactMode = computed(() => store.state.settings.timetable_compact_mode)
 
-const processTimetable = () => {
-  const day = props.day;
-
-  timetable.value = day.lessons.map((l) => ({
-    classrooms: l.classroom.match(/((.+-.+)(\||,))*(.+-.+)/)
-      ? l.classroom.split(/,|\|/).map((l) => l.trim())
-      : l.classroom,
-    ...l,
-  }));
-};
-
-onMounted(() => {
-  processTimetable();
-});
-
-const props = defineProps({
+defineProps({
   day: {
     type: Object as PropType<APITimetableDay>,
     required: true,

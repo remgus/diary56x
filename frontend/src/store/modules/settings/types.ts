@@ -12,6 +12,8 @@ export interface SettingsState {
   homework_hide_subject_icons: boolean;
   homework_dates_preview: boolean;
   timetable_show_today_tomorrow: boolean;
+  timetable_group_pairs: boolean;
+  timetable_compact_mode: boolean;
 }
 
 export enum SettingsActionTypes {

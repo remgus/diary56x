@@ -38,7 +38,7 @@ const storeValue = computed(() => store.state.settings[props.options.name]);
 
 <template>
   <div class="vuex-setting row align-items-center">
-    <div class="col-auto me-auto">
+    <div class="col-9 col-sm-10 me-auto" :class="{ 'text-muted': options.disabled }">
       <label :for="options.name">
         {{ options.label }}
       </label>
@@ -60,6 +60,7 @@ const storeValue = computed(() => store.state.settings[props.options.name]);
           :name="options.name"
           :id="options.name"
           @change="handleValueChange"
+          :disabled="options.disabled"
           :checked="
             options.checkedCondition
               ? options.checkedCondition(storeValue)

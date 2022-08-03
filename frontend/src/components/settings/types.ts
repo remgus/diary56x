@@ -21,6 +21,7 @@ export interface BaseSettingOptions {
   name: keyof SettingsState;
   label: string;
   help?: string;
+  disabled?: boolean;
 }
 
 export type SettingOptions = CheckboxSettingOptions | NumrangeSettingOptions;

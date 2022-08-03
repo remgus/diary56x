@@ -21,6 +21,10 @@
         <div class="card card-body">
           <h2 class="mb-3 card-title">Расписание</h2>
           <VuexSetting :options="timetable_show_today_tomorrow_options" />
+          <hr class="mt-0 mb-2" />
+          <VuexSetting :options="timetable_group_pairs_options" />
+          <hr class="mt-0 mb-2" />
+          <VuexSetting :options="timetable_hide_subject_icons_options" />
         </div>
       </div>
     </div>
@@ -71,6 +75,20 @@ const timetable_show_today_tomorrow_options: CheckboxSettingOptions<"timetable_s
     name: "timetable_show_today_tomorrow",
     label: "Быстрый просмотр расписания",
     help: "Отдельно отображает расписание на сегодняшний и завтрашний дни",
+    type: "switch",
+  };
+
+const timetable_group_pairs_options: CheckboxSettingOptions<"timetable_group_pairs"> =
+  {
+    name: "timetable_group_pairs",
+    label: "Группировать парные уроки",
+    type: "switch",
+  };
+
+const timetable_hide_subject_icons_options: CheckboxSettingOptions<"timetable_compact_mode"> =
+  {
+    name: "timetable_compact_mode",
+    label: "Скрыть иконки предметов",
     type: "switch",
   };
 </script>

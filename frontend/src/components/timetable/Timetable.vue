@@ -35,7 +35,7 @@
 import { computed, ref } from "vue";
 import { Loading } from "..";
 import LessonCard from "./LessonCard.vue";
-import { APITimetableLesson, getTimetable } from "@/api/services/timetable";
+import { getTimetable, TimetableData } from "@/api/services/timetable";
 import SelectClass from "@/components/SelectClass.vue";
 import { useStore } from "@/store";
 
@@ -43,22 +43,50 @@ const ttLoading = ref(true);
 
 // TODO: Select student's current class
 const selectedKlass = ref<number | null>(null);
-const timetable = ref<{ weekday: number; lessons: APITimetableLesson[] }[]>([]);
+const timetable = ref<
+  {
+    weekday: number;
+    lessons: TimetableData[][];
+  }[]
+>([]);
 const store = useStore();
 
 const refreshTimetable = async () => {
   if (!selectedKlass.value) return;
 
-  const res = (await getTimetable(selectedKlass.value)).data;
+  let res = (await getTimetable(selectedKlass.value)).data;
 
   timetable.value = [];
   for (let i = 1; i <= 7; i++)
     timetable.value.push({ weekday: i, lessons: [] });
 
-  for (const lesson of res)
-    timetable.value[lesson.day - 1].lessons.push(lesson);
+  const lessons: TimetableData[] = res.map((l) => ({
+    ...l,
+    classrooms: l.classroom.match(/((.+-.+)(\||,))*(.+-.+)/)
+      ? l.classroom.split(/,|\|/).map((l) => l.trim())
+      : l.classroom,
+  }));
+
+  for (const lesson of lessons) {
+    const b4 = timetable.value[lesson.day - 1].lessons;
+    if (b4.length === 0 || !store.state.settings.timetable_group_pairs) {
+      b4.push([lesson]);
+      continue;
+    }
+    let prev = b4[b4.length - 1];
+    if (lessonsEqual(prev[0], lesson)) {
+      prev.push(lesson);
+    } else b4.push([lesson]);
+  }
 
   ttLoading.value = false;
+};
+
+const lessonsEqual = (first: TimetableData, second: TimetableData) => {
+  return (
+    first.classrooms === second.classrooms &&
+    first.subject.id === second.subject.id
+  );
 };
 
 const classChanged = (newClass: number | null) => {
