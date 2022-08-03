@@ -1,0 +1,82 @@
+<template>
+  <div class="container rt-wp mt-4">
+    <div class="row justify-content-center" id="settings-section">
+      <div class="col-12 col-md-10 col-lg-8">
+        <h1 class="mb-4">Настройки</h1>
+
+        <div class="card card-body mb-3">
+          <h2 class="mb-3 card-title">Домашнее задание</h2>
+          <div v-if="store.getters.isMonitor">
+            <VuexSetting :options="homework_monitor_mode_default_options" />
+            <hr class="mt-0 mb-2" />
+          </div>
+
+          <VuexSetting :options="homework_max_page_count_options" />
+          <hr class="mt-0 mb-2" />
+          <VuexSetting :options="homework_hide_subject_icons_options" />
+          <hr class="mt-0 mb-2" />
+          <VuexSetting :options="homework_dates_preview_options" />
+        </div>
+
+        <div class="card card-body">
+          <h2 class="mb-3 card-title">Расписание</h2>
+          <VuexSetting :options="timetable_show_today_tomorrow_options" />
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script lang="ts" setup>
+import { useStore } from "@/store";
+import { CheckboxSettingOptions } from "./types";
+import VuexSetting from "./VuexSetting.vue";
+
+const store = useStore();
+
+const homework_monitor_mode_default_options: CheckboxSettingOptions<"homework_monitor_mode_default"> =
+  {
+    name: "homework_monitor_mode_default",
+    label: "Режим редактирования для старост по умолчанию",
+    type: "switch",
+    checkedCondition: (val) => val === "edit",
+    values: (v) => (v ? "edit" : "view"),
+  };
+
+const homework_max_page_count_options: CheckboxSettingOptions<"homework_limit_tasks"> =
+  {
+    name: "homework_limit_tasks",
+    label: "Уменьшить отображаемое количество заданий",
+    help: "Влияет на скорость загрузки",
+    type: "switch",
+  };
+
+const homework_hide_subject_icons_options: CheckboxSettingOptions<"homework_hide_subject_icons"> =
+  {
+    name: "homework_hide_subject_icons",
+    label: "Скрыть иконки предметов",
+    type: "switch",
+  };
+
+const homework_dates_preview_options: CheckboxSettingOptions<"homework_hide_subject_icons"> =
+  {
+    name: "homework_dates_preview",
+    label: "Предпросмотр домашнего задания в календаре",
+    help: "При поиске показывает, на какие даты задано д/з",
+    type: "switch",
+  };
+
+const timetable_show_today_tomorrow_options: CheckboxSettingOptions<"timetable_show_today_tomorrow"> =
+  {
+    name: "timetable_show_today_tomorrow",
+    label: "Быстрый просмотр расписания",
+    help: "Отдельно отображает расписание на сегодняшний и завтрашний дни",
+    type: "switch",
+  };
+</script>
+
+<style>
+.vuex-setting:not(:last-child) {
+  margin-bottom: 0.5rem;
+}
+</style>

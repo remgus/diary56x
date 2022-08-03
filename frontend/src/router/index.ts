@@ -15,12 +15,6 @@ const routes: Array<RouteRecordRaw> = [
     },
   },
   {
-    path: "/about",
-    name: "about",
-    component: () => import("../views/About.vue"),
-    meta: {},
-  },
-  {
     path: "/login",
     name: "login",
     component: () => import("../components/auth/Login.vue"),
@@ -58,14 +52,19 @@ const routes: Array<RouteRecordRaw> = [
     path: "/notifications",
     name: "Notifications",
     component: () => import("../components/Notifications.vue"),
-    meta: {
-      requiresAuth: true,
-    },
+    meta: { requiresAuth: true },
   },
   {
-    path: "/timetable",
-    name: "Timetable",
-    component: () => import("../components/timetable/Timetable.vue"),
+    path: "/account",
+    name: "account",
+    component: () => import("../components/auth/Account.vue"),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: "/settings",
+    name: "settings",
+    component: () => import("../components/settings/Settings.vue"),
+    meta: { requiresAuth: true },
   },
 ];
 

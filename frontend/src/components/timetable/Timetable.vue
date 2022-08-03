@@ -9,16 +9,18 @@
     <loading :isLoading="ttLoading">
       <div class="row justify-content-center">
         <div class="col-12 col-md-12 col-lg-9 col-xxl-8">
-          <lesson-card
-            v-if="today && today.lessons.length != 0"
-            :day="today"
-            isToday
-          />
-          <lesson-card
-            v-if="tomorrow && tomorrow.lessons.length != 0"
-            :day="tomorrow"
-            isTomorrow
-          />
+          <div v-if="store.state.settings.timetable_show_today_tomorrow">
+            <lesson-card
+              v-if="today && today.lessons.length != 0"
+              :day="today"
+              isToday
+            />
+            <lesson-card
+              v-if="tomorrow && tomorrow.lessons.length != 0"
+              :day="tomorrow"
+              isTomorrow
+            />
+          </div>
 
           <div v-for="(day, index) in timetable" :key="index">
             <lesson-card :day="day" />
@@ -35,12 +37,14 @@ import { Loading } from "..";
 import LessonCard from "./LessonCard.vue";
 import { APITimetableLesson, getTimetable } from "@/api/services/timetable";
 import SelectClass from "@/components/SelectClass.vue";
+import { useStore } from "@/store";
 
 const ttLoading = ref(true);
 
 // TODO: Select student's current class
 const selectedKlass = ref<number | null>(null);
 const timetable = ref<{ weekday: number; lessons: APITimetableLesson[] }[]>([]);
+const store = useStore();
 
 const refreshTimetable = async () => {
   if (!selectedKlass.value) return;

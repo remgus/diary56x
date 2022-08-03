@@ -15,7 +15,6 @@
     <div class="row justify-content-center">
       <div class="col-12">
         <div class="d-flex flex-row mb-4">
-          
           <datepicker
             v-model="(date as Date[])"
             range
@@ -33,9 +32,19 @@
           <button
             title="Режим редактирования"
             v-if="store.getters.isMonitor"
-            class="btn btn-outline-primary ms-2"
+            class="btn btn-outline-dark ms-2"
+            @click="editingMode = !editingMode"
           >
-            <i class="bi-pencil"></i>
+            <i
+              :class="{ 'bi-pencil': !editingMode, 'bi-check': editingMode }"
+            ></i>
+          </button>
+          <button
+            v-if="editingMode"
+            title="Добавить задание"
+            class="btn btn-outline-dark ms-2"
+          >
+            <i class="bi-plus"></i>
           </button>
         </div>
 
@@ -53,6 +62,7 @@
                 (index > 0 && homework.results[index - 1].date !== task.date)
               "
               :index="index"
+              :editing="editingMode"
             />
           </div>
           <div
@@ -138,7 +148,7 @@ onMounted(async () => {
     .data;
   for (const s of data) subjects.value[s.id] = s;
   fetchHomework();
-  getHomeworkDates();
+  if (store.state.settings.homework_dates_preview) getHomeworkDates();
 });
 
 const fetchHomework = async (reset = false) => {
@@ -159,6 +169,7 @@ const fetchHomework = async (reset = false) => {
       date_before: date_before,
       has_content: true,
       page: page.value,
+      page_size: store.state.settings.homework_limit_tasks ? 10 : 100,
       klass: store.getters.klass as number,
     })
   ).data;
@@ -177,7 +188,9 @@ const fetchHomework = async (reset = false) => {
 // Refresh homework list every time user changes the date
 watch(date, () => fetchHomework(true));
 
-const editingMode = ref(false);
+const editingMode = ref(
+  store.state.settings.homework_monitor_mode_default === "edit"
+);
 </script>
 
 <style lang="scss">

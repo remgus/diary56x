@@ -45,13 +45,14 @@
         </div>
         <ul class="dropdown-menu dropdown-menu-end">
           <li>
-            <button
-              class="dropdown-item"
-              data-bs-toggle="modal"
-              data-bs-target="#accountProfileModal"
-            >
+            <router-link class="dropdown-item" to="/account">
               <i class="bi bi-person me-2"></i><span>Аккаунт</span>
-            </button>
+            </router-link>
+          </li>
+          <li>
+            <router-link class="dropdown-item" to="/settings">
+              <i class="bi bi-gear me-2"></i><span>Настройки</span>
+            </router-link>
           </li>
           <li>
             <router-link class="dropdown-item" to="/notifications">

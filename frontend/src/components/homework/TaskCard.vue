@@ -4,10 +4,15 @@
     <h2 v-if="showDate" class="mb-3 date" :class="{ 'mt-4': index !== 0 }">
       {{ getDateBadge(task.date) }}
     </h2>
-    <div class="py-2 task ps-md-3">
+    <div class="py-2 task ps-md-3 position-relative">
       <!-- Subject -->
       <div class="d-flex flex-row align-items-center mb-3">
-        <img class="subject-icon me-2" :src="subject.icon" alt="" />
+        <img
+          v-if="!hideSubject"
+          class="subject-icon me-2"
+          :src="subject.icon"
+          alt=""
+        />
         <h3 class="mb-0">
           {{ subject.name }}
         </h3>
@@ -49,6 +54,15 @@
           </tbody>
         </table>
       </div>
+
+      <div v-if="editing" class="position-absolute top-0 end-0">
+        <button class="btn btn-sm btn-outline-dark me-1">
+          <i class="bi-pencil"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-danger">
+          <i class="bi-trash"></i>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -60,18 +74,25 @@ import { getMarked } from "@/utils/marked";
 import { capitalize } from "@/utils/strings";
 import { getFileSize } from "@/utils/files";
 
-import { nextTick, onMounted, onUnmounted, ref } from "vue";
+import { computed, nextTick, onMounted, onUnmounted, ref } from "vue";
 import ClipboardJS from "clipboard";
+import { useStore } from "@/store";
 
 interface Props {
   task: APIHomework;
   subject: APISubject;
   showDate?: boolean;
   index: number;
+  editing?: boolean;
 }
 
 const contentEl = ref<null | HTMLElement>(null);
 const clipboards = ref<ClipboardJS[]>([]);
+const store = useStore();
+
+const hideSubject = computed(
+  () => store.state.settings.homework_hide_subject_icons
+);
 
 const getDateBadge = (date: string) => {
   let d = new Date(date);
@@ -136,7 +157,12 @@ onUnmounted(() => {
   for (const c of clipboards.value) c.destroy();
 });
 
-const { subject, task, showDate = false } = defineProps<Props>();
+const {
+  subject,
+  task,
+  showDate = false,
+  editing = false,
+} = defineProps<Props>();
 </script>
 
 <style scoped>
