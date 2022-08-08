@@ -2,7 +2,7 @@
   <div class="container rt-wp mt-4">
     <div class="row justify-content-center" id="settings-section">
       <div class="col-12 col-md-10 col-lg-8">
-        <h1 class="mb-4">Настройки</h1>
+        <h1 class="mb-3">Настройки</h1>
 
         <div class="card card-body mb-3">
           <h2 class="mb-3 card-title">Домашнее задание</h2>

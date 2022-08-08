@@ -1,4 +1,4 @@
-from backend.apps.core.subjects.serializers import SubjectSerializer
+from backend.apps.core.subjects import SubjectSerializer
 from rest_framework import serializers
 
 from .models import Bell, TimetableLesson

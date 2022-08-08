@@ -26,11 +26,12 @@ interface ListHomeworkParams {
   klass?: number;
 }
 
-interface CreateHomeworkData {
+export interface CreateHomeworkData {
   date: string;
-  group_id: number;
+  subject: string;
+  klass: string;
   content?: string;
-  attachments?: FileList;
+  attachments?: FileList | File[];
 }
 
 export const listHomework = (
@@ -44,7 +45,8 @@ export const addHomework = (
 ): Promise<AxiosResponse<APIHomework>> => {
   const fd = new FormData();
   fd.append("date", data.date);
-  fd.append("group", String(data.group_id));
+  fd.append("subject", data.subject);
+  fd.append("klass", data.klass);
   fd.append("content", data.content ? data.content : "");
   if (data.attachments) {
     for (const f of data.attachments) fd.append("attachments", f);

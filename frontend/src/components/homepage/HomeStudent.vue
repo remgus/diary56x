@@ -11,7 +11,7 @@
     </div>
     <div class="col-12 col-md-8 col-lg-9 tab-content">
       <div
-        class="tab-pane fade show active"
+        class="tab-pane fade"
         id="timetable-pane"
         role="tabpanel"
         tabindex="0"
@@ -33,9 +33,10 @@
 <script lang="ts" setup>
 import Timetable from "../timetable/Timetable.vue";
 import Homework from "../homework/Homework.vue";
-import { onMounted, onUnmounted, ref } from "vue";
+import { nextTick, onMounted, onUnmounted, ref } from "vue";
 import Tab from "bootstrap/js/dist/tab";
 import HomeStudentTabs from "./HomeStudentTabs.vue";
+import { useRoute } from "vue-router";
 
 let xDown: null | number = null;
 let yDown: null | number = null;
@@ -68,8 +69,14 @@ const handleTouchMove = (evt: TouchEvent) => {
   yDown = null;
 };
 
+const tabnames: { [n: string]: number } = {
+  timetable: 0,
+  homework: 1,
+};
+
 const tabs = ref<Array<Tab>>([]);
-const currentTab = ref(0);
+const currentTab = ref<number>(-1);
+const route = useRoute();
 
 onMounted(() => {
   document.addEventListener("touchstart", handleTouchStart, false);
@@ -85,6 +92,14 @@ onMounted(() => {
       tabTrigger.show();
     });
   });
+
+  if (!route.query.section) {
+    currentTab.value = 0;
+    const q = (
+      (tabs.value[currentTab.value] as any)._element as HTMLElement
+    ).getAttribute("data-bs-target") as string;
+    document.querySelector(q)?.classList.add("show", "active");
+  } else currentTab.value = tabnames[String(route.query.section)];
 
   setCurrentTab();
 

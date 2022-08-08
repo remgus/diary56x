@@ -77,6 +77,13 @@ class Group(models.Model):
     def __str__(self) -> str:
         return f"Group {self.klass} {self.subject}"
 
+    @classmethod
+    def get_or_create(kls, klass: Klass, subject: Subject) -> tuple[Group, bool]:
+        g, created = kls.objects.get_or_create(klass=klass, subject=subject)
+        if created:
+            g.students.set(klass.students.all())
+        return g, created
+
 
 class Lesson(models.Model):
     date = models.DateField(verbose_name="Дата")

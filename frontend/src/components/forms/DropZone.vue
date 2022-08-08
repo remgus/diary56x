@@ -21,130 +21,136 @@
           :multiple="multiple"
           :required="isRequired"
           :accept="accept"
+          title=""
         />
         <label for="file" class="atk-dropzone-label">
-          <strong>Выберите файл</strong>
-          <span> или перетащите его</span>
+          <strong>Выберите файлы</strong>
+          <span> или перетащите их</span>
         </label>
         <div class="atk-error" v-if="boxError">
           {{ boxError }}
         </div>
-        <div class="atk-file-list">
-          <div v-if="droppedFiles.length">
-            {{
-              $utils.stringUtils.capitalize(
-                $utils.translation.plural(droppedFiles.length, [
-                  "выбран",
-                  "выбрано",
-                  "выбрано",
-                ])
-              )
-            }}
-            {{
-              $utils.translation.plural(
-                droppedFiles.length,
-                ["файл", "файла", "файлов"],
-                true
-              )
-            }}
-            <div v-for="file in droppedFiles" :key="file">
-              {{ file.name }} ({{ $utils.files.getFileSize(file.size) }})
-            </div>
-          </div>
-          <div v-else>Не выбрано ни одного файла</div>
+        <div
+          v-if="droppedFiles.length"
+          class="mt-3 d-flex flex-column align-items-center filelist"
+        >
+          <table class="table table-sm">
+            <tbody>
+              <tr v-for="file in droppedFiles" :key="file.name">
+                <td class="text-muted" style="width: 1%; white-space: nowrap">
+                  {{ getFileSize(file.size) }}
+                </td>
+                <td>
+                  {{ file.name }}
+                </td>
+                <td @click="deleteFile(file)">
+                  <i class="bi-x-lg"></i>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, ref, computed } from "vue";
+<script setup lang="ts">
+import { ref, computed } from "vue";
 
-export default defineComponent({
-  emits: ["change"],
-  setup(props, { emit }) {
-    const inputRef = ref<HTMLInputElement | null>(null);
-    const droppedFiles = ref<Array<File>>([]);
-    const boxHighlighted = ref(false);
-    const boxError = ref("");
+const emit = defineEmits(["changed", "numchange"]);
 
-    const isValid = computed(() => {
-      return !boxError.value;
-    });
+const inputRef = ref<HTMLInputElement | null>(null);
+const droppedFiles = ref<File[]>([]);
+const boxHighlighted = ref(false);
+const boxError = ref("");
 
-    const setBoxHighlight = (s: boolean) => {
-      boxHighlighted.value = s;
-    };
-
-    const submitForm = (): void => {
-      boxError.value = "";
-      let data = new FormData();
-      if (droppedFiles.value.length) {
-        droppedFiles.value.forEach((file) => data.append(props.name, file));
-        emit("update:modelValue", data);
-      }
-    };
-
-    const fileDropped = (e: DragEvent) => {
-      setBoxHighlight(false);
-      if (!props.multiple) droppedFiles.value = [];
-      if (e.dataTransfer) {
-        for (let file of e.dataTransfer.files) droppedFiles.value.push(file);
-      }
-      submitForm();
-    };
-
-    const fileSelected = () => {
-      console.log("Changed", inputRef.value);
-      if (!props.multiple) droppedFiles.value = [];
-      if (inputRef.value?.files?.length) {
-        for (let file of inputRef.value.files) {
-          if (!droppedFiles.value.includes(file)) droppedFiles.value.push(file);
-        }
-      }
-      submitForm();
-    };
-
-    const clearInput = () => {
-      droppedFiles.value = [];
-      if (inputRef.value) inputRef.value.value = "";
-    };
-
-    const validate = () => {
-      if (props.isRequired && droppedFiles.value.length === 0) {
-        boxError.value = "Необходимо выбрать файл";
-        return false;
-      }
-      if (props.multiple && droppedFiles.value.length > props.fileLimit) {
-        boxError.value = "Выбрано слишком много файлов";
-        return false;
-      }
-      return true;
-    };
-
-    return {
-      inputRef,
-      boxHighlighted,
-      setBoxHighlight,
-      fileDropped,
-      isValid,
-      clearInput,
-      fileSelected,
-      validate,
-      boxError,
-      droppedFiles,
-    };
-  },
-  props: {
-    // Name that is used to pass dropped/selected files to `FormData`.
-    name: { type: String, required: true },
-    multiple: { type: Boolean, default: false },
-    fileLimit: { type: Number, default: 1 },
-    isRequired: { type: Boolean, default: false },
-    accept: { type: String, default: "" },
-  },
+const isValid = computed(() => {
+  return !boxError.value;
 });
+
+const setBoxHighlight = (s) => {
+  boxHighlighted.value = s;
+};
+
+const submitForm = () => {
+  boxError.value = "";
+  let data = new FormData();
+  if (droppedFiles.value.length) {
+    droppedFiles.value.forEach((file) => data.append(name, file));
+    emit("changed", data);
+  }
+};
+
+const fileDropped = (e: DragEvent) => {
+  setBoxHighlight(false);
+  if (!multiple) droppedFiles.value = [];
+  if (e.dataTransfer) {
+    for (let file of e.dataTransfer.files) droppedFiles.value.push(file);
+  }
+  emit("numchange", droppedFiles.value.length);
+
+  submitForm();
+};
+
+const fileSelected = () => {
+  if (!multiple) droppedFiles.value = [];
+  if (inputRef.value?.files?.length) {
+    for (let file of inputRef.value.files) {
+      if (!droppedFiles.value.includes(file)) droppedFiles.value.push(file);
+    }
+  }
+  emit("numchange", droppedFiles.value.length);
+  submitForm();
+};
+
+const clearInput = () => {
+  droppedFiles.value = [];
+  if (inputRef.value) inputRef.value.value = "";
+};
+
+const validate = () => {
+  if (isRequired && droppedFiles.value.length === 0) {
+    boxError.value = "Необходимо выбрать файл";
+    return false;
+  }
+  return true;
+};
+
+const getFileSize = (size: number) => {
+  let c = 0,
+    s = size;
+  const sizes = ["Б", "Кбайт", "Мбайт", "Гбайт"];
+  while (s > 1024) {
+    s /= 1024;
+    c++;
+  }
+  return Math.round(s * 100) / 100 + " " + sizes[c];
+};
+
+const deleteFile = (file: File) => {
+  const index = droppedFiles.value.findIndex((el) => el === file);
+  if (index !== -1) droppedFiles.value.splice(index, 1);
+  emit("numchange", droppedFiles.value.length);
+
+  submitForm();
+};
+
+interface Props {
+  name: string;
+  multiple?: boolean;
+  isRequired?: boolean;
+  accept?: string;
+}
+
+const {
+  name,
+  multiple = false,
+  isRequired = false,
+  accept = "",
+} = defineProps<Props>();
+
+defineExpose({ validate, droppedFiles, clearInput });
 </script>
 
 <style scoped>
@@ -183,6 +189,7 @@ export default defineComponent({
   position: absolute;
   top: 0;
   left: 0;
+  z-index: -1;
 }
 
 .box__file + label {
@@ -211,5 +218,10 @@ export default defineComponent({
 
 .atk-file-list {
   font-size: 0.8rem;
+}
+
+.filelist {
+  white-space: nowrap;
+  z-index: 9999;
 }
 </style>

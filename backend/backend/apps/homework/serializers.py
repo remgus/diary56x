@@ -1,7 +1,7 @@
 from django.utils.timezone import datetime
 from rest_framework import serializers
 
-from ..core.models import Group, Subject
+from ..core.models import Group, Klass, Subject
 
 # from ..core.lessons.serializers import LessonSerializer
 from .models import Homework, HomeworkAttachment
@@ -31,18 +31,23 @@ class AttachmentCreateSerializer(serializers.ModelSerializer):
 class CreateHomeworkSerializer(serializers.ModelSerializer):
     """Serializer for creating new `Homework` instances."""
 
-    attachments = serializers.ListField(child=serializers.FileField(allow_empty_file=False))
-    group = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all())
+    attachments = serializers.ListField(
+        child=serializers.FileField(allow_empty_file=False), allow_empty=True, required=False
+    )
+    subject = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all())
+    klass = serializers.PrimaryKeyRelatedField(queryset=Klass.objects.all())
     date = serializers.DateField()
 
     class Meta:
         model = Homework
-        fields = ("content", "group", "date", "attachments")
+        fields = ("content", "subject", "date", "attachments", "klass")
 
     def create(self, validated_data):
-        attachments = validated_data["attachments"]
+        attachments = validated_data.get("attachments")
         date: datetime = validated_data["date"]
-        group: Group = validated_data["group"]
+        subject: Subject = validated_data["subject"]
+        klass: Klass = validated_data["klass"]
+        group, _ = Group.get_or_create(klass=klass, subject=subject)
         content: str = validated_data["content"]
         return Homework.add_homework(date, group, content, attachments)
 

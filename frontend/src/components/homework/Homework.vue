@@ -12,7 +12,7 @@
     </div>
   </div>
   <div v-else>
-    <div class="row justify-content-center">
+    <div v-if="!addHwPage" class="row justify-content-center">
       <div class="col-12">
         <div class="d-flex flex-row mb-4">
           <datepicker
@@ -43,6 +43,7 @@
             v-if="editingMode"
             title="Добавить задание"
             class="btn btn-outline-dark ms-2"
+            @click="() => (addHwPage = true)"
           >
             <i class="bi-plus"></i>
           </button>
@@ -85,6 +86,19 @@
         </div>
       </div>
     </div>
+    <div v-else>
+      <div class="d-flex flex-row align-items-center w-100">
+        <h2 class="my-0 me-auto">Добавить домашнее задание</h2>
+        <button
+          class="btn btn-outline-dark"
+          @click="() => (addHwPage = false)"
+        >
+          <i class="bi-x-lg"></i>
+        </button>
+      </div>
+
+      <AddHomework />
+    </div>
   </div>
 </template>
 
@@ -104,6 +118,7 @@ import { Paginator } from "@/api/types";
 import TaskCard from "./TaskCard.vue";
 import "katex/dist/katex.css";
 import "highlight.js/styles/atom-one-dark.css";
+import AddHomework from "./AddHomework.vue";
 
 const store = useStore();
 
@@ -124,6 +139,7 @@ const homework = ref<null | Paginator<APIHomework>>(null);
 const subjects = ref<{ [n: number]: APISubject }>({});
 const page = ref(1);
 const markers = ref<Marker[]>([]);
+const addHwPage = ref(false);
 
 // Get list of markers for datepicker component
 const getHomeworkDates = async () => {

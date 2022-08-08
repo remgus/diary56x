@@ -15,3 +15,13 @@ export const BlogMDEOptions: Options = {
   tabSize: 4,
   spellChecker: false,
 };
+
+export const homeworkMDEOptions: Options = {
+  autofocus: false,
+  tabSize: 4,
+  spellChecker: false,
+  renderingConfig: {
+    singleLineBreaks: false,
+    codeSyntaxHighlighting: true,
+  },
+};

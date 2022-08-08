@@ -46,7 +46,7 @@ export default defineComponent({
     onMounted(() => {
       if (mdeRef.value)
         easyMDE.value = new EasyMDE({
-          element: mdeRef.value,
+          element: mdeRef.value as HTMLElement,
           ...props.options,
         });
     });
