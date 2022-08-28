@@ -40,7 +40,7 @@ const storeValue = computed(() => store.state.settings[props.options.name]);
   <div class="vuex-setting row align-items-center">
     <div class="col-9 col-sm-10 me-auto" :class="{ 'text-muted': options.disabled }">
       <label :for="options.name">
-        {{ options.label }}
+        <span v-if="options.special" class="me-2 text-primary"><i class="bi bi-star-fill"></i></span>{{ options.label }}
       </label>
       <div v-if="options.help" class="form-text">{{ options.help }}</div>
     </div>

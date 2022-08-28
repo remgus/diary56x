@@ -1,26 +1,29 @@
 <template>
   <div class="container rt-wp mt-4">
-    <div class="row mb-3">
-      <div class="col-auto">
-        <div class="card card-body">
-          <div class="avatar d-flex justify-content-center">
-            <svg v-html="jdenticon" id="avatar"></svg>
+    <div class="row justify-content-center" id="settings-section">
+      <div class="col-12 col-md-10 col-lg-8">
+        <h1 class="mb-3">Аккаунт</h1>
+
+        <div class="row">
+          <div class="col-auto">
+            <div class="avatar d-flex justify-content-center">
+              <svg v-html="jdenticon" id="avatar"></svg>
+            </div>
           </div>
-          <!-- <button class="btn btn-sm btn-outline-dark">Загрузить фото</button> -->
-        </div>
-      </div>
-      <div class="col">
-        <div class="card card-body h-100">
-          <h2>{{ user.surname }} {{ user.first_name }} {{ user.last_name }}</h2>
-          <div class="mb-1"><b>Email: </b>{{ user.email }}</div>
-          <div class="mb-1">
-            <b>Дата регистрации: </b>{{ toShortDate(user.date_joined) }}
+          <div class="col">
+            <div class="card card-body h-100">
+              <h2>
+                {{ user.surname }} {{ user.first_name }} {{ user.last_name }}
+              </h2>
+              <div class="mb-1"><b>Email: </b>{{ user.email }}</div>
+              <div class="mb-1">
+                <b>Дата регистрации: </b>{{ toShortDate(user.date_joined) }}
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
-    
   </div>
 </template>
 

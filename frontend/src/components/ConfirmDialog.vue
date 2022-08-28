@@ -21,17 +21,17 @@
           <div class="mt-3">
             <button
               type="button"
-              class="btn btn-secondary me-2"
+              class="btn btn-outline-danger me-2"
               data-bs-dismiss="modal"
             >
-              Отмена
+              <i class="bi bi-x-lg"></i>
             </button>
             <button
               type="button"
-              class="btn btn-outline-primary"
+              class="btn btn-outline-success"
               @click="successCallback"
             >
-              ОК
+              <i class="bi bi-check-lg"></i>
             </button>
           </div>
         </div>

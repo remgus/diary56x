@@ -46,9 +46,9 @@ class HomeworkListCreateAPIView(generics.ListCreateAPIView):
         page_size_query_param = "page_size"
 
     queryset = Homework.objects.all()
-    ordering = "lesson__date"
     pagination_class = HomeworkPagination
     filter_class = HomeworkFilter
+    ordering = ["lesson__date", "lesson__group__subject"]
 
     def get_serializer_class(self):
         if self.request.method == "POST":

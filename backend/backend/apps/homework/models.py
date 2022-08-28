@@ -40,7 +40,6 @@ class Homework(models.Model):
     class Meta:
         verbose_name = "Домашнее задание"
         verbose_name_plural = "Домашние задания"
-        ordering = ["lesson__date"]
 
     def __str__(self):
         return f"Домашнее задание от урока {self.lesson}"

@@ -22,6 +22,7 @@ export interface BaseSettingOptions {
   label: string;
   help?: string;
   disabled?: boolean;
+  special?: boolean;
 }
 
 export type SettingOptions = CheckboxSettingOptions | NumrangeSettingOptions;

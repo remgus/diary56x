@@ -47,7 +47,10 @@
               <td class="link-primary file-name">
                 {{ getFileName(file.file) }}
               </td>
-              <td class="file-size text-muted">
+              <td
+                class="file-size text-muted text-end"
+                v-if="store.state.settings.homework_show_file_size"
+              >
                 {{ getFileSize(file.size) }}
               </td>
             </tr>
@@ -59,20 +62,37 @@
         <button class="btn btn-sm btn-outline-dark me-1">
           <i class="bi-pencil"></i>
         </button>
-        <button class="btn btn-sm btn-outline-danger">
+        <button
+          class="btn btn-sm btn-outline-danger"
+          @click="showConfirmDialog"
+        >
           <i class="bi-trash"></i>
         </button>
       </div>
     </div>
   </div>
+
+  <confirm-dialog
+    title="Подтверждение удаления"
+    content="Вы уверены, что хотите удалить это задание?"
+    :callback="
+      () => {
+        deleteHomework(task.id);
+        deleteCallback();
+      }
+    "
+    ref="confirmDialog"
+  />
 </template>
 
 <script lang="ts" setup>
-import { APIHomework } from "@/api/services/homework";
+import { APIHomework, deleteHomework } from "@/api/services/homework";
 import { APISubject } from "@/api/services/subjects";
 import { getMarked } from "@/utils/marked";
 import { capitalize } from "@/utils/strings";
 import { getFileSize } from "@/utils/files";
+import { useConfirmDialog } from "@/utils/dialog";
+import ConfirmDialog from "@/components/ConfirmDialog.vue";
 
 import { computed, nextTick, onMounted, onUnmounted, ref } from "vue";
 import ClipboardJS from "clipboard";
@@ -84,6 +104,7 @@ interface Props {
   showDate?: boolean;
   index: number;
   editing?: boolean;
+  deleteCallback: () => void;
 }
 
 const contentEl = ref<null | HTMLElement>(null);
@@ -93,6 +114,8 @@ const store = useStore();
 const hideSubject = computed(
   () => store.state.settings.homework_hide_subject_icons
 );
+
+const attachmentToDelete = ref<null | number>(null);
 
 const getDateBadge = (date: string) => {
   let d = new Date(date);
@@ -111,11 +134,12 @@ const getFileName = (filepath: string) => {
 };
 
 const openFile = (file: string) => {
-  window.location = file as unknown as Location;
+  window.open(file, '_blank')?.focus();
 };
 
 onMounted(() => {
   nextTick(() => {
+    if (!store.state.settings.homework_show_copy_code) return;
     const code_els = (contentEl.value as HTMLElement).querySelectorAll(
       "pre code.hljs"
     );
@@ -124,7 +148,7 @@ onMounted(() => {
     for (let c of code_els) {
       c.id = "code-block-" + index;
       const copy_btn_html = `
-      <button class="code-copy-btn btn btn-outline-light">
+      <button class="code-copy-btn btn btn-sm btn-outline-light">
         <i class="bi-clipboard"></i>
       </button>`;
       const btnWrapper = document.createElement("div");
@@ -157,11 +181,14 @@ onUnmounted(() => {
   for (const c of clipboards.value) c.destroy();
 });
 
+const { showConfirmDialog, confirmDialog } = useConfirmDialog();
+
 const {
   subject,
   task,
   showDate = false,
   editing = false,
+  deleteCallback,
 } = defineProps<Props>();
 </script>
 
@@ -207,8 +234,8 @@ pre code.hljs {
 
 .code-copy-btn-wrapper {
   position: absolute;
-  top: 0.8rem;
-  right: 0.8rem;
+  top: 0.5rem;
+  right: 0.5rem;
 }
 
 .content :last-child {

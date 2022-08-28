@@ -9,6 +9,8 @@
           <div v-if="store.getters.isMonitor">
             <VuexSetting :options="homework_monitor_mode_default_options" />
             <hr class="mt-0 mb-2" />
+            <VuexSetting :options="homework_edit_after_add_options" />
+            <hr class="mt-0 mb-2" />
           </div>
 
           <VuexSetting :options="homework_max_page_count_options" />
@@ -16,6 +18,10 @@
           <VuexSetting :options="homework_hide_subject_icons_options" />
           <hr class="mt-0 mb-2" />
           <VuexSetting :options="homework_dates_preview_options" />
+          <hr class="mt-0 mb-2" />
+          <VuexSetting :options="homework_show_copy_code_options" />
+          <hr class="mt-0 mb-2" />
+          <VuexSetting :options="homework_show_file_size_options" />
         </div>
 
         <div class="card card-body">
@@ -45,6 +51,7 @@ const homework_monitor_mode_default_options: CheckboxSettingOptions<"homework_mo
     type: "switch",
     checkedCondition: (val) => val === "edit",
     values: (v) => (v ? "edit" : "view"),
+    special: true,
   };
 
 const homework_max_page_count_options: CheckboxSettingOptions<"homework_limit_tasks"> =
@@ -89,6 +96,27 @@ const timetable_hide_subject_icons_options: CheckboxSettingOptions<"timetable_co
   {
     name: "timetable_compact_mode",
     label: "Скрыть иконки предметов",
+    type: "switch",
+  };
+
+const homework_edit_after_add_options: CheckboxSettingOptions<"homework_edit_after_add"> =
+  {
+    name: "homework_edit_after_add",
+    label: "Выключать режим редактирования после добавления задания",
+    type: "switch",
+    special: true,
+  };
+
+const homework_show_copy_code_options: CheckboxSettingOptions<"homework_show_copy_code"> =
+  {
+    name: "homework_show_copy_code",
+    label: "Показывать кнопку для копирования блоков кода",
+    type: "switch",
+  };
+const homework_show_file_size_options: CheckboxSettingOptions<"homework_show_file_size"> =
+  {
+    name: "homework_show_file_size",
+    label: "Показывать размер прикрепленных к заданию файлов",
     type: "switch",
   };
 </script>

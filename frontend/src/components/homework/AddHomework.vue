@@ -33,7 +33,7 @@
       />
     </div>
     <div class="mb-3">
-      <DropZone name="attachments" ref="dropzoneRef" />
+      <DropZone name="attachments" ref="dropzoneRef" multiple />
     </div>
     <div>
       <button class="btn btn-outline-dark" @click="submit">Добавить</button>
@@ -42,7 +42,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, toRaw } from "vue";
 import MarkdownEditor from "../forms/MarkdownEditor.vue";
 import Datepicker from "@vuepic/vue-datepicker";
 import moment from "moment";
@@ -54,6 +54,11 @@ import DropZone from "../forms/DropZone.vue";
 import { addHomework, CreateHomeworkData } from "@/api/services/homework";
 import router from "@/router";
 
+interface Props {
+  addedCallback: () => void;
+}
+
+const props = defineProps<Props>();
 const store = useStore();
 
 const date = ref<Date>(moment().add(1, "days").toDate());
@@ -79,22 +84,14 @@ onMounted(() => {
 const submit = () => {
   const createHomeworkData: CreateHomeworkData = {
     content: mdeRef.value?.getValue ? mdeRef.value.getValue() : "",
-    attachments:
-      dropzoneRef.value && dropzoneRef.value.droppedFiles.value
-        ? dropzoneRef.value.droppedFiles.value
-        : [],
+    attachments: dropzoneRef.value
+      ? Object.assign({}, dropzoneRef.value).droppedFiles.slice()
+      : [],
     subject: selectedSubject.value as string,
     klass: String(store.getters.klass),
     date: moment(date.value.toDateString()).format("DD-MM-YYYY"),
   };
 
-  addHomework(createHomeworkData).then((res) => {
-    router.push({
-      name: "home",
-      query: {
-        section: "homework",
-      },
-    });
-  });
+  addHomework(createHomeworkData).then(props.addedCallback);
 };
 </script>

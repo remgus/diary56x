@@ -59,3 +59,16 @@ export const listHomeworkDates = (
 ): Promise<AxiosResponse<string[]>> => {
   return API.axios.get("homework/dates", { params });
 };
+
+export const deleteHomework = (id: number): Promise<AxiosResponse> => {
+  return API.axios.delete(`homework/${id}`);
+};
+
+export const deleteAttachment = (
+  homework_id: number,
+  attachment_id: number
+) => {
+  return API.axios.delete(
+    `homework/${homework_id}/attachments/${attachment_id}`
+  );
+};

@@ -14,6 +14,9 @@ export interface SettingsState {
   timetable_show_today_tomorrow: boolean;
   timetable_group_pairs: boolean;
   timetable_compact_mode: boolean;
+  homework_edit_after_add: boolean;
+  homework_show_copy_code: boolean;
+  homework_show_file_size: boolean;
 }
 
 export enum SettingsActionTypes {

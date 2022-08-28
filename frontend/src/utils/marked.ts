@@ -42,10 +42,10 @@ function renderMathsExpression(expr: string) {
 
     let html = "";
     try {
-      html = katex.renderToString(expr);
+      html = katex.renderToString(expr, { throwOnError: false });
     } catch (e) {
       console.error(e);
-    }
+    } 
     if (displayStyle && html) {
       html = html.replace(
         /class="katex"/g,

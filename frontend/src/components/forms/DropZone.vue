@@ -69,7 +69,7 @@ const isValid = computed(() => {
   return !boxError.value;
 });
 
-const setBoxHighlight = (s) => {
+const setBoxHighlight = (s: boolean) => {
   boxHighlighted.value = s;
 };
 

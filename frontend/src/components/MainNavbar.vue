@@ -15,7 +15,7 @@
         <span id="brand-name">дневник56</span>
       </router-link>
 
-      <div v-if="!user">
+      <div v-if="!user && !(route.name === 'login')">
         <ul class="navbar-nav">
           <li class="nav-item">
             <router-link to="/login" class="me-2 btn btn-outline-dark"
@@ -91,8 +91,10 @@ import { useStore } from "@/store";
 import router from "@/router";
 import { isAdmin } from "@/api/services/auth";
 import { AuthActionTypes } from "@/store/modules/auth/types";
+import { useRoute } from "vue-router";
 
 const store = useStore();
+const route = useRoute();
 
 const user = computed(() => store.state.auth.user);
 const jdenticon = computed(() => toSvg(user.value?.id, 45));
