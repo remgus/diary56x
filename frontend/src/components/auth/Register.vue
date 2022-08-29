@@ -87,6 +87,9 @@
             </div>
           </div>
         </div>
+        <div class="card card-body">
+          <div>Уже есть аккаунт?</div>
+        </div>
       </div>
     </div>
   </div>

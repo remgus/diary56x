@@ -1,11 +1,20 @@
 <template>
   <nav
-    class="navbar navbar-expand navbar-light w-100 fixed-top"
+    class="navbar navbar-light w-100 fixed-top"
     id="main-navbar"
-    :class="{ scrolled: isScrolled }"
+    :class="{
+      scrolled: isScrolled,
+      'navbar-expand':
+        route.meta.navbar?.expand ||
+        (route.name === 'home' && store.getters.isStudent),
+      'navbar-expand-sm': !route.meta.navbar?.expand,
+    }"
   >
     <div class="container">
-      <router-link to="/" class="navbar-brand">
+      <router-link
+        to="/"
+        class="navbar-brand d-block"
+      >
         <img
           src="@/assets/icons/logo.svg"
           id="logo"
@@ -15,72 +24,102 @@
         <span id="brand-name">дневник56</span>
       </router-link>
 
-      <div
-        v-if="!user && !(route.name === 'login' || route.name === 'register')"
+      <button
+        class="navbar-toggler"
+        type="button"
+        id="mainNavbarToggler"
+        data-bs-toggle="collapse"
+        data-bs-target="#mainNavbarContent"
       >
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <router-link to="/login" class="me-2 btn btn-outline-dark"
-              >Войти в аккаунт</router-link
-            >
-          </li>
-        </ul>
-      </div>
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-      <div v-if="user" class="dropdown d-flex">
+      <div
+        class="collapse navbar-collapse"
+        id="mainNavbarContent"
+        ref="navbarContent"
+      >
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+
         <div
-          class="d-flex dropdown-toggle align-items-center position-relative"
-          data-bs-toggle="dropdown"
-          id="mainNavbarDropdown"
+          v-if="!user && !(route.name === 'login' || route.name === 'register')"
         >
-          <div class="navbar-text me-3 fw-bold">
-            {{ user.surname }} {{ user.first_name }}
-          </div>
-
-          <svg v-html="jdenticon" id="avatar"></svg>
-          <span
-            v-if="unreadNotificationsCount"
-            id="notification-count-badge"
-            class="position-absolute bg-danger border border-light rounded-circle"
-          >
-          </span>
+          <li class="d-flex">
+            <ul class="navbar-nav">
+              <ul class="navbar-nav">
+                <li class="nav-item">
+                  <router-link to="/login" class="me-2 nav-link"
+                    >Войти</router-link
+                  >
+                </li>
+              </ul>
+              <li class="nav-item">
+                <router-link
+                  to="/register"
+                  class="me-2 btn btn-outline-primary"
+                >
+                  Создать аккаунт</router-link
+                >
+              </li>
+            </ul>
+          </li>
         </div>
-        <ul class="dropdown-menu dropdown-menu-end">
-          <li>
-            <router-link class="dropdown-item" to="/account">
-              <i class="bi bi-person me-2"></i><span>Аккаунт</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link class="dropdown-item" to="/settings">
-              <i class="bi bi-gear me-2"></i><span>Настройки</span>
-            </router-link>
-          </li>
-          <li>
-            <router-link class="dropdown-item" to="/notifications">
-              <i class="bi bi-bell me-2"></i>
-              <span>Уведомления</span>
-              <span
-                class="ms-2 badge bg-danger"
-                v-if="unreadNotificationsCount"
-              >
-                {{ unreadNotificationsCount }}
-              </span>
-            </router-link>
-          </li>
-          <li v-if="isAdmin(user)">
-            <router-link class="dropdown-item" to="/admin">
-              <i class="bi-window me-2"></i>
-              <span>Панель администратора</span>
-            </router-link>
-          </li>
-          <li>
-            <a class="dropdown-item" href="#" @click.prevent="logout">
-              <i class="bi bi-box-arrow-right me-2"></i>
-              <span>Выйти из аккаунта</span>
-            </a>
-          </li>
-        </ul>
+
+        <div v-if="user" class="dropdown d-flex">
+          <div
+            class="d-flex dropdown-toggle align-items-center position-relative"
+            data-bs-toggle="dropdown"
+            id="mainNavbarDropdown"
+          >
+            <div class="navbar-text me-3 fw-bold">
+              {{ user.surname }} {{ user.first_name }}
+            </div>
+
+            <svg v-html="jdenticon" id="avatar"></svg>
+            <span
+              v-if="unreadNotificationsCount"
+              id="notification-count-badge"
+              class="position-absolute bg-danger border border-light rounded-circle"
+            >
+            </span>
+          </div>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+              <router-link class="dropdown-item" to="/account">
+                <i class="bi bi-person me-2"></i><span>Аккаунт</span>
+              </router-link>
+            </li>
+            <li>
+              <router-link class="dropdown-item" to="/settings">
+                <i class="bi bi-gear me-2"></i><span>Настройки</span>
+              </router-link>
+            </li>
+            <li>
+              <router-link class="dropdown-item" to="/notifications">
+                <i class="bi bi-bell me-2"></i>
+                <span>Уведомления</span>
+                <span
+                  class="ms-2 badge bg-danger"
+                  v-if="unreadNotificationsCount"
+                >
+                  {{ unreadNotificationsCount }}
+                </span>
+              </router-link>
+            </li>
+            <li v-if="isAdmin(user)">
+              <router-link class="dropdown-item" to="/admin">
+                <i class="bi-window me-2"></i>
+                <span>Панель администратора</span>
+              </router-link>
+            </li>
+            <li>
+              <a class="dropdown-item" href="#" @click.prevent="logout">
+                <i class="bi bi-box-arrow-right me-2"></i>
+                <span>Выйти из аккаунта</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </nav>

@@ -2,24 +2,22 @@
   <footer
     class="footer w-100"
     id="footer"
-    :class="{ 'mb-10': route.name === 'home' && store.getters.isStudent }"
+    :class="{ 'd-none': route.name === 'home' && store.getters.isStudent }"
   >
     <hr />
 
-    <div class="container mb-3 pb-3 px-4 px-md-0">
+    <div class="container mb-3 pb-2 px-4 px-md-0">
       <div class="row">
         <div class="col-6 col-md-auto order-1 order-md-0">
-          <div>
+          <div class="d-flex flex-row">
             <img
               src="@/assets/icons/logo.svg"
               width="20"
               class="d-inline-block align-center me-2"
               alt=""
             />
-            <span class="gsans">
-              <span class="fw-bold me-2">дневник56</span>
-              <span>v{{ version }}</span>
-            </span>
+            <div class="fw-bold">дневник56</div>
+            <div class="ms-2">v{{ version }}</div>
           </div>
 
           <div class="gsans">

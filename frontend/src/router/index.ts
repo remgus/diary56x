@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../components/homepage/Home.vue";
 import { handleMetaViews } from "./utils";
 import adminRoutes from "./admin";
+import { store } from "@/store";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -20,6 +21,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("../components/auth/Login.vue"),
     meta: {
       requiresAuth: false,
+      navbar: {
+        expand: true,
+      },
     },
   },
   {
@@ -28,6 +32,9 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("../components/auth/Register.vue"),
     meta: {
       requiresAuth: false,
+      navbar: {
+        expand: true,
+      },
     },
   },
   {
