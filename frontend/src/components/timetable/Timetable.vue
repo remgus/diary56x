@@ -2,7 +2,16 @@
   <div>
     <div class="row justify-content-center mb-4">
       <div class="col-12 col-md-12 col-lg-9 col-xxl-8">
-        <select-class @change="classChanged" />
+        <div class="d-flex">
+          <select-class @change="classChanged" class="flex-fill" />
+          <router-link
+            v-if="store.getters.isMonitor"
+            class="ms-2 btn btn-outline-dark"
+            :to="{ name: 'timetable-edit' }"
+          >
+            <i class="bi bi-pencil"></i>
+          </router-link>
+        </div>
       </div>
     </div>
 

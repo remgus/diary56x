@@ -2,7 +2,7 @@
   <div class="container mt-4 rt-wp">
     <div class="row justify-content-sm-center">
       <div class="col col-md-9 col-lg-6">
-        <div class="card card-body card-shadow login my-3">
+        <div class="card card-body login my-3">
           <h2 class="card-title text-center">Вход</h2>
 
           <form @submit.prevent="processLogin">

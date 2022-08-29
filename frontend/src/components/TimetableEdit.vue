@@ -269,19 +269,19 @@ const saveTimetable = async () => {
 <template>
   <loading :is-loading="isLoading">
     <div class="row justify-content-center">
-      <div class="col-7 mb-5">
+      <div class="col-12 col-md-7 mb-4">
         <button class="btn btn-outline-success me-auto" @click="saveTimetable">
           <i class="bi bi-cloud-arrow-up me-2"></i> Сохранить
         </button>
       </div>
-      <div v-for="day in timetable" class="col-7">
+      <div v-for="day in timetable" class="col-12 col-md-7">
         <table class="table table-sm table">
           <thead>
             <tr class="text-center table-dark">
               <th colspan="5">{{ getDayName(day.weekday) }}</th>
             </tr>
             <tr v-if="day.lessons.length" class="text-center">
-              <th style="width: 10%">#</th>
+              <th>#</th>
               <th>Предмет</th>
               <th>Аудитория</th>
               <th></th>
@@ -293,12 +293,13 @@ const saveTimetable = async () => {
               v-for="(lesson, lessonIndex) in day.lessons"
             >
               <!-- Lesson number -->
-              <td>
+              <td style="width: 10%;">
                 <input
                   :disabled="isLoading"
                   class="n-field-input"
                   :id="`n-${getLessonId(lesson)}`"
                   type="number"
+                
                   min="1"
                   max="15"
                   @change="editLesson($event, lesson.day, lessonIndex)"
@@ -310,7 +311,7 @@ const saveTimetable = async () => {
                 <select
                   :disabled="isLoading"
                   :id="`subject-${getLessonId(lesson)}`"
-                  class="field-input subject-select"
+                  class="w-100 field-input subject-select"
                   @change="editLesson($event, lesson.day, lessonIndex)"
                   name="subject"
                 >
@@ -324,11 +325,11 @@ const saveTimetable = async () => {
                 </select>
               </td>
               <!-- Classroom -->
-              <td>
+              <td  style="width: 10%;">
                 <input
                   :disabled="isLoading"
                   :id="`classroom-${getLessonId(lesson)}`"
-                  class="field-input"
+                  class="w-100 field-input"
                   @change="editLesson($event, lesson.day, lessonIndex)"
                   name="classroom"
                 />

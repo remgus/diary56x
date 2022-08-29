@@ -1,6 +1,7 @@
 <template>
   <main-navbar />
   <router-view />
+  <main-footer />
   <div
     class="position-fixed bottom-0 end-0 p-3 toast-container"
     id="popup-notification-container"
@@ -22,6 +23,7 @@ import { APINotification } from "./api/services/notifications";
 import Profile from "./components/auth/Profile.vue";
 import { DiaryActionTypes } from "./store/modules/diary/types";
 import { AuthActionTypes } from "./store/modules/auth/types";
+import MainFooter from "./components/MainFooter.vue";
 
 const store = useStore();
 const notifications = ref<APINotification[]>([]);
@@ -52,7 +54,7 @@ store.subscribe(() => {
 <style>
 .card-shadow:hover {
   transition-property: box-shadow;
-  transition-duration: 1s;
+  transition-duration: 0.1s;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -84,14 +86,14 @@ h4 {
 
 body {
   margin-bottom: 320px;
-  font-family: Roboto, sans-serif;
+  font-family: "Google Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
 }
 
-.vk-sans-display-bold {
-  font-family: "VK Sans Display", Roboto, sans-serif;
+.gsans-display-bold {
+  font-family: "Google Sans", Roboto, sans-serif;
   font-weight: bold;
 }
 </style>

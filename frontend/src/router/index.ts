@@ -66,6 +66,11 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import("../components/settings/Settings.vue"),
     meta: { requiresAuth: true },
   },
+  {
+    path: "/timetable-edit",
+    name: "timetable-edit",
+    component: () => import("../components/timetable/TimetableClassEdit.vue"),
+  },
 ];
 
 const router = createRouter({

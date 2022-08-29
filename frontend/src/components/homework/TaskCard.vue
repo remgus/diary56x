@@ -8,12 +8,12 @@
       <!-- Subject -->
       <div class="d-flex flex-row align-items-center mb-3">
         <img
-          v-if="!hideSubject"
+          v-if="subject.icon && !hideSubject"
           class="subject-icon me-2"
           :src="subject.icon"
           alt=""
         />
-        <h3 class="mb-0">
+        <h3 class="mb-0 gsans fw-bold">
           {{ subject.name }}
         </h3>
       </div>
@@ -115,8 +115,6 @@ const hideSubject = computed(
   () => store.state.settings.homework_hide_subject_icons
 );
 
-const attachmentToDelete = ref<null | number>(null);
-
 const getDateBadge = (date: string) => {
   let d = new Date(date);
   return capitalize(
@@ -134,16 +132,15 @@ const getFileName = (filepath: string) => {
 };
 
 const openFile = (file: string) => {
-  window.open(file, '_blank')?.focus();
+  window.open(file, "_blank")?.focus();
 };
 
 onMounted(() => {
   nextTick(() => {
     if (!store.state.settings.homework_show_copy_code) return;
-    const code_els = (contentEl.value as HTMLElement).querySelectorAll(
-      "pre code.hljs"
-    );
-    if (!code_els) return;
+    if (!contentEl.value) return;
+    const code_els = contentEl.value.querySelectorAll("pre code.hljs");
+    if (!code_els.length) return;
     let index = 0;
     for (let c of code_els) {
       c.id = "code-block-" + index;

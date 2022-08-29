@@ -9,7 +9,7 @@
         <home-student-tabs />
       </nav>
     </div>
-    <div class="col-12 col-md-8 col-lg-9 tab-content">
+    <div class="col-12 col-md-8 col-lg-9 tab-content mb-5 mb-md-0">
       <div
         class="tab-pane fade"
         id="timetable-pane"
@@ -26,6 +26,18 @@
       >
         <homework />
       </div>
+      <div class="tab-pane fade" id="other-pane" role="tabpanel" tabindex="0">
+        <div class="row justify-content-center justify-content-sm-start">
+          <div class="col-8 col-sm-6 col-md-6 col-lg-4 col-xl-3">
+            <div class="card card-body text-center card-shadow">
+              <div class="py-5">
+                <img src="@/assets/icons/paper.svg" alt="" width="80" />
+              </div>
+              <span>Минимумы</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -33,7 +45,7 @@
 <script lang="ts" setup>
 import Timetable from "../timetable/Timetable.vue";
 import Homework from "../homework/Homework.vue";
-import { nextTick, onMounted, onUnmounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
 import Tab from "bootstrap/js/dist/tab";
 import HomeStudentTabs from "./HomeStudentTabs.vue";
 import { useRoute } from "vue-router";

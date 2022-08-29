@@ -165,8 +165,7 @@ const getHomeworkDates = async () => {
 
 // When the component is mounted, get a list of subjects and fetch homework.
 onMounted(async () => {
-  const data = (await listSubjects({ klass: store.getters.klass as number }))
-    .data;
+  const data = (await listSubjects()).data;
   for (const s of data) subjects.value[s.id] = s;
   fetchHomework();
 });
@@ -175,7 +174,6 @@ const fetchHomework = async (reset = false) => {
   hwLoading.value = true;
 
   if (!date.value.length) return;
-  console.log(date.value)
 
   const dates = date.value
     .slice()

@@ -15,7 +15,9 @@
         <span id="brand-name">дневник56</span>
       </router-link>
 
-      <div v-if="!user && !(route.name === 'login')">
+      <div
+        v-if="!user && !(route.name === 'login' || route.name === 'register')"
+      >
         <ul class="navbar-nav">
           <li class="nav-item">
             <router-link to="/login" class="me-2 btn btn-outline-dark"
@@ -134,8 +136,8 @@ onUnmounted(() => {
 }
 
 #brand-name {
-  font-weight: bold;
-  font-family: "VK Sans Display";
+  font-weight: 600;
+  font-family: "Google Sans";
 }
 
 #main-navbar.scrolled {
@@ -150,10 +152,10 @@ onUnmounted(() => {
   border-radius: 10%;
 }
 
-#main-navbar #avatar {
+/* #main-navbar #avatar {
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
   transition: box-shadow 0.3s ease-in-out;
-}
+} */
 
 #mainNavbarDropdown::after {
   content: none;

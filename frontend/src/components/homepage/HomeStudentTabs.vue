@@ -20,24 +20,33 @@
       ><span class="d-none d-md-inline">Домашнее задание</span>
     </button>
 
-    <router-link to="/" class="nav-link">
+    <!-- <router-link to="/" class="nav-link disabled">
       <i class="bi-journals me-0 me-md-3"></i
       ><span class="d-none d-md-inline">Конспекты</span></router-link
-    >
+    > -->
 
-    <router-link to="/" class="nav-link">
+    <!-- <router-link to="/" class="nav-link">
       <i class="bi-table me-0 me-md-3"></i>
       <span class="d-none d-md-inline">Оценки</span></router-link
-    >
+    > -->
 
-    <a href="#" class="nav-link">
+    <!-- <a href="#" class="nav-link disabled">
       <i class="bi-people me-0 me-md-3"></i
       ><span class="d-none d-md-inline">Класс</span>
-    </a>
+    </a> -->
 
-    <a href="#" class="nav-link">
+    <!-- <a href="#" class="nav-link">
       <i class="bi-bar-chart me-0 me-md-3"></i
       ><span class="d-none d-md-inline">Успеваемость</span>
-    </a>
+    </a> -->
+
+    <button
+      class="nav-link text-start"
+      data-bs-toggle="pill"
+      data-bs-target="#other-pane"
+    >
+      <i class="bi-three-dots me-0 me-md-3"></i
+      ><span class="d-none d-md-inline">Прочее</span>
+    </button>
   </div>
 </template>
