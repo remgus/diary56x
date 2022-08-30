@@ -5,7 +5,9 @@
         <div class="d-flex">
           <select-class @change="classChanged" class="flex-fill" />
           <router-link
-            v-if="store.getters.isMonitor"
+            v-if="
+              store.getters.isMonitor && pluginEnabled(DiaryPlugins.MONITORS)
+            "
             class="ms-2 btn btn-outline-dark"
             :to="{ name: 'timetable-edit' }"
           >
@@ -47,6 +49,7 @@ import LessonCard from "./LessonCard.vue";
 import { getTimetable, TimetableData } from "@/api/services/timetable";
 import SelectClass from "@/components/SelectClass.vue";
 import { useStore } from "@/store";
+import { DiaryPlugins, pluginEnabled } from "@/utils/plugins";
 
 const ttLoading = ref(true);
 

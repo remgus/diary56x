@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "backend.apps.notifications.apps.NotificationsConfig",
     "backend.apps.timetable.apps.TimetableConfig",
     "backend.apps.homework.apps.HomeworkConfig",
+    "backend.apps.minimum.apps.MinimumConfig",
     # Third-party apps
     # "whitenoise.runserver_nostatic",
     "corsheaders",

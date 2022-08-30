@@ -159,3 +159,6 @@ class Quarter(models.Model):
             if q.begin <= date <= q.end:
                 return q
         return None
+
+    def __str__(self) -> str:
+        return f"{self.QUARTERS[self.number - 1][1]} четверть"

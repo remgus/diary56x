@@ -78,6 +78,16 @@ const routes: Array<RouteRecordRaw> = [
     name: "timetable-edit",
     component: () => import("../components/timetable/TimetableClassEdit.vue"),
   },
+  {
+    path: "/minimum",
+    name: "minimum",
+    component: () => import("../components/minimum/MinimumList.vue"),
+  },
+  {
+    path: "/about",
+    name: "about",
+    component: () => import("../components/About.vue"),
+  },
 ];
 
 const router = createRouter({

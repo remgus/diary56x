@@ -1,6 +1,13 @@
 <template>
   <main-navbar />
-  <router-view />
+  <div
+    class="view-wrapper"
+    :class="{
+      'student-home': route.name === 'home' && store.getters.isStudent,
+    }"
+  >
+    <router-view />
+  </div>
   <main-footer />
   <div
     class="position-fixed bottom-0 end-0 p-3 toast-container"
@@ -20,12 +27,13 @@ import PopupNotification from "@/components/PopupNotification.vue";
 import { onMounted, ref } from "vue";
 import { useStore } from "@/store";
 import { APINotification } from "./api/services/notifications";
-import Profile from "./components/auth/Profile.vue";
 import { DiaryActionTypes } from "./store/modules/diary/types";
 import { AuthActionTypes } from "./store/modules/auth/types";
 import MainFooter from "./components/MainFooter.vue";
+import { useRoute } from "vue-router";
 
 const store = useStore();
+const route = useRoute();
 const notifications = ref<APINotification[]>([]);
 const lastTimeFetched = ref<number>(Date.now());
 
@@ -85,11 +93,25 @@ h4 {
 }
 
 body {
-  margin-bottom: 320px;
   font-family: "Google Sans", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-weight: 400;
+}
+
+@media (max-width: 768px) {
+  .view-wrapper:not(.student-home) {
+    margin-bottom: 400px;
+  }
+  .view-wrapper.student-home {
+    margin-bottom: 50px;
+  }
+}
+
+@media (min-width: 768px) {
+  .view-wrapper {
+    margin-bottom: 320px;
+  }
 }
 
 .gsans-display-bold {

@@ -4,33 +4,56 @@
       <div class="col-12 col-md-10 col-lg-8">
         <h1 class="mb-3">Настройки</h1>
 
-        <div class="card card-body mb-3">
-          <h2 class="mb-3 card-title">Домашнее задание</h2>
-          <div v-if="store.getters.isMonitor">
-            <VuexSetting :options="homework_monitor_mode_default_options" />
+        <div
+          v-if="pluginsEnabled(DiaryPlugins.HOMEWORK, DiaryPlugins.TIMETABLE)"
+        >
+          <div
+            class="card card-body mb-3"
+            v-if="pluginEnabled(DiaryPlugins.HOMEWORK)"
+          >
+            <h2 class="mb-3 card-title">Домашнее задание</h2>
+            <div
+              v-if="
+                store.getters.isMonitor && pluginEnabled(DiaryPlugins.MONITORS)
+              "
+            >
+              <VuexSetting :options="homework_monitor_mode_default_options" />
+              <hr class="mt-0 mb-2" />
+              <VuexSetting :options="homework_edit_after_add_options" />
+              <hr class="mt-0 mb-2" />
+            </div>
+
+            <VuexSetting :options="homework_max_page_count_options" />
             <hr class="mt-0 mb-2" />
-            <VuexSetting :options="homework_edit_after_add_options" />
+            <VuexSetting :options="homework_hide_subject_icons_options" />
             <hr class="mt-0 mb-2" />
+            <VuexSetting :options="homework_dates_preview_options" />
+            <hr class="mt-0 mb-2" />
+            <VuexSetting :options="homework_show_copy_code_options" />
+            <hr class="mt-0 mb-2" />
+            <VuexSetting :options="homework_show_file_size_options" />
           </div>
 
-          <VuexSetting :options="homework_max_page_count_options" />
-          <hr class="mt-0 mb-2" />
-          <VuexSetting :options="homework_hide_subject_icons_options" />
-          <hr class="mt-0 mb-2" />
-          <VuexSetting :options="homework_dates_preview_options" />
-          <hr class="mt-0 mb-2" />
-          <VuexSetting :options="homework_show_copy_code_options" />
-          <hr class="mt-0 mb-2" />
-          <VuexSetting :options="homework_show_file_size_options" />
+          <div
+            class="card card-body"
+            v-if="pluginEnabled(DiaryPlugins.TIMETABLE)"
+          >
+            <h2 class="mb-3 card-title">Расписание</h2>
+            <VuexSetting :options="timetable_show_today_tomorrow_options" />
+            <hr class="mt-0 mb-2" />
+            <VuexSetting :options="timetable_group_pairs_options" />
+            <hr class="mt-0 mb-2" />
+            <VuexSetting :options="timetable_hide_subject_icons_options" />
+          </div>
         </div>
-
-        <div class="card card-body">
-          <h2 class="mb-3 card-title">Расписание</h2>
-          <VuexSetting :options="timetable_show_today_tomorrow_options" />
-          <hr class="mt-0 mb-2" />
-          <VuexSetting :options="timetable_group_pairs_options" />
-          <hr class="mt-0 mb-2" />
-          <VuexSetting :options="timetable_hide_subject_icons_options" />
+        <div v-else class="text-center">
+          <img
+            src="@/assets/icons/plugin.svg"
+            alt=""
+            class="mt-5 mb-3"
+            width="80"
+          />
+          <div>Настраиваемые плагины отключены</div>
         </div>
       </div>
     </div>
@@ -41,6 +64,7 @@
 import { useStore } from "@/store";
 import { CheckboxSettingOptions } from "./types";
 import VuexSetting from "./VuexSetting.vue";
+import { DiaryPlugins, pluginEnabled, pluginsEnabled } from "@/utils/plugins";
 
 const store = useStore();
 

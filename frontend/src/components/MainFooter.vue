@@ -9,18 +9,18 @@
     <div class="container mb-3 pb-2 px-4 px-md-0">
       <div class="row">
         <div class="col-6 col-md-auto order-1 order-md-0">
-          <div class="d-flex flex-row">
+          <div class="d-flex flex-row" id="diaryx-info">
             <img
               src="@/assets/icons/logo.svg"
               width="20"
               class="d-inline-block align-center me-2"
               alt=""
             />
-            <div class="fw-bold">дневник56</div>
-            <div class="ms-2">v{{ version }}</div>
+            <div class="fw-bold me-2">дневник56</div>
+            <div id="version">v{{ version }}</div>
           </div>
 
-          <div class="gsans">
+          <div>
             Код by
             <a
               class="fw-bold link-dark text-decoration-none"
@@ -97,5 +97,13 @@ const store = useStore();
   .mb-10 {
     margin-bottom: 4.5rem;
   }
+}
+
+#version {
+  white-space: nowrap;
+}
+
+#diaryx-info {
+  flex-wrap: wrap;
 }
 </style>

@@ -34,7 +34,7 @@
           </button>
           <button
             title="Режим редактирования"
-            v-if="store.getters.isMonitor"
+            v-if="monitorsPluginEnabled && store.getters.isMonitor"
             class="btn btn-outline-dark ms-2"
             @click="editingMode = !editingMode"
           >
@@ -113,7 +113,7 @@ import {
 } from "@/api/services/homework";
 import { APISubject, listSubjects } from "@/api/services/subjects";
 import { useStore } from "@/store";
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import cactus_icon from "@/assets/icons/cactus.svg";
 import Datepicker from "@vuepic/vue-datepicker";
 import moment from "moment";
@@ -123,8 +123,13 @@ import "katex/dist/katex.css";
 import "highlight.js/styles/atom-one-dark.css";
 import AddHomework from "./AddHomework.vue";
 import Loading from "../Loading.vue";
+import { DiaryPlugins, pluginEnabled } from "@/utils/plugins";
 
 const store = useStore();
+const monitorsPluginEnabled = computed(() =>
+  pluginEnabled(DiaryPlugins.MONITORS)
+);
+
 
 type DatePickerRef = [Date, Date] | [Date, null];
 
@@ -214,7 +219,8 @@ const fetchHomework = async (reset = false) => {
 watch(date, () => fetchHomework(true));
 
 const editingMode = ref(
-  store.state.settings.homework_monitor_mode_default === "edit"
+  store.state.settings.homework_monitor_mode_default === "edit" &&
+    monitorsPluginEnabled
 );
 
 const addedHwCallback = () => {

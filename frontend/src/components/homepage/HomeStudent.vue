@@ -2,7 +2,7 @@
   <div class="row mt-0 mt-md-4">
     <div class="col-12 col-md-4 col-lg-3 mb-4">
       <nav
-        class="nav nav-pills d-flex justify-content-center"
+        class="nav nav-pills d-flex justify-content-center justify-content-md-start"
         id="mobileNavbar"
         role="tablist"
       >
@@ -16,7 +16,9 @@
         role="tabpanel"
         tabindex="0"
       >
-        <timetable />
+        <diary-plugin :plugin="DiaryPlugins.TIMETABLE">
+          <timetable />
+        </diary-plugin>
       </div>
       <div
         class="tab-pane fade"
@@ -24,18 +26,36 @@
         role="tabpanel"
         tabindex="0"
       >
-        <homework />
+        <diary-plugin :plugin="DiaryPlugins.HOMEWORK"
+          ><homework
+        /></diary-plugin>
       </div>
       <div class="tab-pane fade" id="other-pane" role="tabpanel" tabindex="0">
-        <div class="row justify-content-center justify-content-sm-start">
+        <div
+          class="row justify-content-center justify-content-sm-start"
+          v-if="hasOtherPlugins"
+        >
           <div class="col-8 col-sm-6 col-md-6 col-lg-4 col-xl-3">
-            <div class="card card-body text-center card-shadow">
+            <div
+              class="card card-body text-center card-shadow"
+              v-if="pluginEnabled(DiaryPlugins.MINIMUM)"
+            >
               <div class="py-5">
                 <img src="@/assets/icons/paper.svg" alt="" width="80" />
               </div>
               <span>Минимумы</span>
+              <router-link to="/minimum" class="stretched-link"></router-link>
             </div>
           </div>
+        </div>
+        <div v-else class="text-center">
+          <img
+            src="@/assets/icons/plugin.svg"
+            alt=""
+            class="mt-5 mb-3"
+            width="80"
+          />
+          <div>Дополнительные плагины отключены</div>
         </div>
       </div>
     </div>
@@ -45,10 +65,16 @@
 <script lang="ts" setup>
 import Timetable from "../timetable/Timetable.vue";
 import Homework from "../homework/Homework.vue";
-import { onMounted, onUnmounted, ref } from "vue";
+import { computed, onMounted, onUnmounted, ref } from "vue";
 import Tab from "bootstrap/js/dist/tab";
 import HomeStudentTabs from "./HomeStudentTabs.vue";
 import { useRoute } from "vue-router";
+import { useStore } from "@/store";
+import { pluginEnabled, DiaryPlugins } from "@/utils/plugins";
+import DiaryPlugin from "../DiaryPlugin.vue";
+
+const store = useStore();
+const hasOtherPlugins = computed(() => pluginEnabled(DiaryPlugins.MINIMUM));
 
 let xDown: null | number = null;
 let yDown: null | number = null;
