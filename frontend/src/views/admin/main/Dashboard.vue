@@ -14,15 +14,8 @@
     </div>
     <div>
       <div class="card card-body mb-3">
-        <div
-          class="d-flex flex-column align-items-center justify-content-center"
-        >
-          <img
-            src="@/assets/icons/school.svg"
-            alt=""
-            height="70"
-            class="mb-2"
-          />
+        <div class="d-flex flex-column align-items-center justify-content-center">
+          <img src="@/assets/icons/school.svg" alt="" height="70" class="mb-2" />
           <!-- <div class="fw-bold">{{ school.name }}</div> -->
         </div>
       </div>

@@ -1,21 +1,8 @@
 <template>
-  <div
-    class="toast"
-    role="alert"
-    aria-live="assertive"
-    aria-atomic="true"
-    ref="toast"
-  >
+  <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" ref="toast">
     <div class="toast-header">
-      <img
-        src="@/assets/icons/logo.svg"
-        class="rounded me-2"
-        alt="..."
-        width="20"
-      />
-      <strong class="me-auto">{{
-        notification.title ? notification.title : "Diary56x"
-      }}</strong>
+      <img src="@/assets/icons/logo.svg" class="rounded me-2" alt="..." width="20" />
+      <strong class="me-auto">{{ notification.title ? notification.title : "Diary56x" }}</strong>
       <small>{{ getTime(notification.created_at) }}</small>
       <button
         type="button"
@@ -30,10 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import {
-  APINotification,
-  markNotificationAsRead,
-} from "@/api/services/notifications";
+import { APINotification, markNotificationAsRead } from "@/api/services/notifications";
 import { onMounted, PropType, ref } from "vue";
 import Toast from "bootstrap/js/dist/toast";
 import { getMarked } from "@/utils/marked";

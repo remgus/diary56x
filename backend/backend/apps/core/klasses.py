@@ -1,8 +1,33 @@
+from rest_framework.serializers import ModelSerializer
+
+from .models import Klass
+from django.urls import path
 import django_filters
 from rest_framework.generics import ListAPIView, RetrieveAPIView
 
-from ..models import Klass
-from .serializers import KlassCompactSerializer, KlassSerializer
+
+class KlassSerializer(ModelSerializer):
+    """Serializer for `Klass` model.
+
+    Fields: `name`, `students`, `teachers`,
+    `head_teacher`, `description`, `subjects`
+
+    """
+
+    class Meta:
+        model = Klass
+        fields = "__all__"
+
+
+class KlassCompactSerializer(ModelSerializer):
+    """Serializer for `Klass` model.
+
+    Fields: `id`, `name`, `head_teacher`, `description`
+    """
+
+    class Meta:
+        model = Klass
+        fields = ["id", "name", "head_teacher", "description"]
 
 
 class KlassListAPIView(ListAPIView):
@@ -33,3 +58,9 @@ class KlassRetrieveAPIView(RetrieveAPIView):
 
     serializer_class = KlassSerializer
     queryset = Klass.objects.all()
+
+
+urlpatterns = [
+    path("", KlassListAPIView.as_view(), name="klass-list"),
+    path("<int:pk>", KlassRetrieveAPIView.as_view(), name="klass-detail"),
+]

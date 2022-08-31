@@ -1,10 +1,5 @@
 import { APINotification } from "@/api/services/notifications";
-import {
-  ActionContext,
-  CommitOptions,
-  Store as VuexStore,
-  DispatchOptions,
-} from "vuex";
+import { ActionContext, CommitOptions, Store as VuexStore, DispatchOptions } from "vuex";
 import { RootState } from "@/store";
 import { DiaryxConfig } from "@/api/services/config";
 
@@ -32,10 +27,7 @@ export enum DiaryMutationTypes {
 }
 
 export type Mutations<S = DiaryState> = {
-  [DiaryMutationTypes.SET_NOTIFICATIONS](
-    state: S,
-    notifications: APINotification[]
-  ): void;
+  [DiaryMutationTypes.SET_NOTIFICATIONS](state: S, notifications: APINotification[]): void;
   [DiaryMutationTypes.ADD_MESSAGE](state: S, message: Message): void;
   [DiaryMutationTypes.SET_CONFIG](state: S, config: DiaryxConfig): void;
 };
@@ -53,13 +45,9 @@ export interface Actions {
     message: Message
   ): Promise<void>;
 
-  [DiaryActionTypes.FETCH_NOTIFICATIONS]({
-    commit,
-  }: AugmentedActionContext): Promise<void>;
+  [DiaryActionTypes.FETCH_NOTIFICATIONS]({ commit }: AugmentedActionContext): Promise<void>;
 
-  [DiaryActionTypes.FETCH_CONFIG]({
-    commit,
-  }: AugmentedActionContext): Promise<void>;
+  [DiaryActionTypes.FETCH_CONFIG]({ commit }: AugmentedActionContext): Promise<void>;
 }
 
 export type Getters = {
@@ -68,10 +56,7 @@ export type Getters = {
   pluginEnabled: (state: DiaryState, name: string) => boolean;
 };
 
-export type DiaryStore<S = DiaryState> = Omit<
-  VuexStore<S>,
-  "getters" | "commit" | "dispatch"
-> & {
+export type DiaryStore<S = DiaryState> = Omit<VuexStore<S>, "getters" | "commit" | "dispatch"> & {
   commit<K extends keyof Mutations, P extends Parameters<Mutations[K]>[1]>(
     key: K,
     payload: P,

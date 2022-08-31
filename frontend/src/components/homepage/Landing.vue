@@ -2,26 +2,17 @@
   <div class="rt-wp container px-4 px-md-0">
     <div id="hero">
       <h1 class="display-2" id="slogan">
-        Электронный Дневник<br /><span class="parallax"
-          >Следующего Поколения</span
-        >
+        Электронный Дневник<br /><span class="parallax">Следующего Поколения</span>
       </h1>
-      <div class="description text-muted mt-4">
-        Наш сервис сделает вашу школьную жизнь лучше
-      </div>
+      <div class="description text-muted mt-4">Наш сервис сделает вашу школьную жизнь лучше</div>
       <div>
         <div class="btn btn-primary me-3">О проекте</div>
-        <router-link class="btn btn-outline-primary" to="/register"
-          >Начать</router-link
-        >
+        <router-link class="btn btn-outline-primary" to="/register">Начать</router-link>
       </div>
     </div>
     <div class="mx-md-5 gx-0 gx-md-5">
       <div class="d-none d-md-flex row align-items-center">
-        <div
-          v-for="header in headings"
-          class="col-12 col-md-4 text-larger mb-2"
-        >
+        <div v-for="header in headings" class="col-12 col-md-4 text-larger mb-2">
           {{ header }}
         </div>
       </div>
@@ -45,11 +36,7 @@
 </template>
 
 <script lang="ts" setup>
-const headings = [
-  "Современность и Безопасность",
-  "Доступность и Удобство",
-  "Открытость и Свобода",
-];
+const headings = ["Современность и Безопасность", "Доступность и Удобство", "Открытость и Свобода"];
 
 const descriptions = [
   "При разработке мы используем актуальные и надежные технологии - не беспокойтесь о том, что родители или одноклассники увидят ваши оценки без спроса",

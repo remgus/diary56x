@@ -14,11 +14,11 @@ interface ListMinimumsParams {
   grade?: number;
   subject?: string;
   quarter__number?: number;
-  page?: number
+  page?: number;
 }
 
 export const listMinimums = (
   params?: ListMinimumsParams
 ): Promise<AxiosResponse<Paginator<APIMinimum>>> => {
-  return API.axios.get("minimums", {params});
+  return API.axios.get("minimums", { params });
 };

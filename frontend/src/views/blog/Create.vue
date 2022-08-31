@@ -33,17 +33,8 @@
           @change="handleFileChange"
         />
       </div>
-      <markdown-editor
-        name="content"
-        ref="mdeRef"
-        label="Текст"
-        :options="editorOptions"
-      />
-      <button
-        class="btn btn-primary"
-        type="submit"
-        @click.prevent="createPostWrapper"
-      >
+      <markdown-editor name="content" ref="mdeRef" label="Текст" :options="editorOptions" />
+      <button class="btn btn-primary" type="submit" @click.prevent="createPostWrapper">
         Добавить
       </button>
     </form>

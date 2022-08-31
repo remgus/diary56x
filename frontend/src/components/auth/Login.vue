@@ -28,9 +28,7 @@
             </div>
 
             <div>
-              <button type="submit" class="btn btn-outline-primary w-100">
-                Войти
-              </button>
+              <button type="submit" class="btn btn-outline-primary w-100">Войти</button>
             </div>
 
             <div class="text-center mt-3">
@@ -114,10 +112,7 @@ const processLogin = (): void => {
       if (error.response?.status === 401) {
         authError.value = error;
         validateForm(credentials.value);
-        if (
-          authError.value !== null &&
-          !credentials.value.password.errorMessage
-        ) {
+        if (authError.value !== null && !credentials.value.password.errorMessage) {
           credentials.value.password.isBound = false;
         }
       }

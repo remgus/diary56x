@@ -18,9 +18,7 @@ import FormSelect, { SelectOption } from "./forms/FormSelect.vue";
 const store = useStore();
 const klassOptions = ref<SelectOption[]>([]);
 const selectedKlass = ref<number | null>(
-  store.getters.inKlass
-    ? (store.state.auth.user?.options_student?.klass as number)
-    : null
+  store.getters.inKlass ? (store.state.auth.user?.options_student?.klass?.id as number) : null
 );
 
 const emit = defineEmits(["change"]);

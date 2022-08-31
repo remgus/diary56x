@@ -1,11 +1,14 @@
 from rest_framework import serializers
 
+from ..core.klasses import KlassCompactSerializer
 from . import models
 from .utils import UserTypes
 
 
 class StudentSerializer(serializers.ModelSerializer):
     """Serializer for `Student` model."""
+
+    klass = KlassCompactSerializer()
 
     class Meta:
         model = models.Student

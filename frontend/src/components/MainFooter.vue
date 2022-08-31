@@ -30,17 +30,13 @@
             >
           </div>
         </div>
-        <div
-          class="col-12 col-md-4 gsans mb-4 mb-md-0 ms-md-5 ps-md-5 order-0 order-md-1"
-        >
+        <div class="col-12 col-md-4 gsans mb-4 mb-md-0 ms-md-5 ps-md-5 order-0 order-md-1">
           <div class="row">
             <div class="col-12">
               <router-link to="/blog" class="link-dark">Блог</router-link>
             </div>
             <div class="col-12">
-              <router-link to="/about" class="link-dark"
-                >О&nbsp;проекте</router-link
-              >
+              <router-link to="/about" class="link-dark">О&nbsp;проекте</router-link>
             </div>
             <div class="col-12">
               <router-link to="/about" class="link-dark">Справка</router-link>
@@ -59,11 +55,7 @@
             >
               <img src="@/assets/icons/social/gh.svg" alt="" />
             </a>
-            <a
-              href="https://vk.com/diary56x"
-              class="link-dark me-3"
-              target="_blank"
-            >
+            <a href="https://vk.com/diary56x" class="link-dark me-3" target="_blank">
               <img src="@/assets/icons/social/vk.svg" alt="" />
             </a>
             <a href="https://t.me/atk_diaryx" class="link-dark" target="_blank">

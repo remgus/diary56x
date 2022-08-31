@@ -30,10 +30,7 @@
         <div class="atk-error" v-if="boxError">
           {{ boxError }}
         </div>
-        <div
-          v-if="droppedFiles.length"
-          class="mt-3 d-flex flex-column align-items-center filelist"
-        >
+        <div v-if="droppedFiles.length" class="mt-3 d-flex flex-column align-items-center filelist">
           <table class="table table-sm">
             <tbody>
               <tr v-for="file in droppedFiles" :key="file.name">
@@ -143,12 +140,7 @@ interface Props {
   accept?: string;
 }
 
-const {
-  name,
-  multiple = false,
-  isRequired = false,
-  accept = "",
-} = defineProps<Props>();
+const { name, multiple = false, isRequired = false, accept = "" } = defineProps<Props>();
 
 defineExpose({ validate, droppedFiles, clearInput });
 </script>
@@ -170,8 +162,7 @@ defineExpose({ validate, droppedFiles, clearInput });
   outline: var(--bs-primary) dashed 2px;
   outline-offset: -10px;
   padding: 3rem;
-  -webkit-transition: outline-offset 0.15s ease-in-out,
-    background-color 0.15s linear;
+  -webkit-transition: outline-offset 0.15s ease-in-out, background-color 0.15s linear;
   transition: outline-offset 0.15s ease-in-out, background-color 0.15s linear;
 }
 

@@ -1,8 +1,6 @@
 <template>
   <div class="form-input-wrapper">
-    <label :for="prefix + '_' + name" v-if="label" class="form-label">{{
-      label
-    }}</label>
+    <label :for="prefix + '_' + name" v-if="label" class="form-label">{{ label }}</label>
     <select
       :name="name"
       :id="prefix + '_' + name"
@@ -26,7 +24,7 @@
         :value="option.value ? option.value : index"
         :selected="option.selected"
         v-for="(option, index) in options"
-        :key="option"
+        :key="option.value"
       >
         {{ option.label }}
       </option>

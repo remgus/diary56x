@@ -5,14 +5,13 @@
         <div class="card my-3">
           <div class="card-body" id="auth-form-app">
             <h2 class="card-title text-center">Регистрация</h2>
-            <div class="d-flex flex-row align-items-center mb-3">
+            <!-- <div class="d-flex flex-row align-items-center mb-3">
               <i class="bi bi-exclamation-circle-fill text-danger me-3"></i>
               <div>
-                Пожалуйста, внимательно проверьте предоставленные данные перед
-                завершением регистрации - для их последующего изменения
-                потребуется время
+                Пожалуйста, внимательно проверьте предоставленные данные перед завершением
+                регистрации - для их последующего изменения потребуется время
               </div>
-            </div>
+            </div> -->
             <div class="mb-3">
               <form-input
                 name="email"
@@ -77,18 +76,11 @@
             </div>
 
             <div class="text-center">
-              <button
-                type="submit"
-                class="btn btn-outline-primary"
-                @click.prevent="register"
-              >
+              <button type="submit" class="btn btn-outline-primary" @click.prevent="register">
                 Зарегистрироваться
               </button>
             </div>
           </div>
-        </div>
-        <div class="card card-body">
-          <div>Уже есть аккаунт?</div>
         </div>
       </div>
     </div>
@@ -98,8 +90,7 @@
 <script lang="ts" setup>
 import { FormBuilder, handleBackendError, validateForm } from "@/utils/forms";
 import { reactive, ref } from "vue";
-import { FormInput, Loading, FormSelect } from "@/components";
-import { SelectOption } from "@/components/forms/FormSelect.vue";
+import { FormInput } from "@/components";
 import { CreateStudentData, createStudent } from "@/api/services/auth";
 import { useRouter } from "vue-router";
 import { AxiosError } from "axios";
@@ -138,10 +129,6 @@ const data = reactive<FormBuilder>({
       },
     },
   },
-  school: {
-    value: "",
-    validators: ["required"],
-  },
 });
 const isBound = ref(false);
 
@@ -166,8 +153,7 @@ const register = () => {
       handleBackendError(e, {
         "400": {
           email: () => {
-            data.email.errorMessage =
-              "Пользователь с таким email уже существует";
+            data.email.errorMessage = "Пользователь с таким email уже существует";
           },
         },
       });

@@ -11,36 +11,17 @@
 
     <div class="row justify-content-center mb-3">
       <div class="col-12 col-md-7">
-        <h2 class="heading">
-          Расписание
-          {{ curClass?.name }} класса
-        </h2>
+        <h2 class="heading">Расписание {{ store.getters.klass?.name }} класса</h2>
       </div>
     </div>
-    
-    <loading :is-loading="curClass === null">
-      <timetable-edit v-if="curClass !== null" :klass="String(curClass.id)" />
-    </loading>
+
+    <timetable-edit v-if="store.getters.klass" :klass="String(store.getters.klass.id)" />
   </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, onMounted, ref } from "vue";
-import { APIKlass, getClass, listClasses } from "@/api/services/klasses";
 import { useStore } from "@/store";
-
 import TimetableEdit from "@/components/TimetableEdit.vue";
-import Loading from "../Loading.vue";
 
 const store = useStore();
-const user = computed(() => store.state.auth.user);
-
-// Class that is currently selected
-const curClass = ref<null | APIKlass>(null);
-
-onMounted(() => {
-  if (store.getters.isStudent && store.getters.klass) {
-    getClass(store.getters.klass).then((res) => (curClass.value = res.data));
-  }
-});
 </script>

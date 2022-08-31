@@ -24,11 +24,7 @@
       {{ error }}
     </div>
 
-    <button
-      v-if="clearButton"
-      class="btn btn-outline-secondary"
-      @click.prevent="clearValue"
-    >
+    <button v-if="clearButton" class="btn btn-outline-secondary" @click.prevent="clearValue">
       <i class="bi bi-x-lg"></i>
     </button>
 

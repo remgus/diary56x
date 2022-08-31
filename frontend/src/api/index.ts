@@ -35,9 +35,7 @@ export const noAuthInstance = axios.create({
 instance.interceptors.request.use(
   (config: AxiosRequestConfig): AxiosRequestConfig => {
     if (!config?.headers) {
-      throw new Error(
-        `Expected 'config' and 'config.headers' not to be undefined`
-      );
+      throw new Error(`Expected 'config' and 'config.headers' not to be undefined`);
     }
     const token = getLocalData(LocalData.ACCESS_TOKEN);
     if (token) {
@@ -58,8 +56,7 @@ const refreshAuthLogic = (failedRequest: AxiosError) =>
     .then((response) => {
       setLocalData(LocalData.ACCESS_TOKEN, response.data.access);
       if (failedRequest.response?.config.headers) {
-        failedRequest.response.config.headers["Authorization"] =
-          "Bearer " + response.data.access;
+        failedRequest.response.config.headers["Authorization"] = "Bearer " + response.data.access;
       }
       return Promise.resolve();
     })

@@ -49,25 +49,19 @@ export const inBuiltValidators: Validators = {
     errorMessage: "Это поле обязательно",
   },
   email: {
-    check: (value: string) =>
-      /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value),
+    check: (value: string) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value),
     errorMessage: "Некорректный адрес электронной почты",
   },
   slug: {
     check: (value: string) => /^[a-z0-9-]+$/i.test(value) && value.length > 2,
-    errorMessage:
-      "Некорректный формат ссылки - используйте только буквы, цифры и тире",
+    errorMessage: "Некорректный формат ссылки - используйте только буквы, цифры и тире",
   },
   password1: {
     check: (value: string) =>
       Boolean(
-        value.length >= 8 &&
-          value.length <= 32 &&
-          /[A-Za-z]/i.test(value) &&
-          /[0-9]/i.test(value)
+        value.length >= 8 && value.length <= 32 && /[A-Za-z]/i.test(value) && /[0-9]/i.test(value)
       ),
-    errorMessage:
-      "Пароль должен быть от 8 до 32 символов, содержать буквы и цифры",
+    errorMessage: "Пароль должен быть от 8 до 32 символов, содержать буквы и цифры",
   },
 };
 
@@ -75,10 +69,7 @@ export const inBuiltValidators: Validators = {
  * Validates a field
  * @param data Field to validate
  */
-export const validateField = (
-  data: FormDataField,
-  state: FormBuilder
-): boolean => {
+export const validateField = (data: FormDataField, state: FormBuilder): boolean => {
   const { validators, transform, checkers } = data;
   let value = data.value;
   data.errorMessage = "";
@@ -114,6 +105,7 @@ export const validateForm = (data: FormBuilder, makeBound = true): boolean => {
   let isValid = true;
   Object.keys(data).forEach((key) => {
     const res = validateField(data[key], data);
+    // console.log(key, res);
     isValid = res && isValid;
     if (makeBound) data[key].isBound = true;
   });
@@ -168,10 +160,7 @@ interface BackendErrorRules {
   [key: string]: ErrorRule;
 }
 
-export const handleBackendError = (
-  error: AxiosError,
-  rules: BackendErrorRules
-): void => {
+export const handleBackendError = (error: AxiosError, rules: BackendErrorRules): void => {
   if (!error.response) return;
   for (const rule in rules) {
     // Error status code matches a rule

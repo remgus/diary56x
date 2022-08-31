@@ -19,11 +19,7 @@
 
       <div class="row justify-content-center mb-4">
         <div class="col col-md-9 col-lg-6">
-          <form-select
-            v-model="selectedKlass"
-            :options="klassOptions"
-            name="klass"
-          />
+          <form-select v-model="selectedKlass" :options="klassOptions" name="klass" />
         </div>
       </div>
 

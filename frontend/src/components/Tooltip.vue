@@ -22,12 +22,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div
-    data-bs-toggle="tooltip"
-    :data-bs-placement="placement"
-    :title="title"
-    class="vue-tooltip"
-  >
+  <div data-bs-toggle="tooltip" :data-bs-placement="placement" :title="title" class="vue-tooltip">
     <slot></slot>
   </div>
 </template>

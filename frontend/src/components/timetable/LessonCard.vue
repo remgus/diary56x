@@ -13,10 +13,7 @@
     </div>
     <div v-for="(lesson, index) in day.lessons" :key="lesson[0].id">
       <div class="row mt-1">
-        <div
-          v-if="!compactMode"
-          class="col-2 text-center"
-        >
+        <div v-if="!compactMode" class="col-2 text-center">
           <div v-if="lesson[0].subject.icon" class="subject-icon-wrapper">
             <img class="subject-icon" :src="lesson[0].subject.icon" alt="" />
           </div>
@@ -37,9 +34,7 @@
         </div>
         <div class="col-auto text-end">
           <div v-if="lesson.length === 1">#{{ lesson[0].n }}</div>
-          <div v-else>
-            #{{ lesson[0].n }} - {{ lesson[lesson.length - 1].n }}
-          </div>
+          <div v-else>#{{ lesson[0].n }} - {{ lesson[lesson.length - 1].n }}</div>
           <div>
             {{ renderTime(lesson[0].start) }} -
             {{ renderTime(lesson[lesson.length - 1].end) }}
@@ -66,7 +61,7 @@ import { useStore } from "@/store";
 
 const store = useStore();
 
-const compactMode = computed(() => store.state.settings.timetable_compact_mode)
+const compactMode = computed(() => store.state.settings.timetable_compact_mode);
 
 defineProps({
   day: {

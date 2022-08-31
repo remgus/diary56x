@@ -1,23 +1,15 @@
 <template>
-  <div
-    class="d-flex flex-row flex-md-column justify-content-center justify-content-md-start"
-  >
+  <div class="d-flex flex-row flex-md-column justify-content-center justify-content-md-start">
     <button
       class="nav-link active text-start"
       data-bs-toggle="pill"
       data-bs-target="#timetable-pane"
     >
-      <i class="bi-clock me-0 me-md-3"></i
-      ><span class="d-none d-md-inline">Расписание</span>
+      <i class="bi-clock me-0 me-md-3"></i><span class="d-none d-md-inline">Расписание</span>
     </button>
 
-    <button
-      class="nav-link text-start"
-      data-bs-toggle="pill"
-      data-bs-target="#homework-pane"
-    >
-      <i class="bi-book me-0 me-md-3"></i
-      ><span class="d-none d-md-inline">Домашнее задание</span>
+    <button class="nav-link text-start" data-bs-toggle="pill" data-bs-target="#homework-pane">
+      <i class="bi-book me-0 me-md-3"></i><span class="d-none d-md-inline">Домашнее задание</span>
     </button>
 
     <!-- <router-link to="/" class="nav-link disabled">
@@ -40,13 +32,8 @@
       ><span class="d-none d-md-inline">Успеваемость</span>
     </a> -->
 
-    <button
-      class="nav-link text-start"
-      data-bs-toggle="pill"
-      data-bs-target="#other-pane"
-    >
-      <i class="bi-three-dots me-0 me-md-3"></i
-      ><span class="d-none d-md-inline">Прочее</span>
+    <button class="nav-link text-start" data-bs-toggle="pill" data-bs-target="#other-pane">
+      <i class="bi-three-dots me-0 me-md-3"></i><span class="d-none d-md-inline">Прочее</span>
     </button>
   </div>
 </template>

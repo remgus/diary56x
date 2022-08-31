@@ -21,9 +21,7 @@
         <button class="btn btn-outline-danger me-2" @click="showConfirmDialog">
           <i class="bi-trash me-2"></i>Удалить
         </button>
-        <button class="btn btn-outline-primary">
-          <i class="bi-pen me-2"></i>Изменить
-        </button>
+        <button class="btn btn-outline-primary"><i class="bi-pen me-2"></i>Изменить</button>
       </div>
 
       <div class="container justify-content-center w-75">

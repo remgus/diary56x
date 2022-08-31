@@ -1,8 +1,6 @@
 import { SettingsState } from "@/store/modules/settings/types";
 
-export type ValuesFunc<T extends keyof SettingsState> = (
-  checked: boolean
-) => SettingsState[T];
+export type ValuesFunc<T extends keyof SettingsState> = (checked: boolean) => SettingsState[T];
 
 export interface CheckboxSettingOptions<T extends keyof SettingsState = any>
   extends BaseSettingOptions {

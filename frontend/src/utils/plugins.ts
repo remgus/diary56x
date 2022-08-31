@@ -10,8 +10,7 @@ export enum DiaryPlugins {
 export const pluginEnabled = (name: string): boolean => {
   const state = store.state.diary;
   return state.config && state.config.plugins.length
-    ? state.config.plugins.includes(name) ||
-        state.config.plugins[0] == "__all__"
+    ? state.config.plugins.includes(name) || state.config.plugins[0] == "__all__"
     : false;
 };
 
@@ -19,7 +18,6 @@ export const pluginsEnabled = (...names: string[]): boolean => {
   const state = store.state.diary;
   if (!state.config || !state.config.plugins.length) return false;
   if (state.config?.plugins[0] == "__all__") return true;
-  for (const name of names)
-    if (!state.config.plugins.includes(name)) return false;
+  for (const name of names) if (!state.config.plugins.includes(name)) return false;
   return true;
 };

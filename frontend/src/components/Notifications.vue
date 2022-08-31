@@ -14,11 +14,7 @@
       <div v-if="notifications.length">
         <div class="mb-3">
           <tooltip title="Отметить всё как прочитанное" placement="right">
-            <button
-              class="btn btn-outline-dark btn-sm"
-              type="button"
-              @click="markAllAsRead"
-            >
+            <button class="btn btn-outline-dark btn-sm" type="button" @click="markAllAsRead">
               <i class="bi-list-check"></i>
             </button>
           </tooltip>
@@ -40,14 +36,10 @@
                     class="bi-eye text-secondary me-2"
                     @click="markAsRead(msg.id)"
                   ></i>
-                  <i
-                    class="bi-x-lg text-danger"
-                    @click="showDeleteDialog(msg.id)"
-                  ></i>
+                  <i class="bi-x-lg text-danger" @click="showDeleteDialog(msg.id)"></i>
                 </div>
                 <div class="mb-1 text-muted">
-                  <span v-if="!msg.read" class="badge bg-success me-2"
-                    >Новое</span
+                  <span v-if="!msg.read" class="badge bg-success me-2">Новое</span
                   >{{ toShortDateTime(new Date(msg.created_at)) }}
                 </div>
                 <div class="fw-bold title" v-if="msg.title">
@@ -60,10 +52,7 @@
         </div>
 
         <div v-if="hasMore">
-          <button
-            class="btn btn-outline-primary btn-block"
-            @click="retrieveNotifications"
-          >
+          <button class="btn btn-outline-primary btn-block" @click="retrieveNotifications">
             Загрузить еще
           </button>
         </div>
@@ -133,9 +122,7 @@ const deleteN = () => {
   if (!notificationToDelete.value) return;
 
   deleteNotification(notificationToDelete.value).then(() => {
-    notifications.value = notifications.value.filter(
-      (n) => n.id !== notificationToDelete.value
-    );
+    notifications.value = notifications.value.filter((n) => n.id !== notificationToDelete.value);
     notificationToDelete.value = null;
   });
 };

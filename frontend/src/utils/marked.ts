@@ -45,12 +45,9 @@ function renderMathsExpression(expr: string) {
       html = katex.renderToString(expr, { throwOnError: false });
     } catch (e) {
       console.error(e);
-    } 
+    }
     if (displayStyle && html) {
-      html = html.replace(
-        /class="katex"/g,
-        'class="katex katex-block" style="display: block;"'
-      );
+      html = html.replace(/class="katex"/g, 'class="katex katex-block" style="display: block;"');
     }
     return html;
   }
@@ -73,10 +70,8 @@ const markedOptions: marked.MarkedOptions = {
 
 export const getMarked = (content: string, inline = false): string => {
   let sanitizedContent = DomPurify.sanitize(content);
-  sanitizedContent = new DOMParser().parseFromString(
-    sanitizedContent,
-    "text/html"
-  ).documentElement.textContent as string;
+  sanitizedContent = new DOMParser().parseFromString(sanitizedContent, "text/html").documentElement
+    .textContent as string;
   if (inline) return marked.parseInline(sanitizedContent, markedOptions);
   return marked(sanitizedContent, markedOptions);
 };

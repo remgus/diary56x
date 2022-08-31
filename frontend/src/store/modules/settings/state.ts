@@ -10,5 +10,5 @@ export const settingsState: SettingsState = {
   timetable_compact_mode: false,
   homework_edit_after_add: false,
   homework_show_copy_code: true,
-  homework_show_file_size: true
+  homework_show_file_size: true,
 };

@@ -10,31 +10,16 @@
       </nav>
     </div>
     <div class="col-12 col-md-8 col-lg-9 tab-content mb-5 mb-md-0">
-      <div
-        class="tab-pane fade"
-        id="timetable-pane"
-        role="tabpanel"
-        tabindex="0"
-      >
+      <div class="tab-pane fade" id="timetable-pane" role="tabpanel" tabindex="0">
         <diary-plugin :plugin="DiaryPlugins.TIMETABLE">
           <timetable />
         </diary-plugin>
       </div>
-      <div
-        class="tab-pane fade"
-        id="homework-pane"
-        role="tabpanel"
-        tabindex="0"
-      >
-        <diary-plugin :plugin="DiaryPlugins.HOMEWORK"
-          ><homework
-        /></diary-plugin>
+      <div class="tab-pane fade" id="homework-pane" role="tabpanel" tabindex="0">
+        <diary-plugin :plugin="DiaryPlugins.HOMEWORK"><homework /></diary-plugin>
       </div>
       <div class="tab-pane fade" id="other-pane" role="tabpanel" tabindex="0">
-        <div
-          class="row justify-content-center justify-content-sm-start"
-          v-if="hasOtherPlugins"
-        >
+        <div class="row justify-content-center justify-content-sm-start" v-if="hasOtherPlugins">
           <div class="col-8 col-sm-6 col-md-6 col-lg-4 col-xl-3">
             <div
               class="card card-body text-center card-shadow"
@@ -49,12 +34,7 @@
           </div>
         </div>
         <div v-else class="text-center">
-          <img
-            src="@/assets/icons/plugin.svg"
-            alt=""
-            class="mt-5 mb-3"
-            width="80"
-          />
+          <img src="@/assets/icons/plugin.svg" alt="" class="mt-5 mb-3" width="80" />
           <div>Дополнительные плагины отключены</div>
         </div>
       </div>
@@ -133,9 +113,9 @@ onMounted(() => {
 
   if (!route.query.section) {
     currentTab.value = 0;
-    const q = (
-      (tabs.value[currentTab.value] as any)._element as HTMLElement
-    ).getAttribute("data-bs-target") as string;
+    const q = ((tabs.value[currentTab.value] as any)._element as HTMLElement).getAttribute(
+      "data-bs-target"
+    ) as string;
     document.querySelector(q)?.classList.add("show", "active");
   } else currentTab.value = tabnames[String(route.query.section)];
 

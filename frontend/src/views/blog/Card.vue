@@ -11,13 +11,7 @@
 
       <div class="col-auto">
         <div class="w-100">
-          <img
-            :src="postImage"
-            class="mr-3 post-image"
-            alt=""
-            height="70"
-            width="70"
-          />
+          <img :src="postImage" class="mr-3 post-image" alt="" height="70" width="70" />
         </div>
       </div>
     </li>

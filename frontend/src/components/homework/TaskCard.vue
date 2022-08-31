@@ -40,9 +40,7 @@
               @click="openFile(file.file)"
             >
               <td>
-                <i
-                  class="text-primary ms-2 bi-file-earmark-arrow-down-fill"
-                ></i>
+                <i class="text-primary ms-2 bi-file-earmark-arrow-down-fill"></i>
               </td>
               <td class="link-primary file-name">
                 {{ getFileName(file.file) }}
@@ -59,13 +57,10 @@
       </div>
 
       <div v-if="editing" class="position-absolute top-0 end-0">
-        <button class="btn btn-sm btn-outline-dark me-1">
+        <button class="btn btn-sm btn-outline-dark me-1" @click="openEditPage(task)">
           <i class="bi-pencil"></i>
         </button>
-        <button
-          class="btn btn-sm btn-outline-danger"
-          @click="showConfirmDialog"
-        >
+        <button class="btn btn-sm btn-outline-danger" @click="showConfirmDialog">
           <i class="bi-trash"></i>
         </button>
       </div>
@@ -105,15 +100,14 @@ interface Props {
   index: number;
   editing?: boolean;
   deleteCallback: () => void;
+  openEditPage: (task: APIHomework) => void;
 }
 
 const contentEl = ref<null | HTMLElement>(null);
 const clipboards = ref<ClipboardJS[]>([]);
 const store = useStore();
 
-const hideSubject = computed(
-  () => store.state.settings.homework_hide_subject_icons
-);
+const hideSubject = computed(() => store.state.settings.homework_hide_subject_icons);
 
 const getDateBadge = (date: string) => {
   let d = new Date(date);
@@ -153,11 +147,7 @@ onMounted(() => {
       btnWrapper.setAttribute("data-clipboard-target", `#code-block-${index}`);
       btnWrapper.classList.add("code-copy-btn-wrapper");
 
-      let walker = document.createTreeWalker(
-        btnWrapper,
-        NodeFilter.SHOW_TEXT,
-        null
-      );
+      let walker = document.createTreeWalker(btnWrapper, NodeFilter.SHOW_TEXT, null);
 
       let node;
       while ((node = walker.nextNode())) {
@@ -180,13 +170,7 @@ onUnmounted(() => {
 
 const { showConfirmDialog, confirmDialog } = useConfirmDialog();
 
-const {
-  subject,
-  task,
-  showDate = false,
-  editing = false,
-  deleteCallback,
-} = defineProps<Props>();
+const { subject, task, showDate = false, editing = false, deleteCallback } = defineProps<Props>();
 </script>
 
 <style scoped>

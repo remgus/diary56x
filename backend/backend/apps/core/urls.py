@@ -9,7 +9,7 @@ router.register("quarters", QuarterViewSet)
 router.register("groups", GroupViewSet)
 
 urlpatterns = [
-    path("klasses/", include("backend.apps.core.klasses.urls")),
+    path("klasses/", include("backend.apps.core.klasses")),
     path("subjects/", include("backend.apps.core.subjects")),
     path("", include("backend.apps.core.config")),
     path("", include(router.urls)),

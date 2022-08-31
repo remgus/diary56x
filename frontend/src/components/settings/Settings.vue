@@ -4,19 +4,10 @@
       <div class="col-12 col-md-10 col-lg-8">
         <h1 class="mb-3">Настройки</h1>
 
-        <div
-          v-if="pluginsEnabled(DiaryPlugins.HOMEWORK, DiaryPlugins.TIMETABLE)"
-        >
-          <div
-            class="card card-body mb-3"
-            v-if="pluginEnabled(DiaryPlugins.HOMEWORK)"
-          >
+        <div v-if="pluginsEnabled(DiaryPlugins.HOMEWORK, DiaryPlugins.TIMETABLE)">
+          <div class="card card-body mb-3" v-if="pluginEnabled(DiaryPlugins.HOMEWORK)">
             <h2 class="mb-3 card-title">Домашнее задание</h2>
-            <div
-              v-if="
-                store.getters.isMonitor && pluginEnabled(DiaryPlugins.MONITORS)
-              "
-            >
+            <div v-if="store.getters.isMonitor && pluginEnabled(DiaryPlugins.MONITORS)">
               <VuexSetting :options="homework_monitor_mode_default_options" />
               <hr class="mt-0 mb-2" />
               <VuexSetting :options="homework_edit_after_add_options" />
@@ -34,10 +25,7 @@
             <VuexSetting :options="homework_show_file_size_options" />
           </div>
 
-          <div
-            class="card card-body"
-            v-if="pluginEnabled(DiaryPlugins.TIMETABLE)"
-          >
+          <div class="card card-body" v-if="pluginEnabled(DiaryPlugins.TIMETABLE)">
             <h2 class="mb-3 card-title">Расписание</h2>
             <VuexSetting :options="timetable_show_today_tomorrow_options" />
             <hr class="mt-0 mb-2" />
@@ -47,12 +35,7 @@
           </div>
         </div>
         <div v-else class="text-center">
-          <img
-            src="@/assets/icons/plugin.svg"
-            alt=""
-            class="mt-5 mb-3"
-            width="80"
-          />
+          <img src="@/assets/icons/plugin.svg" alt="" class="mt-5 mb-3" width="80" />
           <div>Настраиваемые плагины отключены</div>
         </div>
       </div>
@@ -78,28 +61,25 @@ const homework_monitor_mode_default_options: CheckboxSettingOptions<"homework_mo
     special: true,
   };
 
-const homework_max_page_count_options: CheckboxSettingOptions<"homework_limit_tasks"> =
-  {
-    name: "homework_limit_tasks",
-    label: "Уменьшить отображаемое количество заданий",
-    help: "Влияет на скорость загрузки",
-    type: "switch",
-  };
+const homework_max_page_count_options: CheckboxSettingOptions<"homework_limit_tasks"> = {
+  name: "homework_limit_tasks",
+  label: "Уменьшить отображаемое количество заданий",
+  help: "Влияет на скорость загрузки",
+  type: "switch",
+};
 
-const homework_hide_subject_icons_options: CheckboxSettingOptions<"homework_hide_subject_icons"> =
-  {
-    name: "homework_hide_subject_icons",
-    label: "Скрыть иконки предметов",
-    type: "switch",
-  };
+const homework_hide_subject_icons_options: CheckboxSettingOptions<"homework_hide_subject_icons"> = {
+  name: "homework_hide_subject_icons",
+  label: "Скрыть иконки предметов",
+  type: "switch",
+};
 
-const homework_dates_preview_options: CheckboxSettingOptions<"homework_hide_subject_icons"> =
-  {
-    name: "homework_dates_preview",
-    label: "Предпросмотр домашнего задания в календаре",
-    help: "При поиске показывает, на какие даты задано д/з",
-    type: "switch",
-  };
+const homework_dates_preview_options: CheckboxSettingOptions<"homework_hide_subject_icons"> = {
+  name: "homework_dates_preview",
+  label: "Предпросмотр домашнего задания в календаре",
+  help: "При поиске показывает, на какие даты задано д/з",
+  type: "switch",
+};
 
 const timetable_show_today_tomorrow_options: CheckboxSettingOptions<"timetable_show_today_tomorrow"> =
   {
@@ -109,40 +89,35 @@ const timetable_show_today_tomorrow_options: CheckboxSettingOptions<"timetable_s
     type: "switch",
   };
 
-const timetable_group_pairs_options: CheckboxSettingOptions<"timetable_group_pairs"> =
-  {
-    name: "timetable_group_pairs",
-    label: "Группировать парные уроки",
-    type: "switch",
-  };
+const timetable_group_pairs_options: CheckboxSettingOptions<"timetable_group_pairs"> = {
+  name: "timetable_group_pairs",
+  label: "Группировать парные уроки",
+  type: "switch",
+};
 
-const timetable_hide_subject_icons_options: CheckboxSettingOptions<"timetable_compact_mode"> =
-  {
-    name: "timetable_compact_mode",
-    label: "Скрыть иконки предметов",
-    type: "switch",
-  };
+const timetable_hide_subject_icons_options: CheckboxSettingOptions<"timetable_compact_mode"> = {
+  name: "timetable_compact_mode",
+  label: "Скрыть иконки предметов",
+  type: "switch",
+};
 
-const homework_edit_after_add_options: CheckboxSettingOptions<"homework_edit_after_add"> =
-  {
-    name: "homework_edit_after_add",
-    label: "Выключать режим редактирования после добавления задания",
-    type: "switch",
-    special: true,
-  };
+const homework_edit_after_add_options: CheckboxSettingOptions<"homework_edit_after_add"> = {
+  name: "homework_edit_after_add",
+  label: "Выключать режим редактирования после добавления задания",
+  type: "switch",
+  special: true,
+};
 
-const homework_show_copy_code_options: CheckboxSettingOptions<"homework_show_copy_code"> =
-  {
-    name: "homework_show_copy_code",
-    label: "Показывать кнопку для копирования блоков кода",
-    type: "switch",
-  };
-const homework_show_file_size_options: CheckboxSettingOptions<"homework_show_file_size"> =
-  {
-    name: "homework_show_file_size",
-    label: "Показывать размер прикрепленных к заданию файлов",
-    type: "switch",
-  };
+const homework_show_copy_code_options: CheckboxSettingOptions<"homework_show_copy_code"> = {
+  name: "homework_show_copy_code",
+  label: "Показывать кнопку для копирования блоков кода",
+  type: "switch",
+};
+const homework_show_file_size_options: CheckboxSettingOptions<"homework_show_file_size"> = {
+  name: "homework_show_file_size",
+  label: "Показывать размер прикрепленных к заданию файлов",
+  type: "switch",
+};
 </script>
 
 <style>

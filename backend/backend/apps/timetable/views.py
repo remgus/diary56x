@@ -1,4 +1,11 @@
 from backend.apps.core.models import Klass
+from backend.permissions import (
+    IsAdminPermission,
+    IsAuthenticatedReadonlyPermission,
+    IsMonitorStudentPermission,
+    IsStudentPermission,
+    IsAuthenticated,
+)
 from django.shortcuts import get_object_or_404
 from rest_framework import status
 from rest_framework.generics import (
@@ -23,6 +30,7 @@ class BulkCreateLessonsAPIView(CreateAPIView):
     """Create multiple lessons."""
 
     serializer_class = CreateLessonsSerializer
+    permission_classes = [IsAdminPermission | IsMonitorStudentPermission]
 
     def create(self, request):
         """Create multiple timetable records."""
@@ -37,6 +45,7 @@ class TimetableAPIView(ListCreateAPIView):
 
     pagination_class = None
     serializer_class = LessonSerializer
+    permission_classes = [IsStudentPermission | IsAdminPermission]
 
     def get_queryset(self):
         """Return timetable for klass."""
@@ -49,6 +58,7 @@ class BulkDeleteLessonsAPIView(DestroyAPIView):
 
     queryset = TimetableLesson.objects.all()
     serializer_class = DeleteLessonSerializer
+    permission_classes = [IsAdminPermission | IsMonitorStudentPermission]
 
     def destroy(self, request, *args, **kwargs):
         """Delete multiple lessons."""
@@ -73,6 +83,7 @@ class BulkDeleteLessonsAPIView(DestroyAPIView):
 class ListBellsAPIView(ListAPIView):
     """List bells."""
 
+    permission_classes = [IsAuthenticated | IsAdminPermission | IsMonitorStudentPermission]
     serializer_class = BellSerializer
     queryset = Bell.objects.all()
 
@@ -80,5 +91,8 @@ class ListBellsAPIView(ListAPIView):
 class BellAPIView(RetrieveUpdateDestroyAPIView):
     """Retrieve, update or delete a bell."""
 
+    permission_classes = [
+        IsAuthenticatedReadonlyPermission | IsAdminPermission | IsMonitorStudentPermission
+    ]
     queryset = Bell.objects.all()
     serializer_class = BellSerializer

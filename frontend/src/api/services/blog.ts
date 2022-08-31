@@ -34,9 +34,7 @@ export enum BlogAPIURLS {
   DELETE = "blog/",
 }
 
-export const listPosts = (
-  params?: BlogListParams
-): Promise<AxiosResponse<Paginator<APIPost>>> => {
+export const listPosts = (params?: BlogListParams): Promise<AxiosResponse<Paginator<APIPost>>> => {
   return API.noAuthAxios.get<Paginator<APIPost>>(BlogAPIURLS.LIST, {
     params: params,
   });

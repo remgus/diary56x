@@ -14,9 +14,7 @@ interface ListSubjectsParams {
   klass?: number;
 }
 
-export const listSubjects = (
-  params?: ListSubjectsParams
-): Promise<AxiosResponse<APISubject[]>> => {
+export const listSubjects = (params?: ListSubjectsParams): Promise<AxiosResponse<APISubject[]>> => {
   return API.axios.get(SubjectsAPIEndpoint, { params });
 };
 

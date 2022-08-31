@@ -1,7 +1,7 @@
 from django.utils.timezone import datetime
 from rest_framework import serializers
 
-from ..core.models import Group, Klass, Subject
+from ..core.models import Group, Klass, Quarter, Subject
 
 # from ..core.lessons.serializers import LessonSerializer
 from .models import Homework, HomeworkAttachment
@@ -37,6 +37,11 @@ class CreateHomeworkSerializer(serializers.ModelSerializer):
     subject = serializers.PrimaryKeyRelatedField(queryset=Subject.objects.all())
     klass = serializers.PrimaryKeyRelatedField(queryset=Klass.objects.all())
     date = serializers.DateField()
+
+    def validate_date(self, value):
+        if Quarter.get_quarter_by_date(value) is None:
+            raise serializers.ValidationError("Homework can't be added on holidays")
+        return value
 
     class Meta:
         model = Homework

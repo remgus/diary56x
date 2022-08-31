@@ -42,28 +42,16 @@ export interface APITimetableDay {
   lessons: TimetableData[][];
 }
 
-export enum TimetableAPIURLS {
-  LIST = "timetable/",
-  BULK_DELETE = "timetable/bulk-delete/",
-  BULK_CREATE = "timetable/bulk-create/",
-}
-
-export const getTimetable = (
-  klass_id: number
-): Promise<AxiosResponse<APITimetableLesson[]>> => {
-  return API.axios.get(TimetableAPIURLS.LIST + klass_id);
+export const getTimetable = (klass_id: number): Promise<AxiosResponse<APITimetableLesson[]>> => {
+  return API.axios.get(`timetable/${klass_id}`);
 };
 
-export const deleteTimetable = (
-  to_delete: APIDeleteLessons[]
-): Promise<AxiosResponse> => {
-  return API.axios.delete(TimetableAPIURLS.BULK_DELETE, {
+export const deleteTimetable = (to_delete: APIDeleteLessons[]): Promise<AxiosResponse> => {
+  return API.axios.delete("timetable/bulk-delete", {
     data: to_delete,
   });
 };
 
-export const createTimetable = (
-  lessons: APICreateLessons[]
-): Promise<AxiosResponse> => {
-  return API.axios.post(TimetableAPIURLS.BULK_CREATE, lessons);
+export const createTimetable = (lessons: APICreateLessons[]): Promise<AxiosResponse> => {
+  return API.axios.post("timetable/bulk-create", lessons);
 };

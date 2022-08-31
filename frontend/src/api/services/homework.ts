@@ -40,9 +40,7 @@ export const listHomework = (
   return API.axios.get("homework", { params });
 };
 
-export const addHomework = (
-  data: CreateHomeworkData
-): Promise<AxiosResponse<APIHomework>> => {
+export const addHomework = (data: CreateHomeworkData): Promise<AxiosResponse<APIHomework>> => {
   const fd = new FormData();
   fd.append("date", data.date);
   fd.append("subject", data.subject);
@@ -54,9 +52,7 @@ export const addHomework = (
   return API.axios.post("homework", fd);
 };
 
-export const listHomeworkDates = (
-  params: ListHomeworkParams
-): Promise<AxiosResponse<string[]>> => {
+export const listHomeworkDates = (params: ListHomeworkParams): Promise<AxiosResponse<string[]>> => {
   return API.axios.get("homework/dates", { params });
 };
 
@@ -64,11 +60,6 @@ export const deleteHomework = (id: number): Promise<AxiosResponse> => {
   return API.axios.delete(`homework/${id}`);
 };
 
-export const deleteAttachment = (
-  homework_id: number,
-  attachment_id: number
-) => {
-  return API.axios.delete(
-    `homework/${homework_id}/attachments/${attachment_id}`
-  );
+export const deleteAttachment = (homework_id: number, attachment_id: number) => {
+  return API.axios.delete(`homework/${homework_id}/attachments/${attachment_id}`);
 };

@@ -13,11 +13,7 @@ export enum NotificationAPIURLS {
   MARK_ALL_AS_READ = "notifications/mark-all-as-read/",
 }
 
-export type NotificationCatergory =
-  | "system"
-  | "headteacher"
-  | "event"
-  | "CLASS_ADD_REQUEST";
+export type NotificationCatergory = "system" | "headteacher" | "event" | "CLASS_ADD_REQUEST";
 
 export interface APINotification {
   id: number;
@@ -49,9 +45,7 @@ export const listNotifications = (
   });
 };
 
-export const retrieveNotification = (
-  id: number
-): Promise<AxiosResponse<APINotification>> => {
+export const retrieveNotification = (id: number): Promise<AxiosResponse<APINotification>> => {
   return API.axios.get<APINotification>(NotificationAPIURLS.DETAIL + id);
 };
 
@@ -61,19 +55,12 @@ export const createNotification = (
   return API.axios.post<APINotification>(NotificationAPIURLS.CREATE, data);
 };
 
-export const deleteNotification = (
-  id: number
-): Promise<AxiosResponse<APINotification>> => {
+export const deleteNotification = (id: number): Promise<AxiosResponse<APINotification>> => {
   return API.axios.delete<APINotification>(NotificationAPIURLS.DETAIL + id);
 };
 
-export const markNotificationAsRead = (
-  id: number
-): Promise<AxiosResponse<APINotification>> => {
-  return API.axios.patch<APINotification>(
-    NotificationAPIURLS.DETAIL + id + "/",
-    { read: true }
-  );
+export const markNotificationAsRead = (id: number): Promise<AxiosResponse<APINotification>> => {
+  return API.axios.patch<APINotification>(NotificationAPIURLS.DETAIL + id + "/", { read: true });
 };
 
 export const markAllNotificationsAsRead = (): Promise<AxiosResponse> => {

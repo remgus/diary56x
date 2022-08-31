@@ -1,6 +1,7 @@
 import API from "@/api";
 import { UserCredentials } from "@/store/modules/auth/types";
 import { AxiosResponse } from "axios";
+import { APIKlassCompact } from "./klasses";
 
 export interface APITokens {
   access: string;
@@ -8,7 +9,6 @@ export interface APITokens {
 }
 
 export enum AuthAPIURLS {
-  CREATE_STUDENT = "auth/users/create-student/",
   CURRENT_USER = "auth/users/me",
   GET_TOKEN = "auth/jwt/create/",
   REMOVE_TOKEN = "auth/jwt/blacklist/",
@@ -43,7 +43,7 @@ export interface APICompactUser {
 
 export interface APIUserStudentOptions {
   is_monitor: boolean;
-  klass: number | null;
+  klass: APIKlassCompact | null;
 }
 
 export interface APIUser extends APICompactUser {
@@ -58,19 +58,15 @@ export interface CreateStudentData {
   password: string;
 }
 
-export const createStudent = (
-  data: CreateStudentData
-): Promise<AxiosResponse> => {
-  return API.noAuthAxios.post(AuthAPIURLS.CREATE_STUDENT, data);
+export const createStudent = (data: CreateStudentData): Promise<AxiosResponse> => {
+  return API.noAuthAxios.post("auth/users/create-student", data);
 };
 
 export const getCurrentUser = (): Promise<AxiosResponse<APIUser>> => {
   return API.axios.get<APIUser>(AuthAPIURLS.CURRENT_USER);
 };
 
-export const login = (
-  credentials: UserCredentials
-): Promise<AxiosResponse<APITokens>> => {
+export const login = (credentials: UserCredentials): Promise<AxiosResponse<APITokens>> => {
   return API.noAuthAxios.post(AuthAPIURLS.GET_TOKEN, {
     email: credentials.email,
     password: credentials.password,
@@ -84,10 +80,7 @@ export const logout = (refreshToken: string): Promise<AxiosResponse> => {
 };
 
 export const isAdmin = (user: APIUser): boolean => {
-  return (
-    user.account_type === AccountTypes.ADMIN ||
-    user.account_type === AccountTypes.ROOT
-  );
+  return user.account_type === AccountTypes.ADMIN || user.account_type === AccountTypes.ROOT;
 };
 
 export const isTeacher = (user: APIUser): boolean => {

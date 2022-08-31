@@ -1,12 +1,7 @@
 import { ActionTree } from "vuex";
 import { RootState } from "@/store";
 import { listNotifications } from "@/api/services/notifications";
-import {
-  Actions,
-  DiaryActionTypes,
-  DiaryMutationTypes,
-  DiaryState,
-} from "./types";
+import { Actions, DiaryActionTypes, DiaryMutationTypes, DiaryState } from "./types";
 import { fetchConfig } from "@/api/services/config";
 
 export const actions: ActionTree<DiaryState, RootState> & Actions = {

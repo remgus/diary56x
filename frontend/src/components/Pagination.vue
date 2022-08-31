@@ -2,17 +2,13 @@
   <nav>
     <ul class="pagination" :class="{ 'justify-content-center': centered }">
       <li class="page-item" :class="{ disabled: !paginator.previous }">
-        <a class="page-link" href="#" @click.prevent="prevP"
-          ><span>&laquo;</span></a
-        >
+        <a class="page-link" href="#" @click.prevent="prevP"><span>&laquo;</span></a>
       </li>
       <li class="page-item active">
         <router-link class="page-link" to="#">{{ curPage }}</router-link>
       </li>
       <li class="page-item" :class="{ disabled: !paginator.next }">
-        <a class="page-link" href="#" @click.prevent="nextP"
-          ><span>&raquo;</span></a
-        >
+        <a class="page-link" href="#" @click.prevent="nextP"><span>&raquo;</span></a>
       </li>
     </ul>
   </nav>

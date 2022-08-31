@@ -1,10 +1,7 @@
 <template>
   <div class="container mt-4 rt-wp">
     <div class="row">
-      <div
-        v-if="user && isAdmin(user)"
-        class="col col-12 col-md-auto mb-3 mb-md-0"
-      >
+      <div v-if="user && isAdmin(user)" class="col col-12 col-md-auto mb-3 mb-md-0">
         <router-link to="/blog/create/" class="btn btn-outline-primary">
           <i class="bi bi-pencil me-2"></i><span>Добавить</span>
         </router-link>
@@ -49,10 +46,7 @@
     <div v-else>
       <div class="mb-4">
         <div v-for="(post, index) in posts.results" :key="post.id">
-          <card
-            :blogPost="post"
-            :no-margin="index + 1 === posts?.results.length"
-          ></card>
+          <card :blogPost="post" :no-margin="index + 1 === posts?.results.length"></card>
         </div>
       </div>
 

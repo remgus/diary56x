@@ -10,27 +10,15 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">{{ title }}</h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-          ></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <div class="modal-body">
           {{ content }}
           <div class="mt-3">
-            <button
-              type="button"
-              class="btn btn-outline-danger me-2"
-              data-bs-dismiss="modal"
-            >
+            <button type="button" class="btn btn-outline-danger me-2" data-bs-dismiss="modal">
               <i class="bi bi-x-lg"></i>
             </button>
-            <button
-              type="button"
-              class="btn btn-outline-success"
-              @click="successCallback"
-            >
+            <button type="button" class="btn btn-outline-success" @click="successCallback">
               <i class="bi bi-check-lg"></i>
             </button>
           </div>

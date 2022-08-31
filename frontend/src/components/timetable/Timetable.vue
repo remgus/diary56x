@@ -5,9 +5,7 @@
         <div class="d-flex">
           <select-class @change="classChanged" class="flex-fill" />
           <router-link
-            v-if="
-              store.getters.isMonitor && pluginEnabled(DiaryPlugins.MONITORS)
-            "
+            v-if="store.getters.isMonitor && pluginEnabled(DiaryPlugins.MONITORS)"
             class="ms-2 btn btn-outline-dark"
             :to="{ name: 'timetable-edit' }"
           >
@@ -21,11 +19,7 @@
       <div class="row justify-content-center">
         <div class="col-12 col-md-12 col-lg-9 col-xxl-8">
           <div v-if="store.state.settings.timetable_show_today_tomorrow">
-            <lesson-card
-              v-if="today && today.lessons.length != 0"
-              :day="today"
-              isToday
-            />
+            <lesson-card v-if="today && today.lessons.length != 0" :day="today" isToday />
             <lesson-card
               v-if="tomorrow && tomorrow.lessons.length != 0"
               :day="tomorrow"
@@ -69,8 +63,7 @@ const refreshTimetable = async () => {
   let res = (await getTimetable(selectedKlass.value)).data;
 
   timetable.value = [];
-  for (let i = 1; i <= 7; i++)
-    timetable.value.push({ weekday: i, lessons: [] });
+  for (let i = 1; i <= 7; i++) timetable.value.push({ weekday: i, lessons: [] });
 
   const lessons: TimetableData[] = res.map((l) => ({
     ...l,
@@ -95,10 +88,7 @@ const refreshTimetable = async () => {
 };
 
 const lessonsEqual = (first: TimetableData, second: TimetableData) => {
-  return (
-    first.classrooms === second.classrooms &&
-    first.subject.id === second.subject.id
-  );
+  return first.classrooms === second.classrooms && first.subject.id === second.subject.id;
 };
 
 const classChanged = (newClass: number | null) => {

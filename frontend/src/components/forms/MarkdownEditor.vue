@@ -1,79 +1,64 @@
 <template>
   <div class="wrapper">
-    <label :for="'id_' + name" v-if="label" class="form-label">{{
-      label
-    }}</label>
-    <textarea
-      :id="'id_' + name"
-      :cols="cols"
-      :rows="rows"
-      :name="name"
-      ref="mdeRef"
-    />
+    <label :for="'id_' + name" v-if="label" class="form-label">{{ label }}</label>
+    <textarea :id="'id_' + name" :cols="cols" :rows="rows" :name="name" ref="mdeRef" />
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, onMounted, PropType, ref } from "vue";
+<script lang="ts" setup>
+import { onMounted, PropType, ref } from "vue";
 import EasyMDE from "easymde";
 
-export default defineComponent({
-  props: {
-    name: {
-      type: String,
-      required: true,
-    },
-    options: {
-      type: Object as PropType<EasyMDE.Options>,
-      required: true,
-    },
-    size: {
-      type: String,
-      default: "30x10",
-    },
-    label: {
-      type: String,
-      default: "",
-    },
+const props = defineProps({
+  name: {
+    type: String,
+    required: true,
   },
-  setup(props) {
-    const mdeRef = ref<HTMLElement | undefined>(undefined);
-    const easyMDE = ref<EasyMDE | undefined>(undefined);
+  options: {
+    type: Object as PropType<EasyMDE.Options>,
+    required: true,
+  },
+  size: {
+    type: String,
+    default: "30x10",
+  },
+  label: {
+    type: String,
+    default: "",
+  },
+});
 
-    const cols = props.size.split("x")[0];
-    const rows = props.size.split("x")[1];
+const mdeRef = ref<HTMLElement | undefined>(undefined);
+const easyMDE = ref<EasyMDE | undefined>(undefined);
 
-    onMounted(() => {
-      if (mdeRef.value)
-        easyMDE.value = new EasyMDE({
-          element: mdeRef.value as HTMLElement,
-          ...props.options,
-        });
+const cols = props.size.split("x")[0];
+const rows = props.size.split("x")[1];
+
+onMounted(() => {
+  if (mdeRef.value)
+    easyMDE.value = new EasyMDE({
+      element: mdeRef.value as HTMLElement,
+      ...props.options,
     });
+});
 
-    const getValue = () => {
-      if (easyMDE.value) return easyMDE.value.value();
-      return "";
-    };
+const getValue = () => {
+  if (easyMDE.value) return easyMDE.value.value();
+  return "";
+};
 
-    const setValue = (value: string) => {
-      if (easyMDE.value) easyMDE.value.value(value);
-    };
+const setValue = (content: string) => {
+  if (easyMDE.value) easyMDE.value.value(content);
+};
 
-    const clearAutosavedValue = () => {
-      if (easyMDE.value) easyMDE.value.clearAutosavedValue();
-    };
+const clearAutosavedValue = () => {
+  if (easyMDE.value) easyMDE.value.clearAutosavedValue();
+};
 
-    return {
-      easyMDE,
-      mdeRef,
-      cols,
-      rows,
-      getValue,
-      setValue,
-      clearAutosavedValue,
-    };
-  },
+defineExpose({
+  getValue,
+  setValue,
+  clearAutosavedValue,
 });
 </script>
 

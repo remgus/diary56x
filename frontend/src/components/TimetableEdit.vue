@@ -62,9 +62,7 @@ const refreshTableValues = () => {
       // Find corresponsing HTML elements and set values
 
       // Lesson number
-      const nEl = document.querySelector(
-        `#n-${getLessonId(lesson)}`
-      ) as HTMLInputElement;
+      const nEl = document.querySelector(`#n-${getLessonId(lesson)}`) as HTMLInputElement;
       if (nEl) nEl.value = String(n);
 
       // Classroom
@@ -102,8 +100,7 @@ const refreshTimetable = async () => {
 
   // Initial table data
   timetable.value = [];
-  for (let i = 1; i <= 7; i++)
-    timetable.value.push({ weekday: i, lessons: [] });
+  for (let i = 1; i <= 7; i++) timetable.value.push({ weekday: i, lessons: [] });
 
   for (const lesson of res) {
     timetable.value[lesson.day - 1].lessons.push({
@@ -125,9 +122,7 @@ const askForSave = (): boolean => {
   if (getChangesNumber() === 0) return true;
 
   // Ask for save
-  const answer = window.confirm(
-    "Вы действительно хотите выйти? Вы не сохранили изменения."
-  );
+  const answer = window.confirm("Вы действительно хотите выйти? Вы не сохранили изменения.");
   if (!answer) return false;
   return true;
 };
@@ -176,9 +171,8 @@ const editLesson = (e: Event, day: number, lessonIndex: number) => {
   }
 
   const alreadyExists =
-    timetable.value[day - 1].lessons.filter(
-      (l) => l.n === lesson.n && l.subject === lesson.subject
-    ).length > 1;
+    timetable.value[day - 1].lessons.filter((l) => l.n === lesson.n && l.subject === lesson.subject)
+      .length > 1;
 
   if (alreadyExists) {
     alert("Такой урок уже добавлен");
@@ -196,16 +190,13 @@ const editLesson = (e: Event, day: number, lessonIndex: number) => {
   }
 
   const deleted = lessonsToDelete.value.findIndex(
-    (l) =>
-      l.day === lesson.day && l.n === lesson.n && l.subject === lesson.subject
+    (l) => l.day === lesson.day && l.n === lesson.n && l.subject === lesson.subject
   );
 
   if (deleted !== -1) lessonsToDelete.value.splice(deleted, 1);
 
   // Sort lessons in the day
-  timetable.value[day - 1].lessons.sort(
-    (a, b) => a.n - b.n || a.subject - b.subject
-  );
+  timetable.value[day - 1].lessons.sort((a, b) => a.n - b.n || a.subject - b.subject);
 
   nextTick(refreshTableValues);
 };
@@ -288,18 +279,14 @@ const saveTimetable = async () => {
             </tr>
           </thead>
           <tbody>
-            <tr
-              v-if="day.lessons.length"
-              v-for="(lesson, lessonIndex) in day.lessons"
-            >
+            <tr v-if="day.lessons.length" v-for="(lesson, lessonIndex) in day.lessons">
               <!-- Lesson number -->
-              <td style="width: 10%;">
+              <td style="width: 10%">
                 <input
                   :disabled="isLoading"
                   class="n-field-input"
                   :id="`n-${getLessonId(lesson)}`"
                   type="number"
-                
                   min="1"
                   max="15"
                   @change="editLesson($event, lesson.day, lessonIndex)"
@@ -325,7 +312,7 @@ const saveTimetable = async () => {
                 </select>
               </td>
               <!-- Classroom -->
-              <td  style="width: 10%;">
+              <td style="width: 10%">
                 <input
                   :disabled="isLoading"
                   :id="`classroom-${getLessonId(lesson)}`"
@@ -335,10 +322,7 @@ const saveTimetable = async () => {
                 />
               </td>
               <!-- Delete lesson button -->
-              <td
-                class="text-center delete-lesson"
-                @click="deleteLesson(lesson.day, lessonIndex)"
-              >
+              <td class="text-center delete-lesson" @click="deleteLesson(lesson.day, lessonIndex)">
                 <i class="bi-dash-circle text-danger"></i>
               </td>
             </tr>
@@ -348,10 +332,7 @@ const saveTimetable = async () => {
           </tbody>
         </table>
         <div class="mt-2 mb-4 text-center">
-          <div
-            class="btn btn-sm btn-outline-success"
-            @click="addLesson(day.weekday)"
-          >
+          <div class="btn btn-sm btn-outline-success" @click="addLesson(day.weekday)">
             <i class="bi bi-plus"></i>
           </div>
         </div>

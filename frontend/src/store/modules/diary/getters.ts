@@ -7,8 +7,7 @@ export const getters: GetterTree<DiaryState, RootState> & Getters = {
   unreadNotificationsCount: (state) => state.unread_notifications.length,
   pluginEnabled: (state, name) => {
     return state.config && state.config.plugins.length
-      ? state.config.plugins.includes(name) ||
-          state.config.plugins[0] == "__all__"
+      ? state.config.plugins.includes(name) || state.config.plugins[0] == "__all__"
       : false;
   },
 };

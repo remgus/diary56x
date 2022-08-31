@@ -9,15 +9,8 @@
     <router-view />
   </div>
   <main-footer />
-  <div
-    class="position-fixed bottom-0 end-0 p-3 toast-container"
-    id="popup-notification-container"
-  >
-    <popup-notification
-      :notification="msg"
-      v-for="msg in notifications"
-      :key="msg.id"
-    />
+  <div class="position-fixed bottom-0 end-0 p-3 toast-container" id="popup-notification-container">
+    <popup-notification :notification="msg" v-for="msg in notifications" :key="msg.id" />
   </div>
 </template>
 

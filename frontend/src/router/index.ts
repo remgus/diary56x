@@ -3,6 +3,7 @@ import Home from "../components/homepage/Home.vue";
 import { handleMetaViews } from "./utils";
 import adminRoutes from "./admin";
 import { store } from "@/store";
+import { ViewPermissions } from "./permissions";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -77,6 +78,10 @@ const routes: Array<RouteRecordRaw> = [
     path: "/timetable-edit",
     name: "timetable-edit",
     component: () => import("../components/timetable/TimetableClassEdit.vue"),
+    meta: {
+      requiresAuth: true,
+      permissions: ViewPermissions.MONITOR | ViewPermissions.ADMIN,
+    },
   },
   {
     path: "/minimum",
@@ -87,6 +92,11 @@ const routes: Array<RouteRecordRaw> = [
     path: "/about",
     name: "about",
     component: () => import("../components/About.vue"),
+  },
+  {
+    path: "/denied",
+    name: "denied",
+    component: () => import("../components/PermissionMissing.vue"),
   },
 ];
 

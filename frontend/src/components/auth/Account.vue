@@ -5,19 +5,22 @@
         <h1 class="mb-3">Аккаунт</h1>
 
         <div class="row">
-          <div class="col-auto">
-            <div class="avatar d-flex justify-content-center">
+          <div class="col-12 col-md-auto">
+            <div
+              class="avatar d-flex justify-content-center mb-3 mb-md-0 justify-content-md-center"
+            >
               <svg v-html="jdenticon" id="avatar"></svg>
             </div>
           </div>
           <div class="col">
-            <div class="card card-body h-100">
-              <h2>
-                {{ user.surname }} {{ user.first_name }} {{ user.last_name }}
-              </h2>
+            <div class="h-100">
+              <h2>{{ user.surname }} {{ user.first_name }} {{ user.last_name }}</h2>
               <div class="mb-1"><b>Email: </b>{{ user.email }}</div>
               <div class="mb-1">
-                <b>Дата регистрации: </b>{{ toShortDate(user.date_joined) }}
+                <b>Дата регистрации: </b>{{ toShortDate(new Date(user.date_joined)) }}
+              </div>
+              <div class="mb-1" v-if="store.getters.inKlass">
+                <b>Класс:</b> {{ user.options_student?.klass?.name }}
               </div>
             </div>
           </div>
@@ -27,32 +30,17 @@
   </div>
 </template>
 
-<script lang="ts">
-import { computed, defineComponent } from "@vue/runtime-core";
+<script lang="ts" setup>
+import { computed } from "vue";
 import { toSvg } from "jdenticon";
 import { toShortDate } from "@/utils/date";
 import { useStore } from "@/store";
 
-import { APIUser, isStudent } from "@/api/services/auth";
+import { APIUser } from "@/api/services/auth";
 
-export default defineComponent({
-  setup() {
-    const store = useStore();
-    const user = computed(() => store.state.auth.user as APIUser);
-    const jdenticon = computed(() => toSvg(user.value?.id, 150));
-
-    return {
-      jdenticon,
-      user,
-      isStudent,
-    };
-  },
-  methods: {
-    toShortDate(date: string) {
-      return toShortDate(new Date(date));
-    },
-  },
-});
+const store = useStore();
+const user = computed(() => store.state.auth.user as APIUser);
+const jdenticon = computed(() => toSvg(user.value?.id, 150));
 </script>
 
 <style scoped>

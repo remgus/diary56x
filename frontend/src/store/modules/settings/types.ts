@@ -1,9 +1,4 @@
-import {
-  ActionContext,
-  CommitOptions,
-  Store as VuexStore,
-  DispatchOptions,
-} from "vuex";
+import { ActionContext, CommitOptions, Store as VuexStore, DispatchOptions } from "vuex";
 import { RootState } from "@/store";
 
 export interface SettingsState {

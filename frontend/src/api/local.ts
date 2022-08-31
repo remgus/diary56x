@@ -4,11 +4,7 @@ export enum LocalData {
   USER = "user",
 }
 
-export function setLocalData(
-  key: LocalData,
-  value: string,
-  serialize = false
-): void {
+export function setLocalData(key: LocalData, value: string, serialize = false): void {
   if (serialize) value = JSON.stringify(value);
   localStorage.setItem(key, value);
 }

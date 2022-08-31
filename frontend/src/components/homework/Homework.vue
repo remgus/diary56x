@@ -2,17 +2,37 @@
   <div v-if="!store.getters.inKlass">
     <div class="row justify-content-center">
       <div class="col-12">
-        <div class="alert alert-warning w-100 text-center">
-          <img :src="cactus_icon" alt="" width="60" height="60" class="mb-2" />
-          <div>
-            Данная страница недоступна для не добавленных в класс учеников
+        <div class="card card-body">
+          <div class="text-center">
+            <img src="@/assets/icons/cactus.svg" alt="" width="80" class="mb-3" />
+            <div>Данная функция недоступна для не добавленных в класс учеников</div>
           </div>
         </div>
       </div>
     </div>
   </div>
   <div v-else>
-    <div v-if="!addHwPage" class="row justify-content-center">
+    <div v-if="editHwPage">
+      <div class="d-flex flex-row align-items-center w-100">
+        <h2 class="my-0 me-auto">Изменение задания</h2>
+        <button class="btn btn-outline-dark" @click="() => (editHwPage = false)">
+          <i class="bi-x-lg"></i>
+        </button>
+      </div>
+
+      <EditHomework :submit-callback="() => {}" :instance="editInstance" />
+    </div>
+    <div v-else-if="addHwPage">
+      <div class="d-flex flex-row align-items-center w-100">
+        <h2 class="my-0 me-auto">Добавить домашнее задание</h2>
+        <button class="btn btn-outline-dark" @click="() => (addHwPage = false)">
+          <i class="bi-x-lg"></i>
+        </button>
+      </div>
+
+      <AddHomework :added-callback="addedHwCallback" />
+    </div>
+    <div v-else class="row justify-content-center">
       <div class="col-12">
         <div class="d-flex flex-row mb-4">
           <datepicker
@@ -38,9 +58,7 @@
             class="btn btn-outline-dark ms-2"
             @click="editingMode = !editingMode"
           >
-            <i
-              :class="{ 'bi-pencil': !editingMode, 'bi-check': editingMode }"
-            ></i>
+            <i :class="{ 'bi-pencil': !editingMode, 'bi-check': editingMode }"></i>
           </button>
           <button
             v-if="editingMode"
@@ -54,21 +72,17 @@
 
         <Loading :is-loading="hwLoading">
           <div v-if="homework?.results && homework.results.length">
-            <div
-              v-for="(task, index) in homework?.results"
-              :key="task.id"
-              class="mb-0"
-            >
+            <div v-for="(task, index) in homework?.results" :key="task.id" class="mb-0">
               <TaskCard
                 :subject="subjects[task.subject]"
                 :task="task"
                 :show-date="
-                  index === 0 ||
-                  (index > 0 && homework.results[index - 1].date !== task.date)
+                  index === 0 || (index > 0 && homework.results[index - 1].date !== task.date)
                 "
                 :index="index"
                 :editing="editingMode"
                 :delete-callback="() => fetchHomework(true)"
+                :open-edit-page="openEditPage"
               />
             </div>
             <div
@@ -86,35 +100,20 @@
           </div>
 
           <div v-else class="text-center">
-            <img :src="cactus_icon" alt="" width="80" class="mb-2" />
+            <img src="@/assets/icons/cactus.svg" alt="" width="80" class="mb-2" />
             <div>Домашнее задание не найдено</div>
           </div>
         </Loading>
       </div>
     </div>
-    <div v-else>
-      <div class="d-flex flex-row align-items-center w-100">
-        <h2 class="my-0 me-auto">Добавить домашнее задание</h2>
-        <button class="btn btn-outline-dark" @click="() => (addHwPage = false)">
-          <i class="bi-x-lg"></i>
-        </button>
-      </div>
-
-      <AddHomework :added-callback="addedHwCallback" />
-    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
-import {
-  APIHomework,
-  listHomework,
-  listHomeworkDates,
-} from "@/api/services/homework";
+import { APIHomework, listHomework, listHomeworkDates } from "@/api/services/homework";
 import { APISubject, listSubjects } from "@/api/services/subjects";
 import { useStore } from "@/store";
 import { computed, onMounted, ref, watch } from "vue";
-import cactus_icon from "@/assets/icons/cactus.svg";
 import Datepicker from "@vuepic/vue-datepicker";
 import moment from "moment";
 import { Paginator } from "@/api/types";
@@ -124,12 +123,10 @@ import "highlight.js/styles/atom-one-dark.css";
 import AddHomework from "./AddHomework.vue";
 import Loading from "../Loading.vue";
 import { DiaryPlugins, pluginEnabled } from "@/utils/plugins";
+import EditHomework from "./EditHomework.vue";
 
 const store = useStore();
-const monitorsPluginEnabled = computed(() =>
-  pluginEnabled(DiaryPlugins.MONITORS)
-);
-
+const monitorsPluginEnabled = computed(() => pluginEnabled(DiaryPlugins.MONITORS));
 
 type DatePickerRef = [Date, Date] | [Date, null];
 
@@ -140,22 +137,21 @@ type Marker = {
   color?: string;
 };
 
-const date = ref<DatePickerRef>([
-  moment().toDate(),
-  moment().add(7, "days").toDate(),
-]);
+const date = ref<DatePickerRef>([moment().toDate(), moment().add(7, "days").toDate()]);
 const homework = ref<null | Paginator<APIHomework>>(null);
 const subjects = ref<{ [n: number]: APISubject }>({});
 const page = ref(1);
 const markers = ref<Marker[]>([]);
 const addHwPage = ref(false);
+const editHwPage = ref(false);
 const hwLoading = ref(true);
+const editInstance = ref<APIHomework | null>(null);
 
 // Get list of markers for datepicker component
 const getHomeworkDates = async () => {
   const hwDates = (
     await listHomeworkDates({
-      klass: store.getters.klass as number,
+      klass: store.getters.klass?.id as number,
       has_content: true,
     })
   ).data;
@@ -196,7 +192,7 @@ const fetchHomework = async (reset = false) => {
       has_content: true,
       page: page.value,
       page_size: store.state.settings.homework_limit_tasks ? 10 : 100,
-      klass: store.getters.klass as number,
+      klass: store.getters.klass?.id as number,
     })
   ).data;
 
@@ -215,12 +211,16 @@ const fetchHomework = async (reset = false) => {
   hwLoading.value = false;
 };
 
+const openEditPage = (task: APIHomework) => {
+  editInstance.value = task;
+  editHwPage.value = true;
+};
+
 // Refresh homework list every time user changes the date
 watch(date, () => fetchHomework(true));
 
 const editingMode = ref(
-  store.state.settings.homework_monitor_mode_default === "edit" &&
-    monitorsPluginEnabled
+  store.state.settings.homework_monitor_mode_default === "edit" && monitorsPluginEnabled
 );
 
 const addedHwCallback = () => {

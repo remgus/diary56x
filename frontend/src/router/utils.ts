@@ -1,5 +1,6 @@
 import { store } from "@/store";
 import { NavigationGuardNext, RouteLocationNormalized } from "vue-router";
+import { checkViewPermissions } from "./permissions";
 
 export const handleMetaViews = (
   to: RouteLocationNormalized,
@@ -18,5 +19,11 @@ export const handleMetaViews = (
       }
     }
   }
+
+  if (!checkViewPermissions(to.meta.permissions)) {
+    next({ name: "denied" });
+    return true;
+  }
+
   return false;
 };

@@ -45,10 +45,7 @@
                 >
               </div>
 
-              <button
-                class="btn btn-sm btn-outline-dark mt-3"
-                @click="minimums = null"
-              >
+              <button class="btn btn-sm btn-outline-dark mt-3" @click="minimums = null">
                 Вернуться к поиску
               </button>
             </div>
@@ -71,19 +68,13 @@
                     >сайтом гимназии</a
                   >
                   или<br />оповестите нас в
-                  <a
-                    href="https://diaryx_support.t.me"
-                    class="link-secondary"
-                    target="_blank"
+                  <a href="https://diaryx_support.t.me" class="link-secondary" target="_blank"
                     >Telegram</a
                   >
                   об отсутствии минимума
                 </div>
               </div>
-              <button
-                class="btn btn-sm btn-outline-dark"
-                @click="minimums = null"
-              >
+              <button class="btn btn-sm btn-outline-dark" @click="minimums = null">
                 Вернуться к поиску
               </button>
             </div>
@@ -122,10 +113,7 @@ const subjectOptions: SelectOption[] = SUBJECTS.map((el) => ({
   label: el,
   value: el,
 }));
-const gradeOptions: SelectOption[] = Array.from(
-  { length: 8 },
-  (_, i) => i + 4
-).map((el) => ({
+const gradeOptions: SelectOption[] = Array.from({ length: 8 }, (_, i) => i + 4).map((el) => ({
   label: String(el),
   value: String(el),
   selected: el === 11,

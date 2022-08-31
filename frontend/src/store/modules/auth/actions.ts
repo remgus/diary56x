@@ -2,12 +2,7 @@ import { ActionTree } from "vuex";
 import { RootState } from "@/store";
 import { clearLocalData, LocalData, setLocalData } from "@/api/local";
 import { getCurrentUser, login, logout } from "@/api/services/auth";
-import {
-  Actions,
-  AuthActionTypes,
-  AuthMutationTypes,
-  AuthState,
-} from "./types";
+import { Actions, AuthActionTypes, AuthMutationTypes, AuthState } from "./types";
 
 export const actions: ActionTree<AuthState, RootState> & Actions = {
   [AuthActionTypes.LOGIN]({ commit }, credentials) {
