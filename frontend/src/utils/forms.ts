@@ -153,7 +153,7 @@ export const handleFilesEvent = (e: InputEvent): FormFile[] => {
 };
 
 interface ErrorRule {
-  [key: string]: (errorText?: string) => void;
+  [key: string]: (errorTexts?: string[]) => void;
 }
 
 interface BackendErrorRules {

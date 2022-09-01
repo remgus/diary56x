@@ -1,5 +1,12 @@
 <template>
   <div class="mt-4">
+    <div
+      v-for="e in generalErrors"
+      v-if="isBound && generalErrors.length"
+      class="alert alert-danger"
+    >
+      {{ e }}
+    </div>
     <div class="mb-3">
       <label for="dp-input-datepicker" class="form-label">Дата</label>
       <Datepicker
@@ -14,7 +21,22 @@
         title="Выбор даты"
         uid="datepicker"
         required
-      />
+      >
+        <template #dp-input="{ value, onInput, onEnter, onTab, onClear }">
+          <input
+            type="text"
+            :value="value"
+            class="form-control"
+            :class="{
+              'is-invalid': isBound && dateErrors.length,
+            }"
+            @click="if (isBound) isBound = false;"
+          />
+          <div v-for="e in dateErrors" class="invalid-feedback order-1">
+            {{ e }}
+          </div>
+        </template>
+      </Datepicker>
     </div>
     <div class="mb-3">
       <FormSelect
@@ -52,6 +74,8 @@ import { useStore } from "@/store";
 import { homeworkMDEOptions } from "@/utils/mde";
 import DropZone from "../forms/DropZone.vue";
 import { addHomework, CreateHomeworkData } from "@/api/services/homework";
+import { AxiosError } from "axios";
+import { handleBackendError } from "@/utils/forms";
 
 interface Props {
   addedCallback: () => void;
@@ -61,10 +85,13 @@ const props = defineProps<Props>();
 const store = useStore();
 
 const date = ref<Date>(moment().add(1, "days").toDate());
+const dateErrors = ref<string[]>([]);
 const mdeRef = ref<null | typeof MarkdownEditor>(null);
 const subjectOptions = ref<SelectOption[]>([]);
 const selectedSubject = ref<null | string>(null);
 const dropzoneRef = ref<null | typeof DropZone>(null);
+const generalErrors = ref<string[]>([]);
+const isBound = ref(false);
 
 onMounted(() => {
   const klass = store.getters.klass?.id;
@@ -81,14 +108,31 @@ onMounted(() => {
 });
 
 const submit = () => {
+  generalErrors.value = [];
+  dateErrors.value = [];
+  isBound.value = true;
+
   const createHomeworkData: CreateHomeworkData = {
     content: mdeRef.value?.getValue ? mdeRef.value.getValue() : "",
     attachments: dropzoneRef.value ? Object.assign({}, dropzoneRef.value).droppedFiles.slice() : [],
     subject: selectedSubject.value as string,
     klass: String(store.getters.klass?.id),
-    date: moment(date.value.toDateString()).format("DD-MM-YYYY"),
+    date: moment(date.value).format("DD-MM-YYYY"),
   };
 
-  addHomework(createHomeworkData).then(props.addedCallback);
+  addHomework(createHomeworkData)
+    .then(props.addedCallback)
+    .catch((e: AxiosError) =>
+      handleBackendError(e, {
+        "400": {
+          date: (msgs) => {
+            if (msgs) dateErrors.value = msgs;
+          },
+          non_field_errors: (msgs) => {
+            if (msgs) generalErrors.value = msgs;
+          },
+        },
+      })
+    );
 };
 </script>

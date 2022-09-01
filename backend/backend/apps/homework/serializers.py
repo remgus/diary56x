@@ -40,8 +40,14 @@ class CreateHomeworkSerializer(serializers.ModelSerializer):
 
     def validate_date(self, value):
         if Quarter.get_quarter_by_date(value) is None:
-            raise serializers.ValidationError("Homework can't be added on holidays")
+            raise serializers.ValidationError("Домашнее задание нельзя задать на каникулы")
         return value
+
+    def validate(self, data):
+        print(data)
+        if not data.get("content") and not data.get("attachments"):
+            raise serializers.ValidationError("Укажите задание или прикрепите файлы")
+        return data
 
     class Meta:
         model = Homework

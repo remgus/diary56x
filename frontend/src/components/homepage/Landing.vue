@@ -7,7 +7,7 @@
       <div class="description text-muted mt-4">Наш сервис сделает вашу школьную жизнь лучше</div>
       <div>
         <div class="btn btn-primary me-3">О проекте</div>
-        <router-link class="btn btn-outline-primary" to="/register">Начать</router-link>
+        <router-link class="btn btn-outline-primary" to="/login">Начать</router-link>
       </div>
     </div>
     <div class="mx-md-5 gx-0 gx-md-5">
