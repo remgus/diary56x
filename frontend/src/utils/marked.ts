@@ -69,7 +69,9 @@ const markedOptions: marked.MarkedOptions = {
 };
 
 export const getMarked = (content: string, inline = false): string => {
-  let sanitizedContent = DomPurify.sanitize(content);
+  let sanitizedContent = DomPurify.sanitize(content, {
+    ALLOWED_TAGS: ["b", "img", "i"],
+  });
   sanitizedContent = new DOMParser().parseFromString(sanitizedContent, "text/html").documentElement
     .textContent as string;
   if (inline) return marked.parseInline(sanitizedContent, markedOptions);

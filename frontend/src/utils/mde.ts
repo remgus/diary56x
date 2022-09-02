@@ -1,4 +1,5 @@
-import { Options } from "easymde";
+import EasyMDE, { Options } from "easymde";
+import hljs from "highlight.js";
 
 export const BlogMDEOptions: Options = {
   autofocus: true,
@@ -23,5 +24,30 @@ export const homeworkMDEOptions: Options = {
   renderingConfig: {
     singleLineBreaks: false,
     codeSyntaxHighlighting: true,
+    hljs,
   },
+  toolbar: [
+    "bold",
+    "italic",
+    "strikethrough",
+    "|",
+    "quote",
+    "ordered-list",
+    "unordered-list",
+    "link",
+    "image",
+    {
+      name: "table",
+      className: "fa fa-table",
+      action: EasyMDE.drawTable,
+      title: "Table",
+    },
+    "|",
+    "preview",
+    "side-by-side",
+    "fullscreen",
+    "|",
+    "undo",
+    "redo",
+  ],
 };

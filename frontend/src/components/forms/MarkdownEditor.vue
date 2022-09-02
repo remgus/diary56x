@@ -40,6 +40,13 @@ onMounted(() => {
       element: mdeRef.value as HTMLElement,
       ...props.options,
     });
+
+  easyMDE.value?.codemirror.on("beforeChange", (cm, change) => {
+    if (change.origin === "paste") {
+      const newText = change.text.map((line) => line.replace(/^\s+/g, "").replace(/\t/g, "    "));
+      if (change.update) change.update(undefined, undefined, newText);
+    }
+  });
 });
 
 const getValue = () => {
@@ -64,4 +71,19 @@ defineExpose({
 
 <style>
 @import "easymde/dist/easymde.min.css";
+
+.editor-toolbar > .table {
+  width: 30px !important;
+}
+
+.EasyMDEContainer {
+  font-family: "Iosevka";
+}
+
+.EasyMDEContainer pre {
+  border-radius: 5px !important;
+  padding: 10px;
+  color: #abb2bf;
+  background: #282c34;
+}
 </style>
