@@ -1,8 +1,8 @@
+from django.conf import settings
 from django.utils.timezone import datetime
 from rest_framework import serializers
 
 from ..core.models import Group, Klass, Quarter, Subject
-
 # from ..core.lessons.serializers import LessonSerializer
 from .models import Homework, HomeworkAttachment
 
@@ -48,6 +48,20 @@ class CreateHomeworkSerializer(serializers.ModelSerializer):
         if not data.get("content") and not data.get("attachments"):
             raise serializers.ValidationError("Укажите задание или прикрепите файлы")
         return data
+
+    def validate_attachments(self, value):
+        if len(value) > settings.HOMEWORK_MAX_FILES:
+            raise serializers.ValidationError(
+                f"Нельзя прикладывать больше {settings.HOMEWORK_MAX_FILES} файлов к одному заданию"
+            )
+        for file in value:
+            if file.size > settings.HOMEWORK_FILE_SIZE_LIMIT:
+                print(file.size, settings.HOMEWORK_FILE_SIZE_LIMIT)
+                file_size_verbose = round(settings.HOMEWORK_FILE_SIZE_LIMIT / (1024 * 1024 * 8))
+                raise serializers.ValidationError(
+                    f"Размер файлов не должен превышать {file_size_verbose}МБ"
+                )
+        return value
 
     class Meta:
         model = Homework

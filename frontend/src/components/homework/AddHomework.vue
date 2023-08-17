@@ -2,6 +2,7 @@
   <div class="mt-4">
     <div
       v-for="e in generalErrors"
+      id="add-hw-general-errors"
       v-if="isBound && generalErrors.length"
       class="alert alert-danger"
     >
@@ -56,6 +57,13 @@
     </div>
     <div class="mb-3">
       <DropZone name="attachments" ref="dropzoneRef" multiple />
+      <div
+        v-for="e in fileErrors"
+        v-if="isBound && fileErrors.length"
+        class="alert alert-danger mt-3"
+      >
+        {{ e }}
+      </div>
     </div>
     <div>
       <button class="btn btn-outline-dark" @click="submit">Добавить</button>
@@ -64,7 +72,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
+import { nextTick, onMounted, ref } from "vue";
 import MarkdownEditor from "../forms/MarkdownEditor.vue";
 import Datepicker from "@vuepic/vue-datepicker";
 import moment from "moment";
@@ -84,13 +92,18 @@ interface Props {
 const props = defineProps<Props>();
 const store = useStore();
 
-const date = ref<Date>(moment().add(1, "days").toDate());
-const dateErrors = ref<string[]>([]);
+const dropzoneRef = ref<null | typeof DropZone>(null);
 const mdeRef = ref<null | typeof MarkdownEditor>(null);
+
+const date = ref<Date>(moment().add(1, "days").toDate());
 const subjectOptions = ref<SelectOption[]>([]);
 const selectedSubject = ref<null | string>(null);
-const dropzoneRef = ref<null | typeof DropZone>(null);
+
+// Field error messages
 const generalErrors = ref<string[]>([]);
+const dateErrors = ref<string[]>([]);
+const fileErrors = ref<string[]>([]);
+
 const isBound = ref(false);
 
 onMounted(() => {
@@ -108,9 +121,10 @@ onMounted(() => {
 });
 
 const submit = () => {
+  isBound.value = true;
   generalErrors.value = [];
   dateErrors.value = [];
-  isBound.value = true;
+  fileErrors.value = [];
 
   const createHomeworkData: CreateHomeworkData = {
     content: mdeRef.value?.getValue ? mdeRef.value.getValue() : "",
@@ -122,17 +136,23 @@ const submit = () => {
 
   addHomework(createHomeworkData)
     .then(props.addedCallback)
-    .catch((e: AxiosError) =>
+    .catch((e: AxiosError) => {
       handleBackendError(e, {
         "400": {
           date: (msgs) => {
             if (msgs) dateErrors.value = msgs;
           },
+          attachments: (msgs) => {
+            if (msgs) fileErrors.value = msgs;
+          },
           non_field_errors: (msgs) => {
-            if (msgs) generalErrors.value = msgs;
+            if (msgs) {
+              generalErrors.value = msgs;
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }
           },
         },
-      })
-    );
+      });
+    });
 };
 </script>

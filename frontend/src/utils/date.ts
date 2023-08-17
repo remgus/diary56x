@@ -1,4 +1,11 @@
 export const toShortDate = (date: Date): string => {
+  if (date.getFullYear() === new Date().getFullYear()) {
+    return date.toLocaleDateString("ru", {
+      day: "numeric",
+      month: "long",
+    });
+  }
+
   return date.toLocaleDateString("ru", {
     day: "numeric",
     month: "long",

@@ -10,13 +10,14 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import User
 from .serializers import (
+    CurrentUserSerializer,
     RefreshTokenSerializer,
     StudentCreateSerializer,
     UserBulkDeleteSerializer,
     UserSerializer,
 )
 from .utils import ACCOUNT_TYPE_CHOICES
-from backend.permissions import IsAdminPermission
+from backend.permissions import IsAdminPermission, IsAuthenticatedReadonlyPermission
 
 
 # TODO: Replace ActivateUserAPIView with frontend page
@@ -38,8 +39,8 @@ class ActivateUserAPIView(APIView):
 class ProfileView(generics.RetrieveAPIView):
     """Retrieve current user."""
 
-    serializer_class = UserSerializer
-    permission_classes = (permissions.IsAuthenticated,)
+    serializer_class = CurrentUserSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         """Get current user."""
@@ -68,6 +69,7 @@ class UserListAPIView(generics.ListAPIView):
 class UserRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     """Retrieve, update or delete a user."""
 
+    permission_classes = [IsAdminPermission, IsAuthenticatedReadonlyPermission]
     serializer_class = UserSerializer
     queryset = User.objects.all()
 

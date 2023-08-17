@@ -13,15 +13,33 @@
             </div>
           </div>
           <div class="col">
-            <div class="h-100">
+            <div class="card card-body mb-2">
               <h2>{{ user.surname }} {{ user.first_name }} {{ user.last_name }}</h2>
-              <div class="mb-1"><b>Email: </b>{{ user.email }}</div>
-              <div class="mb-1">
-                <b>Дата регистрации: </b>{{ toShortDate(new Date(user.date_joined)) }}
-              </div>
-              <div class="mb-1" v-if="store.getters.inKlass">
-                <b>Класс:</b> {{ user.options_student?.klass?.name }}
-              </div>
+              <table class="table mb-0">
+                <tbody>
+                  <tr>
+                    <td class="fw-bold ps-0">Email</td>
+                    <td class="text-start">{{ user.email }}</td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold ps-0">Дата регистрации</td>
+                    <td class="text-start">
+                      {{ toShortDate(new Date(user.date_joined)) }}
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="fw-bold ps-0">Образовательное учреждение</td>
+                    <td class="text-start">{{ store.state.diary.config?.school_full_name }}</td>
+                  </tr>
+
+                  <template v-if="store.getters.inKlass">
+                    <tr>
+                      <td class="fw-bold border-0 ps-0">Класс</td>
+                      <td class="text-start border-0">{{ user.options_student?.klass?.name }}</td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

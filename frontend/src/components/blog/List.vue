@@ -1,8 +1,8 @@
 <template>
   <div class="container mt-4 rt-wp">
     <div class="row">
-      <div v-if="user && isAdmin(user)" class="col col-12 col-md-auto mb-3 mb-md-0">
-        <router-link to="/blog/create/" class="btn btn-outline-primary">
+      <div v-if="store.getters.isAdmin" class="col col-12 col-md-auto mb-3 mb-md-0">
+        <router-link to="/blog/new-post/" class="btn btn-outline-dark">
           <i class="bi bi-pencil me-2"></i><span>Добавить</span>
         </router-link>
       </div>
@@ -26,7 +26,7 @@
             id="search-input"
             ref="searchInput"
           />
-          <button class="btn btn-outline-primary" id="search-btn" type="submit">
+          <button class="btn btn-outline-dark" id="search-btn" type="submit">
             <i class="bi bi-search" />
           </button>
         </div>
@@ -68,7 +68,6 @@ import { useStore } from "@/store";
 
 import { Paginator } from "@/api/types";
 import Pagination from "@/components/Pagination.vue";
-import { isAdmin } from "@/api/services/auth";
 import { APIPost, listPosts } from "@/api/services/blog";
 import Card from "./Card.vue";
 import cactus from "@/assets/icons/cactus.svg";

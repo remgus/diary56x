@@ -148,7 +148,7 @@ const hwLoading = ref(true);
 const editInstance = ref<APIHomework | null>(null);
 
 // Get list of markers for datepicker component
-const getHomeworkDates = async () => {
+const getHomeworkDateMarkers = async () => {
   const hwDates = (
     await listHomeworkDates({
       klass: store.getters.klass?.id as number,
@@ -206,7 +206,7 @@ const fetchHomework = async (reset = false) => {
   if (!reset) homework.value.results.push(...data.results);
   else homework.value.results = data.results;
 
-  if (store.state.settings.homework_dates_preview) getHomeworkDates();
+  if (store.state.settings.homework_dates_preview) getHomeworkDateMarkers();
 
   hwLoading.value = false;
 };

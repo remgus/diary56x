@@ -2,8 +2,8 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import Home from "../components/homepage/Home.vue";
 import { handleMetaViews } from "./utils";
 import adminRoutes from "./admin";
-import { store } from "@/store";
 import { ViewPermissions } from "./permissions";
+import blogRoutes from "@/components/blog/routes";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -36,24 +36,6 @@ const routes: Array<RouteRecordRaw> = [
       navbar: {
         expand: true,
       },
-    },
-  },
-  {
-    path: "/blog",
-    name: "blog",
-    component: () => import("../views/blog/List.vue"),
-  },
-  {
-    path: "/blog/:slug",
-    name: "BlogPost",
-    component: () => import("../views/blog/Details.vue"),
-  },
-  {
-    path: "/blog/create/",
-    name: "CreatePost",
-    component: () => import("../views/blog/Create.vue"),
-    meta: {
-      requiresAuth: true,
     },
   },
   {
@@ -102,7 +84,7 @@ const routes: Array<RouteRecordRaw> = [
 
 const router = createRouter({
   history: createWebHistory(),
-  routes: [...routes, ...adminRoutes],
+  routes: [...routes, ...adminRoutes, ...blogRoutes],
   scrollBehavior() {
     return { top: 0 };
   },

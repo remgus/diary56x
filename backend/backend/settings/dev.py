@@ -203,3 +203,6 @@ DIARYX_SCHOOL_NAME = config["Diaryx"]["SCHOOL_NAME"]
 DIARYX_SCHOOL_FULL_NAME = config["Diaryx"]["SCHOOL_FULL_NAME"]
 DIARYX_PLUGINS = config["Diaryx"]["PLUGINS"]
 DIARYX_SCHOOL_N = config["Diaryx"]["SCHOOL_N"]
+
+HOMEWORK_FILE_SIZE_LIMIT = config.get("Homework", 20).get("FILE_SIZE_LIMIT", 20) * 1024 * 1024 * 8
+HOMEWORK_MAX_FILES = config.get("Homework", 10).get("MAX_FILES", 10)

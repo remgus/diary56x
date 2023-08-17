@@ -12,6 +12,7 @@ export interface APIPost {
   slug: string;
   id: number;
   thumbnail: string;
+  summary: string;
 }
 
 export interface APICreatePost {
@@ -69,6 +70,5 @@ export const deletePost = (slug: string): Promise<AxiosResponse> => {
  * @returns Name of the author of the post.
  */
 export const postAuthor = (post: APIPost): string => {
-  if (post.author.is_staff) return "ATK Dev Studio";
-  return `${post.author.surname} ${post.author.first_name} ${post.author.last_name}`;
+  return `${post.author.first_name} ${post.author.surname}`;
 };

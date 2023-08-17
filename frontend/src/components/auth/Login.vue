@@ -55,7 +55,6 @@ import router from "@/router";
 import { FormInput } from "@/components";
 import { useStore } from "@/store";
 import { AuthActionTypes } from "@/store/modules/auth/types";
-import { DiaryActionTypes } from "@/store/modules/diary/types";
 
 interface Credentials {
   email: string;
@@ -104,7 +103,6 @@ const processLogin = (): void => {
     .dispatch(AuthActionTypes.LOGIN, data)
     .then(() => {
       store.dispatch(AuthActionTypes.FETCH_CURRENT_USER).then(() => {
-        store.dispatch(DiaryActionTypes.FETCH_NOTIFICATIONS);
         router.push("/");
       });
     })

@@ -34,6 +34,37 @@ class UserSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "account_type",
+            "first_name",
+            "last_name",
+            "surname",
+            "date_joined",
+            "last_login",
+            "options_student",
+            "options_teacher",
+            "is_superuser",
+            "is_staff",
+            "is_active",
+        ]
+        read_only_fields = [
+            "id",
+            "account_type",
+            "is_superuser",
+            "is_staff",
+            "is_active",
+        ]
+
+
+class CurrentUserSerializer(serializers.ModelSerializer):
+    """Serializer for `User` model."""
+
+    options_student = StudentSerializer()
+    options_teacher = TeacherSerializer()
+
+    class Meta:
+        model = models.User
+        fields = [
+            "id",
+            "account_type",
             "email",
             "first_name",
             "last_name",

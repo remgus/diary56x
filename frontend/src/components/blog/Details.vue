@@ -17,21 +17,36 @@
         </ol>
       </nav>
 
-      <div v-if="user && isAdmin(user)" class="my-3">
-        <button class="btn btn-outline-danger me-2" @click="showConfirmDialog">
-          <i class="bi-trash me-2"></i>Удалить
-        </button>
-        <button class="btn btn-outline-primary"><i class="bi-pen me-2"></i>Изменить</button>
-      </div>
-
-      <div class="container justify-content-center w-75">
-        <div class="text-center mb-3">
-          <h1>{{ post?.title }}</h1>
+      <div class="row justify-content-center">
+        <div class="col-12 col-sm-12 col-md-10 col-lg-8">
+          <div class="text-start mb-3" v-if="post">
+            <div class="d-flex flex-row align-items-center mb-3 position-relative">
+              <div class="me-2">
+                <svg v-if="jdenticon" v-html="jdenticon" class="author-avatar"></svg>
+              </div>
+              <div class="d-flex flex-column">
+                <div>{{ postAuthor(post) }}</div>
+                <div>{{ toShortDate(new Date(post.date)) }}</div>
+              </div>
+              <div
+                v-if="store.getters.isAdmin"
+                class="justify-content-end d-flex position-absolute end-0 align-items-center"
+              >
+                <button class="btn btn-outline-danger btn-sm me-2" @click="showConfirmDialog">
+                  <i class="bi-trash"></i>
+                </button>
+                <button class="btn btn-outline-dark btn-sm">
+                  <i class="bi-pen"></i>
+                </button>
+              </div>
+            </div>
+            <h1>{{ post.title }}</h1>
+          </div>
+          <div v-if="postImage">
+            <img class="img-fluid mb-3" :src="postImage" alt="Изображение записи" />
+          </div>
+          <div v-html="post?.content"></div>
         </div>
-        <div v-if="postImage">
-          <img class="img-fluid" :src="postImage" alt="Изображение записи" />
-        </div>
-        <div v-html="post?.content"></div>
       </div>
 
       <confirm-dialog
@@ -47,15 +62,17 @@
 <script lang="ts" setup>
 import { computed, onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { APIPost, deletePost, retrievePost } from "@/api/services/blog";
+import { APIPost, deletePost, retrievePost, postAuthor } from "@/api/services/blog";
 import { getMarked } from "@/utils/marked";
 import { useConfirmDialog } from "@/utils/dialog";
-import ConfirmDialog from "@/components/ConfirmDialog.vue";
 import { getImage } from "@/utils/blog";
 import { useStore } from "@/store";
+import { toShortDate } from "@/utils/date";
 
-import { isAdmin } from "@/api/services/auth";
 import not_found from "@/assets/icons/not-found.svg";
+import { toSvg } from "jdenticon";
+
+const jdenticon = ref<null | string>(null);
 
 const route = useRoute();
 const router = useRouter();
@@ -73,6 +90,7 @@ const getPost = () => {
       postDoesNotExist.value = false;
       post.value = response.data;
       post.value.content = getMarked(post.value?.content || "");
+      jdenticon.value = toSvg(post.value.author?.id, 40);
     })
     .catch(() => {
       postDoesNotExist.value = true;
@@ -95,7 +113,6 @@ onMounted(() => {
 });
 
 const postImage = computed(() => (post.value ? getImage(post.value) : null));
-const user = computed(() => store.state.user);
 </script>
 
 <style>
@@ -104,5 +121,10 @@ const user = computed(() => store.state.user);
 #not-found-icon {
   width: 100px;
   height: 100px;
+}
+
+.author-avatar {
+  width: 40px;
+  height: 40px;
 }
 </style>

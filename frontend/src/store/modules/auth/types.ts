@@ -56,6 +56,7 @@ export interface Actions {
 }
 
 export type Getters = {
+  isAdmin: (state: AuthState) => boolean;
   isAuthenticated: (state: AuthState) => boolean;
   isStudent: (state: AuthState) => boolean;
   inKlass: (state: AuthState) => boolean;
