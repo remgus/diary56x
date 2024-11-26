@@ -8,7 +8,7 @@ version = "0.0.1"
 [tool.poetry.dependencies]
 Django = "^3.2.9"
 Markdown = "^3.3.4"
-Pillow = "^9.0.1"
+Pillow = "^9.3.0"
 django-cleanup = "^5.1.0"
 django-cors-headers = "^3.10.0"
 django-debug-toolbar = "^3.2"
